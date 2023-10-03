@@ -11,4 +11,20 @@ describe Chessboard do
             end
         end
     end
+
+    describe '#setup_board' do
+        it 'sets up the initial chessboard' do
+            chessboard.setup_board
+
+            # Check major pieces for black
+            expect(chessboard.board[7]).to eq(["♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"])
+            # Check pawns for black
+            expect(chessboard.board[6]).to eq(["♙", "♙", "♙", "♙", "♙", "♙", "♙", "♙"])
+
+            # Check pawns for white
+            expect(chessboard.board[0]).to eq(["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"])
+            # Check pawns for white
+            expect(chessboard.board[1]).to eq(["♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"])
+        end
+    end
 end
