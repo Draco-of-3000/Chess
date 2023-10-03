@@ -25,10 +25,10 @@ class Chessboard
         major_pieces = color == :white ? 7 : 0
         pawns = color == :white ? 6 : 1
 
-        @board[major_pieces] = Array.new(8, [
-            color == :white ? "\u2656" : "\u265C", "\u2658" : "\u265E", "\u2657" : "\u265D", 
-            "\u2655" : "\u265B", "\u2654" : "\u265A", "\u2657" : "\u265D", "\u2658" : "\u265E", "\u2656" : "\u265C"
-        ])
+        @board[major_pieces_rank] = Array.new(8,
+            (color == :white ? ["\u2656", "\u2658", "\u2657", "\u2655", "\u2654", "\u2657", "\u2658", "\u2656"] :
+                               ["\u265C", "\u265E", "\u265D", "\u265B", "\u265A", "\u265D", "\u265E", "\u265C"])
+          )
 
         @board[pawns] = Array.new(8, color == :white ? "\u2659" : "\u265F")
     end
