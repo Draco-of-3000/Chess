@@ -105,6 +105,26 @@ class ChessPiece
     white_rook = ChessPiece::WHITE_ROOK
     white_king = ChessPiece::WHITE_KING
     white_queen = ChessPiece::WHITE_QUEEN
+
+
+    def pawn_movement(column, row, color)
+        moves = []
+
+        direction = (color == :white) ? 1 : -1
+
+        moves << [column, row + direction]
+
+        # Double move on the first turn
+        if ((color == :white && row == 1) || (color == :black && row == 6))
+            moves << [column, row + 2 * direction]
+        end
+
+        moves.select { |move| valid_move?(move) }
+    end
+
+    def valid_move?(move)
+        move.all? { |coord| coord.between?(0, 7) }
+    end
 end
 
 game = Chessboard.new
