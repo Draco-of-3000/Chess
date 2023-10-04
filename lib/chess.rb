@@ -123,7 +123,24 @@ class ChessPiece
         moves
     end
     
-
+    def en_passant_possible?(from_column, from_row, to_column, to_row, last_move)
+        # Check if the last move targeted the same column and adjacent row:
+        return false unless to_column == from_column && (to_row == from_row + 2 || to_row == from_row - 2)
+      
+        # Check if the last move was a double move
+        return false unless last_move && last_move[:to][1] == from_row
+      
+        # Check if there is an opponent's pawn next to the destination square on an adjacent file
+        opponent_pawn_position = (to_row == from_row + 2) ? [to_column, to_row - 1] : [to_column, to_row + 1]
+        destination = [to_column, to_row]
+      
+        # Check if the destination matches the position of the opponent's pawn
+        return false unless destination == opponent_pawn_position
+      
+        # En passant is possible
+        true
+    end
+      
     def valid_move?(move)
         move.all? { |coord| coord.between?(0, 7) }
     end
