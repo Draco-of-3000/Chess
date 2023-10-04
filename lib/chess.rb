@@ -76,21 +76,21 @@ class ChessPiece
         @unicode = unicode
     end
 
-    class << self
-        BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
-        BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E")
-        BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D")
-        BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C")
-        BLACK_KING = ChessPiece.new("Black King", "\u265A")
-        BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B")
+    
+    BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
+    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E")
+    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D")
+    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C")
+    BLACK_KING = ChessPiece.new("Black King", "\u265A")
+    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B")
 
-        WHITE_PAWN = ChessPiece.new("White Pawn", "\u2659")
-        WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658")
-        WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657")
-        WHITE_ROOK = ChessPiece.new("White Rook", "\u2656")
-        WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655")
-        WHITE_KING = ChessPiece.new("White King", "\u2654")
-    end
+    WHITE_PAWN = ChessPiece.new("White Pawn", "\u2659")
+    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658")
+    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657")
+    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656")
+    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655")
+    WHITE_KING = ChessPiece.new("White King", "\u2654")
+
 
     black_pawn = ChessPiece::BLACK_PAWN
     black_knight = ChessPiece::BLACK_KNIGHT
@@ -109,18 +109,20 @@ class ChessPiece
 
     def pawn_movement(column, row, color)
         moves = []
-
+    
         direction = (color == :white) ? 1 : -1
-
-        moves << [column, row + direction]
-
+    
+        # Regular forward move
+        regular_move = [column, row + direction]
+        moves << regular_move if valid_move?(regular_move)
+    
         # Double move on the first turn
-        if ((color == :white && row == 1) || (color == :black && row == 6))
-            moves << [column, row + 2 * direction]
-        end
-
-        moves.select { |move| valid_move?(move) }
+        double_move = [column, row + 2 * direction]
+        moves << double_move if row == (color == :white ? 1 : 6) && valid_move?(double_move)
+    
+        moves
     end
+    
 
     def valid_move?(move)
         move.all? { |coord| coord.between?(0, 7) }
