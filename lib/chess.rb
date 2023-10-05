@@ -122,6 +122,22 @@ class ChessPiece
     
         pawn_moves
     end
+
+    def rook_movement(start_column, start_row)
+        rook_moves = []
+
+        # horizontal moves
+        (0..7).each do |column|
+            moves << [column, start_row] unless  column == start_column
+        end
+
+        # vertical moves
+        (0..7).each do |row|
+            moves << [start_column, row] unless  row == start_row
+        end
+
+        rook_moves
+    end
       
     def pawn_valid_move?(move)
         move.all? { |coord| coord.between?(0, 7) }
