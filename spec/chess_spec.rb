@@ -32,6 +32,8 @@ end
 describe ChessPiece do
     let(:white_pawn) { ChessPiece::WHITE_PAWN }
     let(:black_pawn) { ChessPiece::BLACK_PAWN }
+    let(:black_rook) { ChessPiece::BLACK_ROOK }
+    let(:white_rook) { ChessPiece::WHITE_ROOK }
     let(:chesspiece) { described_class.new }
 
     describe '#pawn_movement' do
@@ -66,6 +68,68 @@ describe ChessPiece do
             it 'filters out invalid moves' do
                 moves = black_pawn.pawn_movement(0, 0, :black)
                 expect(moves).to be_empty 
+            end
+        end
+    end
+
+    describe '#rook_movement' do
+        context 'when black rook is in the middle of the board' do
+            let(:start_column) { 3 }
+            let(:start_row) {3}
+
+            it 'returns valid horizontal and vertical moves' do
+                moves = black_rook.rook_movement(start_column, start_row)
+
+                # Check horizontal moves
+                expect(moves).to include([0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3])
+
+                # Check vertical moves
+                expect(moves).to include([3, 0], [3, 1], [3, 2], [3, 4], [3, 5], [3, 6], [3, 7])
+            end
+        end
+
+        context 'when black rook is at the edge of the board' do
+            let(:start_column) { 0 }
+            let(:start_row) { 0 }
+
+            it 'returns valid horizontal and vertical moves' do
+                moves = black_rook.rook_movement(start_column, start_row)
+        
+                # Check horizontal moves
+                expect(moves).to include([1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0])
+        
+                # Check vertical moves
+                expect(moves).to include([0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7])
+            end
+        end
+
+        context 'when white rook is in the middle of the board' do
+            let(:start_column) { 3 }
+            let(:start_row) {3}
+
+            it 'returns valid horizontal and vertical moves' do
+                moves = white_rook.rook_movement(start_column, start_row)
+
+                # Check horizontal moves
+                expect(moves).to include([0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3])
+
+                # Check vertical moves
+                expect(moves).to include([3, 0], [3, 1], [3, 2], [3, 4], [3, 5], [3, 6], [3, 7])
+            end
+        end
+
+        context 'when white rook is at the edge of the board' do
+            let(:start_column) { 7 }
+            let(:start_row) { 7 }
+
+            it 'returns valid horizontal and vertical moves' do
+                moves = white_rook.rook_movement(start_column, start_row)
+        
+                # Check horizontal moves
+                expect(moves).to include([0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7])
+        
+                # Check vertical moves
+                expect(moves).to include([7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6])
             end
         end
     end
