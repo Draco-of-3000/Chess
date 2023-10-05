@@ -114,11 +114,11 @@ class ChessPiece
     
         # Regular forward move
         regular_move = [column, row + direction]
-        pawn_moves << regular_move if valid_move?(regular_move)
+        pawn_moves << regular_move if pawn_valid_move?(regular_move)
     
         # Double move on the first turn
         double_move = [column, row + 2 * direction]
-        pawn_moves << double_move if row == (color == :white ? 1 : 6) && valid_move?(double_move)
+        pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
     
         pawn_moves
     end
@@ -128,12 +128,12 @@ class ChessPiece
 
         # horizontal moves
         (0..7).each do |column|
-            moves << [column, start_row] unless  column == start_column
+            rook_moves << [column, start_row] unless  column == start_column
         end
 
         # vertical moves
         (0..7).each do |row|
-            moves << [start_column, row] unless  row == start_row
+            rook_moves << [start_column, row] unless  row == start_row
         end
 
         rook_moves
@@ -157,11 +157,11 @@ class ChessPiece
 
                 break unless new_column.between?(0, 7) && new_row.between?(0, 7)
 
-                moves << [new_column, new_row]
+                bishop_moves << [new_column, new_row]
             end
         end
 
-        moves
+        bishop_moves
     end
       
     def pawn_valid_move?(move)
@@ -169,5 +169,5 @@ class ChessPiece
     end
 end
 
-game = Chessboard.new
-game.display_board
+#game = Chessboard.new
+#game.display_board
