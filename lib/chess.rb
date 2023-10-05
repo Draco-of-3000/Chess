@@ -108,40 +108,22 @@ class ChessPiece
 
 
     def pawn_movement(column, row, color)
-        moves = []
+        pawn_moves = []
     
         direction = (color == :white) ? 1 : -1
     
         # Regular forward move
         regular_move = [column, row + direction]
-        moves << regular_move if valid_move?(regular_move)
+        pawn_moves << regular_move if valid_move?(regular_move)
     
         # Double move on the first turn
         double_move = [column, row + 2 * direction]
-        moves << double_move if row == (color == :white ? 1 : 6) && valid_move?(double_move)
+        pawn_moves << double_move if row == (color == :white ? 1 : 6) && valid_move?(double_move)
     
-        moves
-    end
-    
-    def en_passant_possible?(from_column, from_row, to_column, to_row, last_move)
-        # Check if the last move targeted the same column and adjacent row:
-        return false unless to_column == from_column && (to_row == from_row + 2 || to_row == from_row - 2)
-      
-        # Check if the last move was a double move
-        return false unless last_move && last_move[:to][1] == from_row
-      
-        # Check if there is an opponent's pawn next to the destination square on an adjacent file
-        opponent_pawn_position = (to_row == from_row + 2) ? [to_column, to_row - 1] : [to_column, to_row + 1]
-        destination = [to_column, to_row]
-      
-        # Check if the destination matches the position of the opponent's pawn
-        return false unless destination == opponent_pawn_position
-      
-        # En passant is possible
-        true
+        pawn_moves
     end
       
-    def valid_move?(move)
+    def pawn_valid_move?(move)
         move.all? { |coord| coord.between?(0, 7) }
     end
 end
