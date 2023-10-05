@@ -138,6 +138,31 @@ class ChessPiece
 
         rook_moves
     end
+
+    def bishop_movement(column, row)
+        bishop_moves = []
+
+        directions = [
+            [1, 1], [-1, 1], [1, -1], [-1, -1],
+            [1, 0], [-1, 0], [0, 1], [0, -1]
+        ]
+
+        directions.each do |direction|
+            column_change, row_change = direction
+            new_column, new_row = column, row
+
+            loop do
+                new_column += column_change
+                new_row += row_change
+
+                break unless new_column.between?(0, 7) && new_row.between?(0, 7)
+
+                moves << [new_column, new_row]
+            end
+        end
+
+        moves
+    end
       
     def pawn_valid_move?(move)
         move.all? { |coord| coord.between?(0, 7) }
