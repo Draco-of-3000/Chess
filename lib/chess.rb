@@ -123,6 +123,10 @@ class ChessPiece
         pawn_moves
     end
 
+    def pawn_valid_move?(move)
+        move.all? { |coord| coord.between?(0, 7) }
+    end
+
     def rook_movement(start_column, start_row)
         rook_moves = []
 
@@ -163,11 +167,29 @@ class ChessPiece
 
         bishop_moves
     end
-      
-    def pawn_valid_move?(move)
-        move.all? { |coord| coord.between?(0, 7) }
+    
+    def knight_movement
+        valid_knight_moves = [
+            [1, 2], [2, 1],
+            [-1, 2], [-2, 1],
+            [1, -2], [2, -1],
+            [-1, -2], [-2, -1]  
+        ]
+
+        knight_moves = []
+
+        valid_knight_moves.each do |move|
+            column_change, row_change = move
+            new_column, new_row = column + column_change, row + row_change
+
+            if new_column.between?(0, 7) && new_row.between?(0, 7)
+                knight_moves << [new_column, new_row]
+            end
+        end
+
+        knight_moves
     end
 end
 
-#game = Chessboard.new
-#game.display_board
+game = Chessboard.new
+game.display_board
