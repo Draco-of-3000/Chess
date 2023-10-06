@@ -34,6 +34,7 @@ describe ChessPiece do
     let(:black_pawn) { ChessPiece::BLACK_PAWN }
     let(:black_rook) { ChessPiece::BLACK_ROOK }
     let(:white_rook) { ChessPiece::WHITE_ROOK }
+    let(:white_bishop) { ChessPiece::WHITE_BISHOP }
     let(:chesspiece) { described_class.new }
 
     describe '#pawn_movement' do
@@ -130,6 +131,35 @@ describe ChessPiece do
         
                 # Check vertical moves
                 expect(moves).to include([7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6])
+            end
+        end
+    end
+
+    describe '#bishop_movement' do
+        context 'when bishop is in the center of the board' do
+            let(:start_column) { 4 }
+            let(:start_row) { 4 }
+
+            it 'returns valid diagonal moves' do
+                moves = white_bishop.bishop_movement(start_column, start_row)
+
+                # check diagonal moves
+                expect(moves).to include([5, 5], [6, 6], [7, 7])
+                expect(moves).to include([3, 3], [2, 2], [1, 1], [0, 0])
+                expect(moves).to include([5, 3], [6, 2], [7, 1])
+                expect(moves).to include([3, 5], [2, 6], [1, 7])
+            end
+        end
+
+        context 'when bishop is at the edge of the board' do
+            let(:start_column) { 7 }
+            let(:start_row) { 0 }
+            
+            it 'returns valid diagonal moves' do
+                moves = white_bishop.bishop_movement(start_column, start_row)
+
+                # Check diagonal moves
+                expect(moves).to include([6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7])
             end
         end
     end
