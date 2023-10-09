@@ -168,7 +168,7 @@ class ChessPiece
         bishop_moves
     end
     
-    def knight_movement
+    def knight_movement(column, row)
         valid_knight_moves = [
             [1, 2], [2, 1],
             [-1, 2], [-2, 1],
@@ -191,5 +191,5 @@ class ChessPiece
     end
 end
 
-game = Chessboard.new
-game.display_board
+#game = Chessboard.new
+#game.display_board
