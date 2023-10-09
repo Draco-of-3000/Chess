@@ -209,6 +209,15 @@ class ChessPiece
 
         king_moves
     end
+
+    def queen_movement(column, row)
+        queen_moves = []
+
+        rook_result = rook_movement(column, row)
+        bishop_result = bishop_movement(column, row)
+
+        queen_moves = rook_result | bishop_result
+    end
 end
 
 #game = Chessboard.new
