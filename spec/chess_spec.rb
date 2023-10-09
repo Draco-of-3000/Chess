@@ -240,4 +240,22 @@ describe ChessPiece do
             end
         end
     end
+
+    describe '#queen_movement' do
+        let(:column) { 3 }
+        let(:row) { 3 }
+
+        it 'returns valid queen moves combining rook and bishop movements' do
+            queen_moves = white_queen.queen_movement(column, row)
+
+            expected_moves = [
+                [0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3],  # Rook moves
+                [3, 0], [3, 1], [3, 2], [3, 4], [3, 5], [3, 6], [3, 7],  # Rook moves
+                [2, 2], [1, 1], [0, 0], [4, 4], [5, 5], [6, 6], [7, 7],  # Bishop moves
+                [4, 2], [5, 1], [6, 0], [2, 4], [1, 5], [0, 6],           # Bishop moves
+            ]
+
+            expect(queen_moves).to contain_exactly(*expected_moves)
+        end
+    end
 end
