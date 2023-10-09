@@ -35,6 +35,7 @@ describe ChessPiece do
     let(:black_rook) { ChessPiece::BLACK_ROOK }
     let(:white_rook) { ChessPiece::WHITE_ROOK }
     let(:white_bishop) { ChessPiece::WHITE_BISHOP }
+    let(:white_knight) { ChessPiece::WHITE_KNIGHT }
     let(:chesspiece) { described_class.new }
 
     describe '#pawn_movement' do
@@ -160,6 +161,32 @@ describe ChessPiece do
 
                 # Check diagonal moves
                 expect(moves).to include([6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7])
+            end
+        end
+    end
+
+    describe '#knight_movement' do
+        context ' when the night is in the middle of the board' do
+            it 'returns valid knight moves' do
+                moves = white_knight.knight_movement(3, 3) # Assuming the knight is in the middle
+
+                expect(moves).to contain_exactly([1, 2], [2, 1], [4, 1], [5, 2], [5, 4], [4, 5], [2, 5], [1, 4])
+            end
+        end
+
+        context 'when knight is at the edge of the board' do
+            it 'returns valid knight moves' do
+                moves = white_knight.knight_movement(0, 0) # Assuming the knight is at the top-left corner
+        
+                expect(moves).to contain_exactly([1, 2], [2, 1])
+            end
+        end
+        
+        context 'when knight is at a corner of the board' do
+            it 'returns valid knight moves' do
+                moves = white_knight.knight_movement(7, 7) # Assuming the knight is at the bottom-right corner
+        
+                expect(moves).to contain_exactly([5, 6], [6, 5])
             end
         end
     end
