@@ -189,6 +189,26 @@ class ChessPiece
 
         knight_moves
     end
+
+    def king_movement(column, row)
+        king_moves = []
+
+        directions = [
+            [1, 0], [-1, 0], [0, 1], [0, -1],
+            [1, 1], [-1, 1], [1, -1], [-1, -1]
+        ]
+
+        directions.each do |direction|
+            column_change, row_change = direction
+            new_column, new_row = column + column_change, row + row_change
+
+            if new_column.between?(0, 7) && new_row.between?(0, 7)
+                king_moves << [new_column, new_row]
+            end
+        end
+
+        king_moves
+    end
 end
 
 #game = Chessboard.new
