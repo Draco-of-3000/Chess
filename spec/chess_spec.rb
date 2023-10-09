@@ -36,6 +36,8 @@ describe ChessPiece do
     let(:white_rook) { ChessPiece::WHITE_ROOK }
     let(:white_bishop) { ChessPiece::WHITE_BISHOP }
     let(:white_knight) { ChessPiece::WHITE_KNIGHT }
+    let(:white_king) { ChessPiece::WHITE_KING }
+    let(:white_queen) { ChessPiece::WHITE_QUEEN }
     let(:chesspiece) { described_class.new }
 
     describe '#pawn_movement' do
@@ -187,6 +189,54 @@ describe ChessPiece do
                 moves = white_knight.knight_movement(7, 7) # Assuming the knight is at the bottom-right corner
         
                 expect(moves).to contain_exactly([5, 6], [6, 5])
+            end
+        end
+    end
+
+    describe '#king_movement' do
+        context 'when the king is at the center of the board' do
+            let(:column) { 4 }
+            let(:row) { 4 }
+
+            it 'returns valid king moves' do
+                moves = white_king.king_movement(column, row)
+
+                expected_moves = [
+                    [5, 4], [3, 4], [4, 5], [4, 3],
+                    [5, 5], [3, 3], [5, 3], [3, 5]
+                ]
+
+                expect(moves).to contain_exactly(*expected_moves)
+            end
+        end
+
+        context 'when king is at the corner of the board' do
+            let(:column) { 0 }
+            let(:row) { 0 }
+      
+            it 'returns valid king moves' do
+                moves = white_king.king_movement(column, row)
+      
+                expected_moves = [
+                    [1, 0], [0, 1], [1, 1]
+                ]
+      
+                expect(moves).to contain_exactly(*expected_moves)
+            end
+        end
+
+        context 'when king is at the left edge of the board' do
+            let(:column) { 0 }
+            let(:row) { 4 }
+      
+            it 'returns valid king moves' do
+                moves = white_king.king_movement(column, row)
+      
+                expected_moves = [
+                    [0, 5], [1, 5], [1, 4], [1, 3], [0, 3]
+                ]
+      
+                expect(moves).to contain_exactly(*expected_moves)
             end
         end
     end
