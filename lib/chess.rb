@@ -181,9 +181,9 @@ class Chessboard
     def display_board
         puts letters
         puts seperator
-        puts "8 |   #{@white_rook}   |   #{"\u2658"}   |   #{"\u2657"}   |   #{"\u2655"}   |   #{"\u2654"}   |   #{"\u2657"}   |   #{"\u2658"}   |   #{"\u2656"}   |"
+        puts "8 |   #{@black_rook.unicode}   |   #{@black_knight.unicode}   |   #{@black_bishop.unicode}   |   #{@black_queen.unicode}   |   #{@black_king.unicode}   |   #{@black_bishop.unicode}   |   #{@black_knight.unicode}   |   #{@black_rook.unicode}   |"
         puts seperator
-        puts "7 |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |"
+        puts "7 |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |"
         puts seperator
         puts "6 |   #{label_at(16)}  |   #{label_at(17)}  |   #{label_at(18)}  |   #{label_at(19)}  |   #{label_at(20)}  |   #{label_at(21)}  |   #{label_at(22)}  |   #{label_at(23)}  |"
         puts seperator
@@ -193,9 +193,9 @@ class Chessboard
         puts seperator
         puts "3 |   #{label_at(40)}  |   #{label_at(41)}  |   #{label_at(42)}  |   #{label_at(43)}  |   #{label_at(44)}  |   #{label_at(45)}  |   #{label_at(46)}  |   #{label_at(47)}  |"
         puts seperator
-        puts "2 |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |   #{"\u265F"}   |"
+        puts "2 |   #{@white_rook.unicode}   |   #{@white_knight.unicode}   |   #{@white_bishop.unicode}   |   #{@white_queen.unicode}   |   #{@white_king.unicode}   |   #{@white_bishop.unicode}   |   #{@white_knight.unicode}   |   #{@white_rook.unicode}   |"
         puts seperator
-        puts "1 |   #{"\u265C"}   |   #{"\u265E"}   |   #{"\u265D"}   |   #{"\u265B"}   |   #{"\u265A"}   |   #{"\u265D"}   |   #{"\u265E"}   |   #{"\u265C"}   |"
+        puts "1 |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |"
         puts seperator
         puts "\n"
     end
