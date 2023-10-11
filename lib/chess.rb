@@ -220,5 +220,18 @@ module ChessPiece
     end
 end
 
+class ChessGame
+    include ChessPiece
+
+    def initialize
+        @current_player = ''
+        @player_one_pieces_captured = 0
+        @player_one_pieces_remaining = 0
+        @player_two_pieces_captured = 0
+        @player_two_pieces_remaining = 0
+    end
+end
+
+
 #game = Chessboard.new
 #game.display_board
