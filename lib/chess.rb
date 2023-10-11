@@ -150,6 +150,19 @@ class Chessboard
 
     def initialize
         @board = Array.new(8) { Array.new(8, nil) }
+        @black_pawn = Piece::BLACK_PAWN
+        @black_knight = Piece::BLACK_KNIGHT
+        @black_bishop = Piece::BLACK_BISHOP
+        @black_rook = Piece::BLACK_ROOK
+        @black_king = Piece::BLACK_KING
+        @black_queen = Piece::BLACK_QUEEN
+
+        @white_pawn = Piece::WHITE_PAWN
+        @white_knight = Piece::WHITE_KNIGHT
+        @white_bishop = Piece::WHITE_BISHOP
+        @white_rook = Piece::WHITE_ROOK
+        @white_king = Piece::WHITE_KING
+        @white_queen = Piece::WHITE_QUEEN
     end
 
     def setup_board
