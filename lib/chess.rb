@@ -68,7 +68,7 @@ class Chessboard
     end
 end
 
-class ChessPiece
+module ChessPiece
     attr_reader :name, :unicode
 
     def initialize(name, unicode)
