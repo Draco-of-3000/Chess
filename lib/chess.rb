@@ -225,17 +225,29 @@ class ChessGame
     def initialize
         @current_player = ''
         @player_one_pieces_captured = 0
-        @player_one_pieces_remaining = 0
+        @player_one_pieces_remaining = 16
         @player_two_pieces_captured = 0
-        @player_two_pieces_remaining = 0
+        @player_two_pieces_remaining = 16
+        @black_pieces = [Piece::BLACK_PAWN, Piece::BLACK_KNIGHT, Piece::BLACK_BISHOP, Piece::BLACK_ROOK, Piece::BLACK_KING, Piece::BLACK_QUEEN]
+        @white_pieces = [Piece::WHITE_PAWN, Piece::WHITE_KNIGHT, Piece::WHITE_BISHOP, Piece::WHITE_ROOK, Piece::WHITE_KING, Piece::WHITE_QUEEN]
+        @player_one_pieces = @white_pieces
+        @player_two_pieces = @black_pieces
     end
 
     def pawn_capture
-        if @current_player.color == 'black' && moves.include?([destination_column, destination_row])
-            opponent_piece = white_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+        if @current_player == player_one && moves.include?([destination_column, destination_row])
+            opponent_piece = @black_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
 
             if opponent_piece
-                white_pieces.delete(opponent_piece)
+                @black_pieces.delete(opponent_piece)
+                puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
+            end
+        elsif @current_player == player_one && moves.include?([destination_column, destination_row])
+            opponent_piece = @black_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+
+            if opponent_piece
+                @black_pieces.delete(opponent_piece)
+                puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
             end
         end
     end
