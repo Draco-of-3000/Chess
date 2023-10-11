@@ -230,6 +230,17 @@ class ChessGame
         @player_two_pieces_captured = 0
         @player_two_pieces_remaining = 0
     end
+
+    def pawn_capture
+        if @current_player.color == 'black' && moves.include?([destination_column, destination_row])
+            opponent_piece = white_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+
+            if opponent_piece
+                white_pieces.delete(opponent_piece)
+            end
+        end
+    end
+
 end
 
 
