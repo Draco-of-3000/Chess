@@ -8,43 +8,28 @@ class Player
 end
 
 module ChessPiece
-    attr_reader :name, :unicode
+    class Piece
+        attr_reader :name, :unicode
 
-    def initialize(name, unicode)
-        @name = name
-        @unicode = unicode
+        def initialize(name, unicode)
+            @name = name
+            @unicode = unicode
+        end
+
+        BLACK_PAWN = Piece.new("Black Pawn", "\u265F")
+        BLACK_KNIGHT = Piece.new("Black Knight", "\u265E")
+        BLACK_BISHOP = Piece.new("Black Bishop", "\u265D")
+        BLACK_ROOK = Piece.new("Black Rook", "\u265C")
+        BLACK_KING = Piece.new("Black King", "\u265A")
+        BLACK_QUEEN = Piece.new("Black Queen", "\u265B")
+
+        WHITE_PAWN = Piece.new("White Pawn", "\u2659")
+        WHITE_KNIGHT = Piece.new("White Knight", "\u2658")
+        WHITE_BISHOP = Piece.new("White Bishop", "\u2657")
+        WHITE_ROOK = Piece.new("White Rook", "\u2656")
+        WHITE_QUEEN = Piece.new("White Queen", "\u2655")
+        WHITE_KING = Piece.new("White King", "\u2654")
     end
-
-    
-    BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
-    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E")
-    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D")
-    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C")
-    BLACK_KING = ChessPiece.new("Black King", "\u265A")
-    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B")
-
-    WHITE_PAWN = ChessPiece.new("White Pawn", "\u2659")
-    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658")
-    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657")
-    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656")
-    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655")
-    WHITE_KING = ChessPiece.new("White King", "\u2654")
-
-
-    black_pawn = ChessPiece::BLACK_PAWN
-    black_knight = ChessPiece::BLACK_KNIGHT
-    black_bishop = ChessPiece::BLACK_BISHOP
-    black_rook = ChessPiece::BLACK_ROOK
-    black_king = ChessPiece::BLACK_KING
-    black_queen = ChessPiece::BLACK_QUEEN
-
-    white_pawn = ChessPiece::WHITE_PAWN
-    white_knight = ChessPiece::WHITE_KNIGHT
-    white_bishop = ChessPiece::WHITE_BISHOP
-    white_rook = ChessPiece::WHITE_ROOK
-    white_king = ChessPiece::WHITE_KING
-    white_queen = ChessPiece::WHITE_QUEEN
-
 
     def pawn_movement(column, row, color)
         pawn_moves = []
@@ -160,6 +145,7 @@ module ChessPiece
 end
 
 class Chessboard
+    include ChessPiece
     attr_reader :board
 
     def initialize
@@ -182,7 +168,7 @@ class Chessboard
     def display_board
         puts letters
         puts seperator
-        puts "8 |   #{"\u2656"}   |   #{"\u2658"}   |   #{"\u2657"}   |   #{"\u2655"}   |   #{"\u2654"}   |   #{"\u2657"}   |   #{"\u2658"}   |   #{"\u2656"}   |"
+        puts "8 |   #{@white_rook}   |   #{"\u2658"}   |   #{"\u2657"}   |   #{"\u2655"}   |   #{"\u2654"}   |   #{"\u2657"}   |   #{"\u2658"}   |   #{"\u2656"}   |"
         puts seperator
         puts "7 |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |   #{"\u2659"}   |"
         puts seperator
