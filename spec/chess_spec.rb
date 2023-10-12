@@ -30,15 +30,14 @@ describe Chessboard do
 end
 
 describe ChessPiece do
-    let(:white_pawn) { ChessPiece::WHITE_PAWN }
-    let(:black_pawn) { ChessPiece::BLACK_PAWN }
-    let(:black_rook) { ChessPiece::BLACK_ROOK }
-    let(:white_rook) { ChessPiece::WHITE_ROOK }
-    let(:white_bishop) { ChessPiece::WHITE_BISHOP }
-    let(:white_knight) { ChessPiece::WHITE_KNIGHT }
-    let(:white_king) { ChessPiece::WHITE_KING }
-    let(:white_queen) { ChessPiece::WHITE_QUEEN }
-    let(:chesspiece) { described_class.new }
+    let(:white_pawn) { ChessPiece::Piece::WHITE_PAWN }
+    let(:black_pawn) { ChessPiece::Piece::BLACK_PAWN }
+    let(:black_rook) { ChessPiece::Piece::BLACK_ROOK }
+    let(:white_rook) { ChessPiece::Piece::WHITE_ROOK }
+    let(:white_bishop) { ChessPiece::Piece::WHITE_BISHOP }
+    let(:white_knight) { ChessPiece::Piece::WHITE_KNIGHT }
+    let(:white_king) { ChessPiece::Piece::WHITE_KING }
+    let(:white_queen) { ChessPiece::Piece::WHITE_QUEEN }
 
     describe '#pawn_movement' do
         context 'when the pawn is white' do
