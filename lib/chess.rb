@@ -29,118 +29,118 @@ module ChessPiece
         WHITE_ROOK = Piece.new("White Rook", "\u2656")
         WHITE_QUEEN = Piece.new("White Queen", "\u2655")
         WHITE_KING = Piece.new("White King", "\u2654")
-    end
 
-    def pawn_movement(column, row, color)
-        pawn_moves = []
-    
-        direction = (color == :white) ? 1 : -1
-    
-        # Regular forward move
-        regular_move = [column, row + direction]
-        pawn_moves << regular_move if pawn_valid_move?(regular_move)
-    
-        # Double move on the first turn
-        double_move = [column, row + 2 * direction]
-        pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
-    
-        pawn_moves
-    end
-
-    def pawn_valid_move?(move)
-        move.all? { |coord| coord.between?(0, 7) }
-    end
-
-    def rook_movement(start_column, start_row)
-        rook_moves = []
-
-        # horizontal moves
-        (0..7).each do |column|
-            rook_moves << [column, start_row] unless  column == start_column
+        def pawn_movement(column, row, color)
+            pawn_moves = []
+        
+            direction = (color == :white) ? 1 : -1
+        
+            # Regular forward move
+            regular_move = [column, row + direction]
+            pawn_moves << regular_move if pawn_valid_move?(regular_move)
+        
+            # Double move on the first turn
+            double_move = [column, row + 2 * direction]
+            pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
+        
+            pawn_moves
         end
-
-        # vertical moves
-        (0..7).each do |row|
-            rook_moves << [start_column, row] unless  row == start_row
+    
+        def pawn_valid_move?(move)
+            move.all? { |coord| coord.between?(0, 7) }
         end
-
-        rook_moves
-    end
-
-    def bishop_movement(column, row)
-        bishop_moves = []
-
-        directions = [
-            [1, 1], [-1, 1], [1, -1], [-1, -1],
-            [1, 0], [-1, 0], [0, 1], [0, -1]
-        ]
-
-        directions.each do |direction|
-            column_change, row_change = direction
-            new_column, new_row = column, row
-
-            loop do
-                new_column += column_change
-                new_row += row_change
-
-                break unless new_column.between?(0, 7) && new_row.between?(0, 7)
-
-                bishop_moves << [new_column, new_row]
+    
+        def rook_movement(start_column, start_row)
+            rook_moves = []
+    
+            # horizontal moves
+            (0..7).each do |column|
+                rook_moves << [column, start_row] unless  column == start_column
             end
-        end
-
-        bishop_moves
-    end
     
-    def knight_movement(column, row)
-        valid_knight_moves = [
-            [1, 2], [2, 1],
-            [-1, 2], [-2, 1],
-            [1, -2], [2, -1],
-            [-1, -2], [-2, -1]  
-        ]
-
-        knight_moves = []
-
-        valid_knight_moves.each do |move|
-            column_change, row_change = move
-            new_column, new_row = column + column_change, row + row_change
-
-            if new_column.between?(0, 7) && new_row.between?(0, 7)
-                knight_moves << [new_column, new_row]
+            # vertical moves
+            (0..7).each do |row|
+                rook_moves << [start_column, row] unless  row == start_row
             end
+    
+            rook_moves
         end
-
-        knight_moves
-    end
-
-    def king_movement(column, row)
-        king_moves = []
-
-        directions = [
-            [1, 0], [-1, 0], [0, 1], [0, -1],
-            [1, 1], [-1, 1], [1, -1], [-1, -1]
-        ]
-
-        directions.each do |direction|
-            column_change, row_change = direction
-            new_column, new_row = column + column_change, row + row_change
-
-            if new_column.between?(0, 7) && new_row.between?(0, 7)
-                king_moves << [new_column, new_row]
+    
+        def bishop_movement(column, row)
+            bishop_moves = []
+    
+            directions = [
+                [1, 1], [-1, 1], [1, -1], [-1, -1],
+                [1, 0], [-1, 0], [0, 1], [0, -1]
+            ]
+    
+            directions.each do |direction|
+                column_change, row_change = direction
+                new_column, new_row = column, row
+    
+                loop do
+                    new_column += column_change
+                    new_row += row_change
+    
+                    break unless new_column.between?(0, 7) && new_row.between?(0, 7)
+    
+                    bishop_moves << [new_column, new_row]
+                end
             end
+    
+            bishop_moves
         end
-
-        king_moves
-    end
-
-    def queen_movement(column, row)
-        queen_moves = []
-
-        rook_result = rook_movement(column, row)
-        bishop_result = bishop_movement(column, row)
-
-        queen_moves = rook_result | bishop_result
+        
+        def knight_movement(column, row)
+            valid_knight_moves = [
+                [1, 2], [2, 1],
+                [-1, 2], [-2, 1],
+                [1, -2], [2, -1],
+                [-1, -2], [-2, -1]  
+            ]
+    
+            knight_moves = []
+    
+            valid_knight_moves.each do |move|
+                column_change, row_change = move
+                new_column, new_row = column + column_change, row + row_change
+    
+                if new_column.between?(0, 7) && new_row.between?(0, 7)
+                    knight_moves << [new_column, new_row]
+                end
+            end
+    
+            knight_moves
+        end
+    
+        def king_movement(column, row)
+            king_moves = []
+    
+            directions = [
+                [1, 0], [-1, 0], [0, 1], [0, -1],
+                [1, 1], [-1, 1], [1, -1], [-1, -1]
+            ]
+    
+            directions.each do |direction|
+                column_change, row_change = direction
+                new_column, new_row = column + column_change, row + row_change
+    
+                if new_column.between?(0, 7) && new_row.between?(0, 7)
+                    king_moves << [new_column, new_row]
+                end
+            end
+    
+            king_moves
+        end
+    
+        def queen_movement(column, row)
+            queen_moves = []
+    
+            rook_result = rook_movement(column, row)
+            bishop_result = bishop_movement(column, row)
+    
+            queen_moves = rook_result | bishop_result
+        end
     end
 end
 
@@ -234,7 +234,7 @@ class ChessGame
         @player_two_pieces = @black_pieces
     end
 
-    def pawn_capture
+    def pawn_capture(destination_column, destination_row)
         if @current_player == player_one && moves.include?([destination_column, destination_row])
             opponent_piece = @black_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
 
@@ -242,11 +242,11 @@ class ChessGame
                 @black_pieces.delete(opponent_piece)
                 puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
             end
-        elsif @current_player == player_one && moves.include?([destination_column, destination_row])
-            opponent_piece = @black_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+        elsif @current_player == player_two && moves.include?([destination_column, destination_row])
+            opponent_piece = @white_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
 
             if opponent_piece
-                @black_pieces.delete(opponent_piece)
+                @white_pieces.delete(opponent_piece)
                 puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
             end
         end
