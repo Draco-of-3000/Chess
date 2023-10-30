@@ -236,7 +236,7 @@ class ChessGame
     end
 
     def pawn_capture(column, row, destination_column, destination_row)
-        moves = pawn_movement(column, row, @current_player)
+        moves = pawn_movement(column, row)
       
         if moves.include?([destination_column, destination_row])
             opponent_pieces = @current_player == player_one ? @black_pieces : @white_pieces
