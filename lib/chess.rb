@@ -234,21 +234,17 @@ class ChessGame
         @player_two_pieces = @black_pieces
     end
 
-    def pawn_capture(destination_column, destination_row)
-        if @current_player == player_one && moves.include?([destination_column, destination_row])
-            opponent_piece = @black_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
-
+    def pawn_capture(column, row, destination_column, destination_row)
+        moves = pawn_movement(column, row, @current_player)
+      
+        if moves.include?([destination_column, destination_row])
+            opponent_pieces = @current_player == player_one ? @black_pieces : @white_pieces
+            opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+            
             if opponent_piece
-                @black_pieces.delete(opponent_piece)
-                puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
-            end
-        elsif @current_player == player_two && moves.include?([destination_column, destination_row])
-            opponent_piece = @white_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
-
-            if opponent_piece
-                @white_pieces.delete(opponent_piece)
-                puts "#{player_one.name}'s pawn captured #{player_one.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
-            end
+                opponent_pieces.delete(opponent_piece)
+                puts "#{current_player.name}'s pawn captured #{current_player.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
+          end
         end
     end
 
