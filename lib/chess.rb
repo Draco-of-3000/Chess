@@ -30,19 +30,20 @@ module ChessPiece
         WHITE_QUEEN = Piece.new("White Queen", "\u2655")
         WHITE_KING = Piece.new("White King", "\u2654")
 
-        def pawn_movement(column, row, color)
+        def pawn_movement(column, row)
             pawn_moves = []
-        
-            direction = (color == :white) ? 1 : -1
-        
+          
+            current_player = @current_player
+            direction = (current_player == player_one) ? 1 : -1
+          
             # Regular forward move
             regular_move = [column, row + direction]
             pawn_moves << regular_move if pawn_valid_move?(regular_move)
-        
+          
             # Double move on the first turn
             double_move = [column, row + 2 * direction]
-            pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
-        
+            pawn_moves << double_move if row == (current_player == player_one ? 1 : 6) && pawn_valid_move?(double_move)
+          
             pawn_moves
         end
     
