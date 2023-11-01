@@ -29,47 +29,48 @@ describe Chessboard do
     end
 end
 
-describe ChessPiece do
-    let(:white_pawn) { ChessPiece::Piece::WHITE_PAWN }
-    let(:black_pawn) { ChessPiece::Piece::BLACK_PAWN }
-    let(:black_rook) { ChessPiece::Piece::BLACK_ROOK }
-    let(:white_rook) { ChessPiece::Piece::WHITE_ROOK }
-    let(:white_bishop) { ChessPiece::Piece::WHITE_BISHOP }
-    let(:white_knight) { ChessPiece::Piece::WHITE_KNIGHT }
-    let(:white_king) { ChessPiece::Piece::WHITE_KING }
-    let(:white_queen) { ChessPiece::Piece::WHITE_QUEEN }
+describe ChessGame do
+    let(:white_pawn) { ChessPiece::WHITE_PAWN }
+    let(:black_pawn) { ChessPiece::BLACK_PAWN }
+    let(:black_rook) { ChessPiece::BLACK_ROOK }
+    let(:white_rook) { ChessPiece::WHITE_ROOK }
+    let(:white_bishop) { ChessPiece::WHITE_BISHOP }
+    let(:white_knight) { ChessPiece::WHITE_KNIGHT }
+    let(:white_king) { ChessPiece::WHITE_KING }
+    let(:white_queen) { ChessPiece::WHITE_QUEEN }
+    let(:game) {described_class.new}
 
     describe '#pawn_movement' do
         context 'when the pawn is white' do
             it 'returns valid moves for a regular forward move' do
-                moves = white_pawn.pawn_movement(3, 2, :white)
+                moves = game.pawn_movement(3, 2, :white)
                 expect(moves).to contain_exactly([3, 3])
             end
 
             it 'returns valid moves for a double move on the first turn' do
-                moves = white_pawn.pawn_movement(3, 1, :white)
+                moves = game.pawn_movement(3, 1, :white)
                 expect(moves).to contain_exactly([3, 2], [3, 3]) # Assuming (3, 2) and (3, 3) are valid moves
             end
 
             it 'filters out invalid moves' do
-                moves = white_pawn.pawn_movement(7, 7, :white)
+                moves = game.pawn_movement(7, 7, :white)
                 expect(moves).to be_empty # Assuming (7, 8) is an invalid move
             end
         end
 
         context 'when the pawn is black' do
             it 'returns valid moves for a regular forward move' do
-                moves = black_pawn.pawn_movement(3, 5, :black)
+                moves = game.pawn_movement(3, 5, :black)
                 expect(moves).to contain_exactly([3, 4])
             end
 
             it 'returns valid moves for a double move on the first turn' do
-                moves = black_pawn.pawn_movement(3, 6, :black)
+                moves = game.pawn_movement(3, 6, :black)
                 expect(moves).to contain_exactly([3, 5], [3, 4])
             end
 
             it 'filters out invalid moves' do
-                moves = black_pawn.pawn_movement(0, 0, :black)
+                moves = game.pawn_movement(0, 0, :black)
                 expect(moves).to be_empty 
             end
         end
@@ -81,7 +82,7 @@ describe ChessPiece do
             let(:start_row) {3}
 
             it 'returns valid horizontal and vertical moves' do
-                moves = black_rook.rook_movement(start_column, start_row)
+                moves = game.rook_movement(start_column, start_row)
 
                 # Check horizontal moves
                 expect(moves).to include([0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3])
@@ -96,7 +97,7 @@ describe ChessPiece do
             let(:start_row) { 0 }
 
             it 'returns valid horizontal and vertical moves' do
-                moves = black_rook.rook_movement(start_column, start_row)
+                moves = game.rook_movement(start_column, start_row)
         
                 # Check horizontal moves
                 expect(moves).to include([1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0])
@@ -111,7 +112,7 @@ describe ChessPiece do
             let(:start_row) {3}
 
             it 'returns valid horizontal and vertical moves' do
-                moves = white_rook.rook_movement(start_column, start_row)
+                moves = game.rook_movement(start_column, start_row)
 
                 # Check horizontal moves
                 expect(moves).to include([0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3])
@@ -126,7 +127,7 @@ describe ChessPiece do
             let(:start_row) { 7 }
 
             it 'returns valid horizontal and vertical moves' do
-                moves = white_rook.rook_movement(start_column, start_row)
+                moves = game.rook_movement(start_column, start_row)
         
                 # Check horizontal moves
                 expect(moves).to include([0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7])
@@ -143,7 +144,7 @@ describe ChessPiece do
             let(:start_row) { 4 }
 
             it 'returns valid diagonal moves' do
-                moves = white_bishop.bishop_movement(start_column, start_row)
+                moves = game.bishop_movement(start_column, start_row)
 
                 # check diagonal moves
                 expect(moves).to include([5, 5], [6, 6], [7, 7])
@@ -158,7 +159,7 @@ describe ChessPiece do
             let(:start_row) { 0 }
             
             it 'returns valid diagonal moves' do
-                moves = white_bishop.bishop_movement(start_column, start_row)
+                moves = game.bishop_movement(start_column, start_row)
 
                 # Check diagonal moves
                 expect(moves).to include([6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7])
@@ -167,9 +168,9 @@ describe ChessPiece do
     end
 
     describe '#knight_movement' do
-        context ' when the night is in the middle of the board' do
+        context ' when the knight is in the middle of the board' do
             it 'returns valid knight moves' do
-                moves = white_knight.knight_movement(3, 3) # Assuming the knight is in the middle
+                moves = game.knight_movement(3, 3) # Assuming the knight is in the middle
 
                 expect(moves).to contain_exactly([1, 2], [2, 1], [4, 1], [5, 2], [5, 4], [4, 5], [2, 5], [1, 4])
             end
@@ -177,7 +178,7 @@ describe ChessPiece do
 
         context 'when knight is at the edge of the board' do
             it 'returns valid knight moves' do
-                moves = white_knight.knight_movement(0, 0) # Assuming the knight is at the top-left corner
+                moves = game.knight_movement(0, 0) # Assuming the knight is at the top-left corner
         
                 expect(moves).to contain_exactly([1, 2], [2, 1])
             end
@@ -185,7 +186,7 @@ describe ChessPiece do
         
         context 'when knight is at a corner of the board' do
             it 'returns valid knight moves' do
-                moves = white_knight.knight_movement(7, 7) # Assuming the knight is at the bottom-right corner
+                moves = game.knight_movement(7, 7) # Assuming the knight is at the bottom-right corner
         
                 expect(moves).to contain_exactly([5, 6], [6, 5])
             end
@@ -198,7 +199,7 @@ describe ChessPiece do
             let(:row) { 4 }
 
             it 'returns valid king moves' do
-                moves = white_king.king_movement(column, row)
+                moves = game.king_movement(column, row)
 
                 expected_moves = [
                     [5, 4], [3, 4], [4, 5], [4, 3],
@@ -214,7 +215,7 @@ describe ChessPiece do
             let(:row) { 0 }
       
             it 'returns valid king moves' do
-                moves = white_king.king_movement(column, row)
+                moves = game.king_movement(column, row)
       
                 expected_moves = [
                     [1, 0], [0, 1], [1, 1]
@@ -229,7 +230,7 @@ describe ChessPiece do
             let(:row) { 4 }
       
             it 'returns valid king moves' do
-                moves = white_king.king_movement(column, row)
+                moves = game.king_movement(column, row)
       
                 expected_moves = [
                     [0, 5], [1, 5], [1, 4], [1, 3], [0, 3]
@@ -245,7 +246,7 @@ describe ChessPiece do
         let(:row) { 3 }
 
         it 'returns valid queen moves combining rook and bishop movements' do
-            queen_moves = white_queen.queen_movement(column, row)
+            queen_moves = game.queen_movement(column, row)
 
             expected_moves = [
                 [0, 3], [1, 3], [2, 3], [4, 3], [5, 3], [6, 3], [7, 3],  # Rook moves
@@ -258,3 +259,23 @@ describe ChessPiece do
         end
     end
 end
+
+#describe ChessGame do
+    #let(:player_one) { Player.new("Player1", "white") }
+    #let(:player_two) { Player.new("Player2", "black") }
+    #subject(:game) { described_class.new }
+
+    #describe '#pawn_capture' do
+        #context "when player one moves to a valid destination occupied by player two's piece" do
+           # it "should capture player two's piece" do
+                #game.instance_variable_set(:@current_player, 'player_one')
+               # game.instance_variable_set(:@black_pieces, [ChessPiece::Piece::BLACK_PAWN,  ChessPiece::Piece::BLACK_KNIGHT])
+                #game.instance_variable_set(:@white_pieces, [ChessPiece::Piece::WHITE_PAWN,  ChessPiece::Piece::WHITE_KNIGHT])
+
+                #game.pawn_capture(1, 2, 1, 4, @current_player)
+    
+                #expect(@black_pieces.length).to eq(@black_pieces.length - 1)
+            #end
+        #end
+    #end
+#end
