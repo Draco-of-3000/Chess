@@ -7,163 +7,47 @@ class Player
     end
 end
 
-module ChessPiece
-    class Piece
-        attr_reader :name, :unicode
+class ChessPiece
+    attr_reader :name, :unicode
 
-        def initialize(name, unicode)
-            @name = name
-            @unicode = unicode
-        end
-
-        BLACK_PAWN = Piece.new("Black Pawn", "\u265F")
-        BLACK_KNIGHT = Piece.new("Black Knight", "\u265E")
-        BLACK_BISHOP = Piece.new("Black Bishop", "\u265D")
-        BLACK_ROOK = Piece.new("Black Rook", "\u265C")
-        BLACK_KING = Piece.new("Black King", "\u265A")
-        BLACK_QUEEN = Piece.new("Black Queen", "\u265B")
-
-        WHITE_PAWN = Piece.new("White Pawn", "\u2659")
-        WHITE_KNIGHT = Piece.new("White Knight", "\u2658")
-        WHITE_BISHOP = Piece.new("White Bishop", "\u2657")
-        WHITE_ROOK = Piece.new("White Rook", "\u2656")
-        WHITE_QUEEN = Piece.new("White Queen", "\u2655")
-        WHITE_KING = Piece.new("White King", "\u2654")
-
-        def pawn_movement(column, row)
-            pawn_moves = []
-          
-            current_player = @current_player
-            direction = (current_player == player_one) ? 1 : -1
-          
-            # Regular forward move
-            regular_move = [column, row + direction]
-            pawn_moves << regular_move if pawn_valid_move?(regular_move)
-          
-            # Double move on the first turn
-            double_move = [column, row + 2 * direction]
-            pawn_moves << double_move if row == (current_player == player_one ? 1 : 6) && pawn_valid_move?(double_move)
-          
-            pawn_moves
-        end
-    
-        def pawn_valid_move?(move)
-            move.all? { |coord| coord.between?(0, 7) }
-        end
-    
-        def rook_movement(start_column, start_row)
-            rook_moves = []
-    
-            # horizontal moves
-            (0..7).each do |column|
-                rook_moves << [column, start_row] unless  column == start_column
-            end
-    
-            # vertical moves
-            (0..7).each do |row|
-                rook_moves << [start_column, row] unless  row == start_row
-            end
-    
-            rook_moves
-        end
-    
-        def bishop_movement(column, row)
-            bishop_moves = []
-    
-            directions = [
-                [1, 1], [-1, 1], [1, -1], [-1, -1],
-                [1, 0], [-1, 0], [0, 1], [0, -1]
-            ]
-    
-            directions.each do |direction|
-                column_change, row_change = direction
-                new_column, new_row = column, row
-    
-                loop do
-                    new_column += column_change
-                    new_row += row_change
-    
-                    break unless new_column.between?(0, 7) && new_row.between?(0, 7)
-    
-                    bishop_moves << [new_column, new_row]
-                end
-            end
-    
-            bishop_moves
-        end
-        
-        def knight_movement(column, row)
-            valid_knight_moves = [
-                [1, 2], [2, 1],
-                [-1, 2], [-2, 1],
-                [1, -2], [2, -1],
-                [-1, -2], [-2, -1]  
-            ]
-    
-            knight_moves = []
-    
-            valid_knight_moves.each do |move|
-                column_change, row_change = move
-                new_column, new_row = column + column_change, row + row_change
-    
-                if new_column.between?(0, 7) && new_row.between?(0, 7)
-                    knight_moves << [new_column, new_row]
-                end
-            end
-    
-            knight_moves
-        end
-    
-        def king_movement(column, row)
-            king_moves = []
-    
-            directions = [
-                [1, 0], [-1, 0], [0, 1], [0, -1],
-                [1, 1], [-1, 1], [1, -1], [-1, -1]
-            ]
-    
-            directions.each do |direction|
-                column_change, row_change = direction
-                new_column, new_row = column + column_change, row + row_change
-    
-                if new_column.between?(0, 7) && new_row.between?(0, 7)
-                    king_moves << [new_column, new_row]
-                end
-            end
-    
-            king_moves
-        end
-    
-        def queen_movement(column, row)
-            queen_moves = []
-    
-            rook_result = rook_movement(column, row)
-            bishop_result = bishop_movement(column, row)
-    
-            queen_moves = rook_result | bishop_result
-        end
+    def initialize(name, unicode)
+        @name = name
+        @unicode = unicode
     end
+
+    BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
+    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E")
+    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D")
+    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C")
+    BLACK_KING = ChessPiece.new("Black King", "\u265A")
+    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B")
+
+    WHITE_PAWN = ChessPiece.new("White Pawn", "\u2659")
+    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658")
+    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657")
+    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656")
+    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655")
+    WHITE_KING = ChessPiece.new("White King", "\u2654")
 end
 
-class Chessboard
-    include ChessPiece
+class Chessboard < ChessPiece
     attr_reader :board
 
     def initialize
         @board = Array.new(8) { Array.new(8, nil) }
-        @black_pawn = Piece::BLACK_PAWN
-        @black_knight = Piece::BLACK_KNIGHT
-        @black_bishop = Piece::BLACK_BISHOP
-        @black_rook = Piece::BLACK_ROOK
-        @black_king = Piece::BLACK_KING
-        @black_queen = Piece::BLACK_QUEEN
+        @black_pawn = ChessPiece::BLACK_PAWN
+        @black_knight = ChessPiece::BLACK_KNIGHT
+        @black_bishop = ChessPiece::BLACK_BISHOP
+        @black_rook = ChessPiece::BLACK_ROOK
+        @black_king = ChessPiece::BLACK_KING
+        @black_queen = ChessPiece::BLACK_QUEEN
 
-        @white_pawn = Piece::WHITE_PAWN
-        @white_knight = Piece::WHITE_KNIGHT
-        @white_bishop = Piece::WHITE_BISHOP
-        @white_rook = Piece::WHITE_ROOK
-        @white_king = Piece::WHITE_KING
-        @white_queen = Piece::WHITE_QUEEN
+        @white_pawn = ChessPiece::WHITE_PAWN
+        @white_knight = ChessPiece::WHITE_KNIGHT
+        @white_bishop = ChessPiece::WHITE_BISHOP
+        @white_rook = ChessPiece::WHITE_ROOK
+        @white_king = ChessPiece::WHITE_KING
+        @white_queen = ChessPiece::WHITE_QUEEN
     end
 
     def setup_board
@@ -220,8 +104,7 @@ class Chessboard
     end
 end
 
-class ChessGame
-    include ChessPiece
+class ChessGame < ChessPiece
 
     def initialize
         @current_player = ''
@@ -229,14 +112,128 @@ class ChessGame
         @player_one_pieces_remaining = 16
         @player_two_pieces_captured = 0
         @player_two_pieces_remaining = 16
-        @black_pieces = [Piece::BLACK_PAWN, Piece::BLACK_KNIGHT, Piece::BLACK_BISHOP, Piece::BLACK_ROOK, Piece::BLACK_KING, Piece::BLACK_QUEEN]
-        @white_pieces = [Piece::WHITE_PAWN, Piece::WHITE_KNIGHT, Piece::WHITE_BISHOP, Piece::WHITE_ROOK, Piece::WHITE_KING, Piece::WHITE_QUEEN]
+        @black_pieces = [ChessPiece::BLACK_PAWN, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        @white_pieces = [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         @player_one_pieces = @white_pieces
         @player_two_pieces = @black_pieces
+        @player_one_pieces = ''
+        @player_two_pieces = ''
     end
 
-    def pawn_capture(column, row, destination_column, destination_row)
-        moves = pawn_movement(column, row)
+    def pawn_movement(column, row, color)
+        pawn_moves = []
+    
+        direction = (color == :white) ? 1 : -1
+    
+        # Regular forward move
+        regular_move = [column, row + direction]
+        pawn_moves << regular_move if pawn_valid_move?(regular_move)
+    
+        # Double move on the first turn
+        double_move = [column, row + 2 * direction]
+        pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
+    
+        pawn_moves
+    end
+
+    def pawn_valid_move?(move)
+        move.all? { |coord| coord.between?(0, 7) }
+    end
+
+    def rook_movement(start_column, start_row)
+        rook_moves = []
+
+        # horizontal moves
+        (0..7).each do |column|
+            rook_moves << [column, start_row] unless  column == start_column
+        end
+
+        # vertical moves
+        (0..7).each do |row|
+            rook_moves << [start_column, row] unless  row == start_row
+        end
+
+        rook_moves
+    end
+
+    def bishop_movement(column, row)
+        bishop_moves = []
+
+        directions = [
+            [1, 1], [-1, 1], [1, -1], [-1, -1],
+            [1, 0], [-1, 0], [0, 1], [0, -1]
+        ]
+
+        directions.each do |direction|
+            column_change, row_change = direction
+            new_column, new_row = column, row
+
+            loop do
+                new_column += column_change
+                new_row += row_change
+
+                break unless new_column.between?(0, 7) && new_row.between?(0, 7)
+
+                bishop_moves << [new_column, new_row]
+            end
+        end
+
+        bishop_moves
+    end
+    
+    def knight_movement(column, row)
+        valid_knight_moves = [
+            [1, 2], [2, 1],
+            [-1, 2], [-2, 1],
+            [1, -2], [2, -1],
+            [-1, -2], [-2, -1]  
+        ]
+
+        knight_moves = []
+
+        valid_knight_moves.each do |move|
+            column_change, row_change = move
+            new_column, new_row = column + column_change, row + row_change
+
+            if new_column.between?(0, 7) && new_row.between?(0, 7)
+                knight_moves << [new_column, new_row]
+            end
+        end
+
+        knight_moves
+    end
+
+    def king_movement(column, row)
+        king_moves = []
+
+        directions = [
+            [1, 0], [-1, 0], [0, 1], [0, -1],
+            [1, 1], [-1, 1], [1, -1], [-1, -1]
+        ]
+
+        directions.each do |direction|
+            column_change, row_change = direction
+            new_column, new_row = column + column_change, row + row_change
+
+            if new_column.between?(0, 7) && new_row.between?(0, 7)
+                king_moves << [new_column, new_row]
+            end
+        end
+
+        king_moves
+    end
+
+    def queen_movement(column, row)
+        queen_moves = []
+
+        rook_result = rook_movement(column, row)
+        bishop_result = bishop_movement(column, row)
+
+        queen_moves = rook_result | bishop_result
+    end
+
+    def pawn_capture(column, row, destination_column, destination_row, color)
+        moves = pawn_movement(column, row, color)
       
         if moves.include?([destination_column, destination_row])
             opponent_pieces = @current_player == player_one ? @black_pieces : @white_pieces
@@ -245,12 +242,11 @@ class ChessGame
             if opponent_piece
                 opponent_pieces.delete(opponent_piece)
                 puts "#{current_player.name}'s pawn captured #{current_player.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
-          end
+            end
         end
     end
-
 end
 
 
-game = Chessboard.new
-game.display_board
+#game = Chessboard.new
+#game.display_board
