@@ -8,11 +8,13 @@ class Player
 end
 
 class ChessPiece
-    attr_reader :name, :unicode
+    attr_reader :name, :unicode, :column, :row
 
     def initialize(name, unicode)
         @name = name
         @unicode = unicode
+        @column = column
+        @row = row
     end
 
     BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
@@ -114,10 +116,12 @@ class ChessGame < ChessPiece
         @player_two_pieces_remaining = 16
         @black_pieces = [ChessPiece::BLACK_PAWN, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
         @white_pieces = [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
+        @player_one = ''
+        @player_two = ''
         @player_one_pieces = @white_pieces
         @player_two_pieces = @black_pieces
-        @player_one_pieces = ''
-        @player_two_pieces = ''
+        @player_one_pieces = nil
+        @player_two_pieces = nil
     end
 
     def pawn_movement(column, row, color)
@@ -232,16 +236,20 @@ class ChessGame < ChessPiece
         queen_moves = rook_result | bishop_result
     end
 
-    def pawn_capture(column, row, destination_column, destination_row, color)
-        moves = pawn_movement(column, row, color)
-      
-        if moves.include?([destination_column, destination_row])
-            opponent_pieces = @current_player == player_one ? @black_pieces : @white_pieces
-            opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
-            
-            if opponent_piece
-                opponent_pieces.delete(opponent_piece)
-                puts "#{current_player.name}'s pawn captured #{current_player.name}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
+    def capture_piece(destination_column, destination_row, color)
+        opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
+        opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+        
+        if opponent_piece
+            opponent_pieces.delete(opponent_piece)
+            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
+    
+            if color == :white
+                @player_two_pieces_captured += 1
+                @player_two_pieces_remaining -= 1
+            else
+                @player_one_pieces_captured += 1
+                @player_one_pieces_remaining -= 1
             end
         end
     end
