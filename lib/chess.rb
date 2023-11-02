@@ -122,6 +122,7 @@ class ChessGame < ChessPiece
         @player_two_pieces = @black_pieces
         @player_one_pieces = nil
         @player_two_pieces = nil
+        @double_move_made = false
     end
 
     def pawn_movement(column, row, color)
@@ -135,8 +136,11 @@ class ChessGame < ChessPiece
     
         # Double move on the first turn
         double_move = [column, row + 2 * direction]
-        pawn_moves << double_move if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
-    
+        if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
+            pawn_moves << double_move
+            @double_move_made = true
+        end
+
         pawn_moves
     end
 
