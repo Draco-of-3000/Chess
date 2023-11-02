@@ -38,6 +38,9 @@ describe ChessGame do
     let(:white_knight) { ChessPiece::WHITE_KNIGHT }
     let(:white_king) { ChessPiece::WHITE_KING }
     let(:white_queen) { ChessPiece::WHITE_QUEEN }
+    let(:player_one) { Player.new("Player1", "white") }
+    let(:player_two) { Player.new("Player2", "black") }
+    let(:fake_opponent_piece) { double(column: 1, row: 4, name: 'black_pawn') }
     let(:game) {described_class.new}
 
     describe '#pawn_movement' do
@@ -258,24 +261,34 @@ describe ChessGame do
             expect(queen_moves).to contain_exactly(*expected_moves)
         end
     end
+
+    describe '#capture_piece' do
+        context "when player one moves to capture an opponent's piece at (1, 4)" do
+          it "should capture the opponent's piece and reduce the opponent's piece count by 1" do
+            game.instance_variable_set(:@current_player, 'player_one')
+      
+            opponent_piece_1 = double(column: 1, row: 4, name: 'Black Pawn')
+            opponent_piece_2 = double(column: 2, row: 5, name: 'Black Knight')
+      
+            game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, opponent_piece_1, opponent_piece_2])
+            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT])
+      
+            initial_black_pieces_length = game.instance_variable_get(:@black_pieces).length
+      
+            game.capture_piece(1, 4, :white)
+      
+            updated_black_pieces_length = game.instance_variable_get(:@black_pieces).length
+      
+            expect(updated_black_pieces_length).to eq(initial_black_pieces_length - 1)
+            expect(game.instance_variable_get(:@player_two_pieces_remaining)).to eq(15)
+          end
+        end
+    end
 end
 
 #describe ChessGame do
-    #let(:player_one) { Player.new("Player1", "white") }
-    #let(:player_two) { Player.new("Player2", "black") }
+    
     #subject(:game) { described_class.new }
 
-    #describe '#pawn_capture' do
-        #context "when player one moves to a valid destination occupied by player two's piece" do
-           # it "should capture player two's piece" do
-                #game.instance_variable_set(:@current_player, 'player_one')
-               # game.instance_variable_set(:@black_pieces, [ChessPiece::Piece::BLACK_PAWN,  ChessPiece::Piece::BLACK_KNIGHT])
-                #game.instance_variable_set(:@white_pieces, [ChessPiece::Piece::WHITE_PAWN,  ChessPiece::Piece::WHITE_KNIGHT])
-
-                #game.pawn_capture(1, 2, 1, 4, @current_player)
     
-                #expect(@black_pieces.length).to eq(@black_pieces.length - 1)
-            #end
-        #end
-    #end
 #end
