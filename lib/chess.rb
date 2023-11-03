@@ -123,10 +123,10 @@ class ChessGame < ChessPiece
         @player_one_pieces = nil
         @player_two_pieces = nil
         @double_move_made = false
-        @in_check? = false
-        @king_moved? = false
-        @rook_moved? = false
-        @square_under_attack? = false
+        @in_check = false
+        @king_moved = false
+        @rook_moved = false
+        @square_under_attack = false
     end
 
     def pawn_movement(column, row, color)
@@ -295,6 +295,16 @@ class ChessGame < ChessPiece
     def get_piece_at(column, row)
         @black_pieces.concat(@white_pieces).find { |piece| piece.column == column && piece.row == row }
     end
+
+    def move_piece(new_column, new_row, old_column, old_row)
+        piece = get_piece_at(old_column, old_row)
+        return unless piece
+      
+        piece.column = new_column
+        piece.row = new_row
+    end
+
+    
 end
 
 
