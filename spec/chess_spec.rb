@@ -321,6 +321,33 @@ describe ChessGame do
             expect(game.instance_variable_get(:@player_two_pieces_remaining)).to eq(15)
         end
     end
+
+    describe '#get_piece_at' do
+        context 'when a piece exists at the specified column and row' do
+            it 'should return the correct piece' do
+                piece = double(column: 1, row: 4, name: 'Black Pawn')
+            
+      
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, piece])
+                column = 1
+                row = 4
+      
+                retrieved_piece = game.get_piece_at(column, row)
+      
+                expect(retrieved_piece).to eq(piece)
+          end
+        end
+      
+        context 'when there is no piece at the specified column and row' do
+            it 'should return nil' do
+                row = 4
+      
+                retrieved_piece = game.get_piece_at(column, row)
+      
+                expect(retrieved_piece).to be_nil
+          end
+        end
+    end
 end
 
 #describe ChessGame do
