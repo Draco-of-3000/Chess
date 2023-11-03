@@ -340,12 +340,51 @@ describe ChessGame do
       
         context 'when there is no piece at the specified column and row' do
             it 'should return nil' do
+                column = 1
                 row = 4
       
                 retrieved_piece = game.get_piece_at(column, row)
       
                 expect(retrieved_piece).to be_nil
-          end
+            end
+        end
+    end
+
+    describe '#castling_possible?' do
+        before do
+            game.instance_variable_set(:@current_player, 'player_two')
+        end
+
+        context 'when castling is possible' do
+            before do
+                allow(game).to receive(:castling_possible?).and_return(true)
+            end
+
+            it 'should return true' do
+                expect(game.castling_possible?(:black)).to be_truthy
+            end
+        end
+
+        context 'when castling is not possible due to king movement' do
+            before do
+                game.instance_variable_set(:@king_moved, true) # King has moved.
+                game.instance_variable_set(:@rook_moved, false) # Rook has not moved.
+            end
+        
+            it 'should return false' do
+              expect(game.castling_possible?(:black)).to be_falsey
+            end
+        end
+        
+        context 'when castling is not possible due to rook movement' do
+            before do
+              game.instance_variable_set(:@king_moved, false)
+              game.instance_variable_set(:@rook_moved, true) # Rook has moved.
+            end
+        
+            it 'should return false' do
+              expect(game.castling_possible?(:black)).to be_falsey
+            end
         end
     end
 end
