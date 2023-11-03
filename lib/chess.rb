@@ -110,9 +110,9 @@ class ChessGame < ChessPiece
 
     def initialize
         @current_player = ''
-        @player_one_pieces_captured = 0
+        @pieces_captured_by_player_one = 0
         @player_one_pieces_remaining = 16
-        @player_two_pieces_captured = 0
+        @pieces_captured_by_player_two = 0
         @player_two_pieces_remaining = 16
         @black_pieces = [ChessPiece::BLACK_PAWN, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
         @white_pieces = [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
@@ -249,10 +249,10 @@ class ChessGame < ChessPiece
             puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
     
             if color == :white
-                @player_two_pieces_captured += 1
+                @pieces_captured_by_player_one += 1
                 @player_two_pieces_remaining -= 1
             else
-                @player_one_pieces_captured += 1
+                @pieces_captured_by_player_two += 1
                 @player_one_pieces_remaining -= 1
             end
         end
@@ -279,10 +279,10 @@ class ChessGame < ChessPiece
             puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} en passant at #{opponent_piece.column}, #{opponent_piece.row}"
       
             if color == :white
-                @player_two_pieces_captured += 1
+                @pieces_captured_by_player_one += 1
                 @player_two_pieces_remaining -= 1
             else
-                @player_one_pieces_captured += 1
+                @pieces_captured_by_player_two += 1
                 @player_one_pieces_remaining -= 1
             end
         end
