@@ -8,13 +8,13 @@ class Player
 end
 
 class ChessPiece
-    attr_reader :name, :unicode, :column, :row
+    attr_accessor :name, :unicode, :column, :row
 
     def initialize(name, unicode)
         @name = name
         @unicode = unicode
-        @column = column
-        @row = row
+        @column = nil
+        @row = nil
     end
 
     BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
