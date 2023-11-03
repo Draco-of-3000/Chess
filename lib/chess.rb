@@ -123,6 +123,10 @@ class ChessGame < ChessPiece
         @player_one_pieces = nil
         @player_two_pieces = nil
         @double_move_made = false
+        @in_check? = false
+        @king_moved? = false
+        @rook_moved? = false
+        @square_under_attack? = false
     end
 
     def pawn_movement(column, row, color)
