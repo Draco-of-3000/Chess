@@ -303,6 +303,45 @@ class ChessGame < ChessPiece
         piece.column = new_column
         piece.row = new_row
     end
+
+    def castling_possible?(color)
+        return false if @king_moved == true || @rook_moved == true
+
+        # Determine the column of the king and rook based on the color
+        king_column = (color == :white) ? 4 : 3
+        rook_column = (color == :white) ? 7 : 0
+
+        # Check if the king and rook are present at their starting positions
+        return false unless get_piece_at(king_column, 0)&.name == "#{color.to_s.capitalize} King"
+        return false unless get_piece_at(rook_column, 0)&.name == "#{color.to_s.capitalize} Rook"
+
+        # Check that the squares between the king and rook are unoccupied
+        (1..2).each do |column|
+            return false unless get_piece_at(column, 0).nil?
+        end
+
+        true
+    end
+
+    def castling(color)
+        # Assuming castling is valid and already checked
+        king_column = (color == :white) ? 4 : 3
+        rook_column = (color == :white) ? 7 : 0
+      
+        if rook_column == 7
+          # Kingside castling for white
+          move_piece(6, 0, king_column, 0) # Move the king to the new position
+          move_piece(5, 0, rook_column, 0) # Move the rook to the new position
+        else
+          # Queenside castling for black
+          move_piece(2, 0, king_column, 0) # Move the king to the new position
+          move_piece(3, 0, rook_column, 0) # Move the rook to the new position
+        end
+      
+        # Mark the king and rook as moved
+        @king_moved = true
+        @rook_moved = true
+    end
 end
 
 
