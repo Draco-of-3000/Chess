@@ -317,7 +317,7 @@ describe ChessGame do
             game.en_passant_capture(1, 4, :white)
 
             # Check that the opponent's pawn is captured, and pieces and counts are updated
-            expect(game.instance_variable_get(:@player_two_pieces_captured)).to eq(1)
+            expect(game.instance_variable_get(:@pieces_captured_by_player_one)).to eq(1)
             expect(game.instance_variable_get(:@player_two_pieces_remaining)).to eq(15)
         end
     end
