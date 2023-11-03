@@ -291,6 +291,10 @@ class ChessGame < ChessPiece
             end
         end
     end
+
+    def get_piece_at(column, row)
+        @black_pieces.concat(@white_pieces).find { |piece| piece.column == column && piece.row == row }
+    end
 end
 
 
