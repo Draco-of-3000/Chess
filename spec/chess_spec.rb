@@ -284,6 +284,23 @@ describe ChessGame do
           end
         end
     end
+
+    describe '#en_passant_possible' do
+        context 'when en passant is possible' do
+            it 'returns true' do
+                game.instance_variable_set(:@current_player, 'player_one')
+                game.instance_variable_set(:@double_move_made, true)
+      
+                opponent_piece_1 = double(column: 1, row: 4, name: 'Black Pawn')
+                opponent_piece_2 = double(column: 2, row: 5, name: 'Black Knight')
+      
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, opponent_piece_1, opponent_piece_2])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT])
+
+                expect(game.en_passant_possible?(1, 4, :white)).to be(true)
+            end
+        end
+    end
 end
 
 #describe ChessGame do
