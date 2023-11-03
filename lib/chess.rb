@@ -257,6 +257,36 @@ class ChessGame < ChessPiece
             end
         end
     end
+
+    def en_passant_possible?(column, row, color)
+        direction = (color == :white) ? 1 : -1
+        fifth_rank = (color == :white) ? 4 : 3
+
+        if row == fifth_rank
+            double_move = [column, row + 2 * direction]
+            return true if @double_move_made && pawn_valid_move?(double_move)
+        end
+
+        false
+    end
+
+    def en_passant_capture(destination_column, destination_row, color)
+        opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
+        opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+
+        if opponent_piece
+            opponent_pieces.delete(opponent_piece)
+            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} en passant at #{opponent_piece.column}, #{opponent_piece.row}"
+      
+            if color == :white
+                @player_two_pieces_captured += 1
+                @player_two_pieces_remaining -= 1
+            else
+                @player_one_pieces_captured += 1
+                @player_one_pieces_remaining -= 1
+            end
+        end
+    end
 end
 
 
