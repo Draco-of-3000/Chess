@@ -303,10 +303,8 @@ class ChessGame < ChessPiece
         piece.column = new_column
         piece.row = new_row
     end
-
-    
 end
 
 
-#game = Chessboard.new
+game = Chessboard.new
 #game.display_board
