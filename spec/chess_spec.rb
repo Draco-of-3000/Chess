@@ -387,6 +387,52 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#castling' do
+        context 'when castling is valid' do
+            it 'should allow kingside castling for white' do
+              # Set up the initial board state
+              game.move_piece(4, 0, 6, 0) # Move a piece out of the way
+              game.move_piece(7, 0, 5, 0) # Move the rook out of the way
+              game.instance_variable_set(:@king_moved, false)
+              game.instance_variable_set(:@rook_moved, false)
+        
+              # Perform castling
+              game.castling(:white)
+        
+              # Check that the king and rook are in the new positions
+              allow(game).to receive(:get_piece_at).with(6, 0).and_return(double(name: 'White King'))
+              allow(game).to receive(:get_piece_at).with(5, 0).and_return(double(name: 'White Rook'))
+              expect(game.get_piece_at(6, 0)&.name).to eq('White King')
+              expect(game.get_piece_at(5, 0)&.name).to eq('White Rook')
+        
+              # Check that the king and rook are marked as moved
+              expect(game.instance_variable_get(:@king_moved)).to be_truthy
+              expect(game.instance_variable_get(:@rook_moved)).to be_truthy
+            end
+        
+            it 'should allow queenside castling for black' do
+              # Set up the initial board state
+              game.move_piece(4, 0, 2, 0) # Move a piece out of the way
+              game.move_piece(0, 0, 3, 0) # Move the rook out of the way
+              game.instance_variable_set(:@king_moved, false)
+              game.instance_variable_set(:@rook_moved, false)
+        
+              # Perform castling
+              game.castling(:black)
+        
+              # Check that the king and rook are in the new positions
+              allow(game).to receive(:get_piece_at).with(2, 0).and_return(double(name: 'Black King'))
+              allow(game).to receive(:get_piece_at).with(3, 0).and_return(double(name: 'Black Rook'))
+              expect(game.get_piece_at(2, 0)&.name).to eq('Black King')
+              expect(game.get_piece_at(3, 0)&.name).to eq('Black Rook')
+        
+              # Check that the king and rook are marked as moved
+              expect(game.instance_variable_get(:@king_moved)).to be_truthy
+              expect(game.instance_variable_get(:@rook_moved)).to be_truthy
+            end
+        end
+    end
 end
 
 #describe ChessGame do
