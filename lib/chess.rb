@@ -109,6 +109,8 @@ end
 class ChessGame < ChessPiece
 
     def initialize
+        @chessboard = ChessBoard.new
+        @board = @chessboard.board
         @current_player = ''
         @pieces_captured_by_player_one = 0
         @player_one_pieces_remaining = 16
