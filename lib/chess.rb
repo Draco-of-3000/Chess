@@ -345,6 +345,12 @@ class ChessGame < ChessPiece
         @rook_moved = true
     end
 
+    def replace_piece(old_piece, new_piece)
+        @board.each do |row|
+          row.map! { |piece| piece == old_piece ? new_piece : piece }
+        end
+    end
+
     def pawn_promotion(column, row, current_player)
         current_player = @current_player
 
@@ -377,7 +383,6 @@ class ChessGame < ChessPiece
         replace_piece(pawn, new_piece)
         puts "#{piece_color.to_s.capitalize} promotes a pawn to a #{piece_choice.capitalize} at #{column}, #{row}."
     end
-
 end
 
 
