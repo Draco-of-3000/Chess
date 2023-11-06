@@ -433,11 +433,53 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#replace_piece' do
+        context 'when a piece is capture or replaced at a coordinate' do
+            it 'replaces piece on the board' do
+                
+                old_piece = ChessPiece.new('Old Piece', 'O')
+                new_piece = ChessPiece.new('New Piece', 'N')
+                game.instance_variable_set(:@board, [
+                  [old_piece, nil, nil, nil],
+                  [nil, old_piece, nil, nil],
+                  [nil, nil, old_piece, nil],
+                  [nil, nil, nil, old_piece]
+                ])
+          
+                game.replace_piece(old_piece, new_piece)
+          
+                # Ensure that the old piece is replaced with the new piece on the board
+                expect(game.instance_variable_get(:@board)).to eq([
+                  [new_piece, nil, nil, nil],
+                  [nil, new_piece, nil, nil],
+                  [nil, nil, new_piece, nil],
+                  [nil, nil, nil, new_piece]
+                ])
+            end
+        end
+
+        context 'when there is no piece to replace' do
+            it 'does not modify board' do
+                old_piece = ChessPiece.new('Old Piece', 'O')
+                new_piece = ChessPiece.new('New Piece', 'N')
+                game.instance_variable_set(:@board, [
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil]
+                ])
+          
+                game.replace_piece(old_piece, new_piece)
+          
+                # Ensure that the board remains unchanged when old piece is not found
+                expect(game.instance_variable_get(:@board)).to eq([
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil],
+                  [nil, nil, nil, nil]
+                ])
+            end
+        end
+    end
 end
-
-#describe ChessGame do
-    
-    #subject(:game) { described_class.new }
-
-    
-#end
