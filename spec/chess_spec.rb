@@ -1,7 +1,7 @@
 require './lib/chess'
 
-describe Chessboard do
-    let(:chessboard) { Chessboard.new }
+describe ChessBoard do
+    let(:chessboard) { ChessBoard.new }
 
     describe '#initialize' do
         context 'when the game is initialized' do
