@@ -32,8 +32,8 @@ class ChessPiece
     WHITE_KING = ChessPiece.new("White King", "\u2654")
 end
 
-class Chessboard < ChessPiece
-    attr_reader :board
+class ChessBoard < ChessPiece
+    attr_accessor :board
 
     def initialize
         @board = Array.new(8) { Array.new(8, nil) }
@@ -379,5 +379,5 @@ class ChessGame < ChessPiece
 end
 
 
-game = Chessboard.new
+#game = ChessBoard.new
 #game.display_board
