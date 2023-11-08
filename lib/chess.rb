@@ -8,9 +8,9 @@ class Player
 end
 
 class ChessPiece
-    attr_accessor :name, :unicode, :column, :row
+    attr_accessor :name, :unicode, :start_column, :start_row, :current_column, :current_row
 
-    def initialize(name, unicode)
+    def initialize(name, unicode, start_column, start_row)
         @name = name
         @unicode = unicode
         @start_column = start_column
@@ -67,7 +67,14 @@ class ChessBoard < ChessPiece
         @black_king = ChessPiece::BLACK_KING
         @black_queen = ChessPiece::BLACK_QUEEN
 
-        @white_pawn = ChessPiece::WHITE_PAWN
+        @white_pawn_1 = ChessPiece::WHITE_PAWN_1
+        @white_pawn_2 = ChessPiece::WHITE_PAWN_2
+        @white_pawn_3 = ChessPiece::WHITE_PAWN_3
+        @white_pawn_4 = ChessPiece::WHITE_PAWN_4
+        @white_pawn_5 = ChessPiece::WHITE_PAWN_5
+        @white_pawn_6 = ChessPiece::WHITE_PAWN_6
+        @white_pawn_7 = ChessPiece::WHITE_PAWN_7
+        @white_pawn_8 = ChessPiece::WHITE_PAWN_8
         @white_knight = ChessPiece::WHITE_KNIGHT
         @white_bishop = ChessPiece::WHITE_BISHOP
         @white_rook = ChessPiece::WHITE_ROOK
