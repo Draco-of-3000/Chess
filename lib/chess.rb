@@ -13,23 +13,39 @@ class ChessPiece
     def initialize(name, unicode)
         @name = name
         @unicode = unicode
-        @column = nil
-        @row = nil
+        @start_column = start_column
+        @start_row = start_row
+        @current_column = nil
+        @current_row = nil
     end
 
-    BLACK_PAWN = ChessPiece.new("Black Pawn", "\u265F")
-    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E")
-    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D")
-    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C")
-    BLACK_KING = ChessPiece.new("Black King", "\u265A")
-    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B")
+    BLACK_PAWN_1 = ChessPiece.new("Black Pawn 1", "\u265F", 0, 6)
+    BLACK_PAWN_2 = ChessPiece.new("Black Pawn 2", "\u265F", 1, 6)
+    BLACK_PAWN_3 = ChessPiece.new("Black Pawn 3", "\u265F", 2, 6)
+    BLACK_PAWN_4 = ChessPiece.new("Black Pawn 4", "\u265F", 3, 6)
+    BLACK_PAWN_5 = ChessPiece.new("Black Pawn 5", "\u265F", 4, 6)
+    BLACK_PAWN_6 = ChessPiece.new("Black Pawn 6", "\u265F", 5, 6)
+    BLACK_PAWN_7 = ChessPiece.new("Black Pawn 7", "\u265F", 6, 6)
+    BLACK_PAWN_8 = ChessPiece.new("Black Pawn 8", "\u265F", 7, 6)
+    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E", 1, 7)
+    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D", 1, 8)
+    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C", 0, 7)
+    BLACK_KING = ChessPiece.new("Black King", "\u265A", 3, 7)
+    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B", 4, 7)
 
-    WHITE_PAWN = ChessPiece.new("White Pawn", "\u2659")
-    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658")
-    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657")
-    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656")
-    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655")
-    WHITE_KING = ChessPiece.new("White King", "\u2654")
+    WHITE_PAWN_1 = ChessPiece.new("White Pawn 1", "\u2659", 0, 1)
+    WHITE_PAWN_2 = ChessPiece.new("White Pawn 2", "\u2659", 1, 0)
+    WHITE_PAWN_3 = ChessPiece.new("White Pawn 3", "\u2659", 2, 0)
+    WHITE_PAWN_4 = ChessPiece.new("White Pawn 4", "\u2659", 3, 0)
+    WHITE_PAWN_5 = ChessPiece.new("White Pawn 5", "\u2659", 4, 0)
+    WHITE_PAWN_6 = ChessPiece.new("White Pawn 6", "\u2659", 5, 0)
+    WHITE_PAWN_7 = ChessPiece.new("White Pawn 7", "\u2659", 6, 0)
+    WHITE_PAWN_8 = ChessPiece.new("White Pawn 8", "\u2659", 7, 0)
+    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658", 1, 0)
+    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657", 2, 0)
+    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656", 0, 0)
+    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 4, 0)
+    WHITE_KING = ChessPiece.new("White King", "\u2654", 3, 0)
 end
 
 class ChessBoard < ChessPiece
@@ -37,7 +53,14 @@ class ChessBoard < ChessPiece
 
     def initialize
         @board = Array.new(8) { Array.new(8, nil) }
-        @black_pawn = ChessPiece::BLACK_PAWN
+        @black_pawn_1 = ChessPiece::BLACK_PAWN_1
+        @black_pawn_2 = ChessPiece::BLACK_PAWN_2
+        @black_pawn_3 = ChessPiece::BLACK_PAWN_3
+        @black_pawn_4 = ChessPiece::BLACK_PAWN_4
+        @black_pawn_5 = ChessPiece::BLACK_PAWN_5
+        @black_pawn_6 = ChessPiece::BLACK_PAWN_6
+        @black_pawn_7 = ChessPiece::BLACK_PAWN_7
+        @black_pawn_8 = ChessPiece::BLACK_PAWN_8
         @black_knight = ChessPiece::BLACK_KNIGHT
         @black_bishop = ChessPiece::BLACK_BISHOP
         @black_rook = ChessPiece::BLACK_ROOK
@@ -116,8 +139,10 @@ class ChessGame < ChessPiece
         @player_one_pieces_remaining = 16
         @pieces_captured_by_player_two = 0
         @player_two_pieces_remaining = 16
-        @black_pieces = [ChessPiece::BLACK_PAWN, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
-        @white_pieces = [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
+        @white_pawns = [ChessPiece::WHITE_PAWN_1, ChessPiece::WHITE_PAWN_2, ChessPiece::WHITE_PAWN_3, ChessPiece::WHITE_PAWN_4, ChessPiece::WHITE_PAWN_5, ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_PAWN_7, ChessPiece::WHITE_PAWN_8]
+        @black_pawns = [ChessPiece::BLACK_PAWN_1, ChessPiece::BLACK_PAWN_2, ChessPiece::BLACK_PAWN_3, ChessPiece::BLACK_PAWN_4, ChessPiece::BLACK_PAWN_5, ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_PAWN_7, ChessPiece::BLACK_PAWN_8]
+        @black_pieces = [@black_pawns, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        @white_pieces = [@white_pawns, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         @player_one = ''
         @player_two = ''
         @player_one_pieces = @white_pieces
