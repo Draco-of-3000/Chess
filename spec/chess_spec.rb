@@ -482,4 +482,55 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#pawn_promotion' do
+        it 'promotes a pawn to a queen' do
+            
+            game.pawn_promotion(0, 7, @current_player)
+            game.instance_variable_set(:@current_player, 'player_one')
+            game.instance_variable_set(:@board, [
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [ChessPiece::WHITE_PAWN, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil]
+            ])
+
+            pawn = ChessPiece.new('White Pawn', "\u2659")
+            piece_choice = 'queen'
+            piece_color = :white
+            new_piece = ChessPiece.new('White Queen', "\u2655")
+            game.instance_variable_set(:@board, [
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil]
+            ])
+
+            updated_board = [
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil],
+                [nil, nil, nil, nil, nil, nil, nil, nil]
+            ]
+
+            
+    
+            # Stub the replace_piece method to update the game's board
+            allow(game).to receive(:replace_piece).with(pawn, new_piece)
+
+            expect(game.instance_variable_get(:@board)).to eq(updated_board)   
+        end
+    end
 end
