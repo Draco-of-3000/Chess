@@ -280,11 +280,11 @@ class ChessGame < ChessPiece
 
     def capture_piece(destination_column, destination_row, color)
         opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
-        opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+        opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
         
         if opponent_piece
             opponent_pieces.delete(opponent_piece)
-            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.column}, #{opponent_piece.row}"
+            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
     
             if color == :white
                 @pieces_captured_by_player_one += 1
@@ -310,11 +310,11 @@ class ChessGame < ChessPiece
 
     def en_passant_capture(destination_column, destination_row, color)
         opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
-        opponent_piece = opponent_pieces.find { |piece| piece.column == destination_column && piece.row == destination_row }
+        opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
 
         if opponent_piece
             opponent_pieces.delete(opponent_piece)
-            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} en passant at #{opponent_piece.column}, #{opponent_piece.row}"
+            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
       
             if color == :white
                 @pieces_captured_by_player_one += 1
@@ -327,15 +327,21 @@ class ChessGame < ChessPiece
     end
 
     def get_piece_at(column, row)
-        @black_pieces.concat(@white_pieces).find { |piece| piece.column == column && piece.row == row }
+        piece = @black_pieces.concat(@white_pieces).find do |piece|
+          piece.instance_variable_get(:@start_column) == column && piece.instance_variable_get(:@start_row) == row
+        end
+      
+        return piece if piece
+      
+        nil
     end
 
     def move_piece(new_column, new_row, old_column, old_row)
         piece = get_piece_at(old_column, old_row)
         return unless piece
       
-        piece.column = new_column
-        piece.row = new_row
+        piece.current_column = new_column
+        piece.current_row = new_row
     end
 
     def castling_possible?(color)
@@ -388,7 +394,7 @@ class ChessGame < ChessPiece
 
         pawn = get_piece_at(column, row)
 
-        return unless (pawn == BLACK_PAWN || pawn == WHITE_PAWN) && (row == 0 || row == 7)
+        return unless (@black_pawns.include?(pawn) || @white_pawns.include?(pawn)) && (row == 0 || row == 7)
 
         piece_color = (current_player == @player_one) ? :white : :black
 
