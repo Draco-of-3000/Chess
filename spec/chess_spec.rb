@@ -30,8 +30,10 @@ describe ChessBoard do
 end
 
 describe ChessGame do
-    let(:white_pawn) { ChessPiece::WHITE_PAWN }
-    let(:black_pawn) { ChessPiece::BLACK_PAWN }
+    let(:white_pawn_1) { ChessPiece::WHITE_PAWN_1 }
+    let(:black_pawn_1) { ChessPiece::BLACK_PAWN_1}
+    let(:white_pawn_6) { ChessPiece::WHITE_PAWN_6}
+    let(:black_pawn_6) { ChessPiece::BLACK_PAWN_6}
     let(:black_rook) { ChessPiece::BLACK_ROOK }
     let(:white_rook) { ChessPiece::WHITE_ROOK }
     let(:white_bishop) { ChessPiece::WHITE_BISHOP }
@@ -40,7 +42,7 @@ describe ChessGame do
     let(:white_queen) { ChessPiece::WHITE_QUEEN }
     let(:player_one) { Player.new("Player1", "white") }
     let(:player_two) { Player.new("Player2", "black") }
-    let(:fake_opponent_piece) { double(column: 1, row: 4, name: 'black_pawn') }
+    let(:fake_opponent_piece) { double(start_column: 1, start_row: 4, name: 'black_pawn_1') }
     let(:game) {described_class.new}
 
     describe '#pawn_movement' do
@@ -267,11 +269,11 @@ describe ChessGame do
           it "should capture the opponent's piece and reduce the opponent's piece count by 1" do
             game.instance_variable_set(:@current_player, 'player_one')
       
-            opponent_piece_1 = double(column: 1, row: 4, name: 'Black Pawn')
-            opponent_piece_2 = double(column: 2, row: 5, name: 'Black Knight')
+            opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
+            opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
-            game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, opponent_piece_1, opponent_piece_2])
-            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT])
+            game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
+            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
       
             initial_black_pieces_length = game.instance_variable_get(:@black_pieces).length
       
@@ -291,11 +293,11 @@ describe ChessGame do
                 game.instance_variable_set(:@current_player, 'player_one')
                 game.instance_variable_set(:@double_move_made, true)
       
-                opponent_piece_1 = double(column: 1, row: 4, name: 'Black Pawn')
-                opponent_piece_2 = double(column: 2, row: 5, name: 'Black Knight')
+                opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
+                opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
-                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, opponent_piece_1, opponent_piece_2])
-                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT])
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
 
                 expect(game.en_passant_possible?(1, 4, :white)).to be(true)
             end
@@ -307,11 +309,11 @@ describe ChessGame do
             game.instance_variable_set(:@current_player, 'player_one')
             game.instance_variable_set(:@double_move_made, true)
       
-            opponent_piece_1 = double(column: 1, row: 4, name: 'Black Pawn')
-            opponent_piece_2 = double(column: 2, row: 5, name: 'Black Knight')
+            opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
+            opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
-            game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, opponent_piece_1, opponent_piece_2])
-            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN, ChessPiece::WHITE_KNIGHT])
+            game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
+            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
 
             # Capture the pawn en passant
             game.en_passant_capture(1, 4, :white)
@@ -325,15 +327,14 @@ describe ChessGame do
     describe '#get_piece_at' do
         context 'when a piece exists at the specified column and row' do
             it 'should return the correct piece' do
-                piece = double(column: 1, row: 4, name: 'Black Pawn')
-            
-      
-                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN, piece])
+                piece = ChessPiece.new('Black Pawn 2', "\u265F", 1, 6)
+  
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_1, piece])
                 column = 1
-                row = 4
-      
+                row = 6
+            
                 retrieved_piece = game.get_piece_at(column, row)
-      
+            
                 expect(retrieved_piece).to eq(piece)
           end
         end
@@ -438,8 +439,8 @@ describe ChessGame do
         context 'when a piece is capture or replaced at a coordinate' do
             it 'replaces piece on the board' do
                 
-                old_piece = ChessPiece.new('Old Piece', 'O')
-                new_piece = ChessPiece.new('New Piece', 'N')
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0)
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0)
                 game.instance_variable_set(:@board, [
                   [old_piece, nil, nil, nil],
                   [nil, old_piece, nil, nil],
@@ -461,8 +462,8 @@ describe ChessGame do
 
         context 'when there is no piece to replace' do
             it 'does not modify board' do
-                old_piece = ChessPiece.new('Old Piece', 'O')
-                new_piece = ChessPiece.new('New Piece', 'N')
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0)
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0)
                 game.instance_variable_set(:@board, [
                   [nil, nil, nil, nil],
                   [nil, nil, nil, nil],
@@ -490,7 +491,7 @@ describe ChessGame do
             game.instance_variable_set(:@current_player, 'player_one')
             game.instance_variable_set(:@board, [
               [nil, nil, nil, nil, nil, nil, nil, nil],
-              [ChessPiece::WHITE_PAWN, nil, nil, nil, nil, nil, nil, nil],
+              [ChessPiece::WHITE_PAWN_1, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -499,10 +500,10 @@ describe ChessGame do
               [nil, nil, nil, nil, nil, nil, nil, nil]
             ])
 
-            pawn = ChessPiece.new('White Pawn', "\u2659")
+            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1)
             piece_choice = 'queen'
             piece_color = :white
-            new_piece = ChessPiece.new('White Queen', "\u2655")
+            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7)
             game.instance_variable_set(:@board, [
                 [nil, nil, nil, nil, nil, nil, nil, nil],
                 [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
