@@ -421,6 +421,38 @@ class ChessGame < ChessPiece
         replace_piece(pawn, new_piece)
         puts "#{piece_color.to_s.capitalize} promotes a pawn to a #{piece_choice.capitalize} at #{column}, #{row}."
     end
+
+    def king_in_check?
+        king_piece = color == :white ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
+
+        opponent_pieces = color == :white ? @black_pieces : @white_pieces
+
+        opponent_pieces.flatten.each do |piece|
+            possible_moves =
+            
+            case piece.name
+            when /Pawn/
+                pawn_movement(piece.current_column, piece.current_row, color)
+            when /Rook/
+                rook_movement(piece.current_column, piece.current_row)
+            when /Bishop/
+                bishop_movement(piece.current_column, piece.current_row)
+            when /Knight/
+                knight_movement(piece.current_column, piece.current_row)
+            when /Queen/
+                queen_movement(piece.current_column, piece.current_row)
+            when /King/
+                king_movement(piece.current_column, piece.current_row)
+            end
+
+            if possible_moves.include?([king_piece.current_column, king_piece.current_row])
+                @in_check = true
+                return true
+            end
+        end
+
+        false
+    end
 end
 
 
