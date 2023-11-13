@@ -579,4 +579,37 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#checkmate?' do
+        before do
+            allow(game).to receive(:pawn_movement)
+            allow(game).to receive(:knight_movement)
+        end
+        context 'when the king is not in check' do
+            it 'returns false' do
+                expect(game.checkmate?).to be_falsey
+            end
+        end
+
+        context 'when the king is in checkmate' do
+            it 'returns true' do
+                game.instance_variable_set(:@in_check, true)
+                allow(game).to receive(:checkmate_possible?).and_return(false)
+                allow(game).to receive(:checkmate?).and_return(true)
+                result = game.checkmate?
+                expect(result).to be_truthy
+            end
+        end
+
+        context 'when the king is in check but can escape checkmate' do
+            it 'returns falsey checkmate' do
+                game.instance_variable_set(:@in_check, true)
+
+                allow(game).to receive(:checkmate_possible?).and_return(true)
+                allow(game).to receive(:checkmate?).and_return(false)
+                result = game.checkmate?
+                expect(result).to be_falsey
+            end
+        end
+    end
 end
