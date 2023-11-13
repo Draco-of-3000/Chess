@@ -612,4 +612,27 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#checkmate_possible?' do
+        let(:game) { ChessGame.new }
+    
+        context 'when the king is not in check' do
+            it 'returns true for any move' do
+                game.instance_variable_set(:@in_check, false)
+                piece = instance_double("Piece", current_row: 0, current_column: 0, name: "Pawn")
+                moves = [[1, 1], [2, 2]]  # Example moves, they don't matter for this test
+                expect(game.checkmate_possible?(piece, moves)).to be_truthy
+            end
+        end
+    
+        context 'when the king is in check' do
+            it 'returns false for any move' do
+                game.instance_variable_set(:@in_check, true)
+                allow(game).to receive(:checkmate_possible?).and_return(false)
+                piece = instance_double("Piece", current_row: 0, current_column: 0, name: "Pawn")
+                moves = [[1, 1], [2, 2]]  # Example moves, they don't matter for this test
+                expect(game.checkmate_possible?(piece, moves)).to be_falsey
+            end
+        end
+    end
 end
