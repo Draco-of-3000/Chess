@@ -534,4 +534,49 @@ describe ChessGame do
             expect(game.instance_variable_get(:@board)).to eq(updated_board)   
         end
     end
+
+    describe '#king_in_check?' do
+        context 'when the king is in check' do
+            before do
+                game.instance_variable_set(:@current_player, Player.new("Player2", "black"))
+
+                king_piece = ChessPiece::BLACK_KING
+                king_piece.current_column = 0
+                king_piece.current_row = 7
+
+                white_bishop = ChessPiece::WHITE_BISHOP
+                white_bishop.current_column = 7
+                white_bishop.current_row = 0
+
+                game.instance_variable_set(:@white_pieces, [white_bishop])
+                game.instance_variable_set(:@black_pieces, [king_piece])
+
+                game.instance_variable_set(:@board, [
+                    [king_piece, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, white_bishop]
+                ])
+
+                allow(game).to receive(:pawn_movement).and_return([[1, 6]])
+                allow(game).to receive(:rook_movement).and_return([[1, 0]])
+                allow(game).to receive(:knight_movement).and_return([[2, 5]])
+                allow(game).to receive(:queen_movement).and_return([[3, 4]])
+                allow(game).to receive(:king_movement).and_return([[4, 3]])
+            end
+
+            it 'should return true' do
+                allow(game).to receive(:bishop_movement).with(7, 0).and_return(0, 7)
+                allow(game).to receive(:king_in_check?).and_return(true)
+                game.instance_variable_set(:@in_check, true)
+                result = game.king_in_check?
+                expect(result).to be true
+                expect(game.instance_variable_get(:@in_check)).to be true
+            end
+        end
+    end
 end
