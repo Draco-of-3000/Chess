@@ -455,7 +455,7 @@ class ChessGame < ChessPiece
     end
 
     def checkmate?
-        return false unless @in_check
+        return false unless @in_check == true
 
         player_pieces = (@current_player == @player_one) ? @white_pieces : @black_pieces
     
@@ -487,6 +487,7 @@ class ChessGame < ChessPiece
     end
 
     def checkmate_possible?(piece, moves)
+        return true unless @in_check == true
         moves.each do |move|
             # Simulate the move and check if it gets the king out of check
             @board[move[1]][move[0]], @board[piece.current_row][piece.current_column] = piece, nil
