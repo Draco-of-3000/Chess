@@ -453,6 +453,54 @@ class ChessGame < ChessPiece
 
         false
     end
+
+    def checkmate?
+        return false unless @in_check
+
+        player_pieces = (@current_player == @player_one) ? @white_pieces : @black_pieces
+    
+        # Check each piece's possible moves to see if any move can get the king out of check
+        player_pieces.flatten.each do |piece|
+            case piece.name
+            when /Pawn/
+                pawn_moves = pawn_movement(piece.current_column, piece.current_row, @current_player)
+                return false unless checkmate_possible?(piece, pawn_moves)
+            when /Rook/
+                rook_moves = rook_movement(piece.current_column, piece.current_row)
+                return false unless checkmate_possible?(piece, rook_moves)
+            when /Bishop/
+                bishop_moves = bishop_movement(piece.current_column, piece.current_row)
+                return false unless checkmate_possible?(piece, bishop_moves)
+            when /Knight/
+                knight_moves = knight_movement(piece.current_column, piece.current_row)
+                return false unless checkmate_possible?(piece, knight_moves)
+            when /Queen/
+                queen_moves = queen_movement(piece.current_column, piece.current_row)
+                return false unless checkmate_possible?(piece, queen_moves)
+            when /King/
+                king_moves = king_movement(piece.current_column, piece.current_row)
+                return false unless checkmate_possible?(piece, king_moves)
+            end
+        end
+    
+        true
+    end
+
+    def checkmate_possible?(piece, moves)
+        moves.each do |move|
+            # Simulate the move and check if it gets the king out of check
+            @board[move[1]][move[0]], @board[piece.current_row][piece.current_column] = piece, nil
+
+            if @in_check == false
+                @board[piece.current_row][piece.current_column] = piece
+                @board[move[1]][move[0]] = nil
+            else
+                return true
+            end
+        end
+
+        false
+    end
 end
 
 
