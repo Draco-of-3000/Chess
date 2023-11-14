@@ -8,44 +8,45 @@ class Player
 end
 
 class ChessPiece
-    attr_accessor :name, :unicode, :start_column, :start_row, :current_column, :current_row
+    attr_accessor :name, :unicode, :start_column, :start_row, :current_column, :current_row, :color
 
-    def initialize(name, unicode, start_column, start_row)
+    def initialize(name, unicode, start_column, start_row, color)
         @name = name
         @unicode = unicode
         @start_column = start_column
         @start_row = start_row
         @current_column = nil
         @current_row = nil
+        @color = color
     end
 
-    BLACK_PAWN_1 = ChessPiece.new("Black Pawn 1", "\u265F", 0, 6)
-    BLACK_PAWN_2 = ChessPiece.new("Black Pawn 2", "\u265F", 1, 6)
-    BLACK_PAWN_3 = ChessPiece.new("Black Pawn 3", "\u265F", 2, 6)
-    BLACK_PAWN_4 = ChessPiece.new("Black Pawn 4", "\u265F", 3, 6)
-    BLACK_PAWN_5 = ChessPiece.new("Black Pawn 5", "\u265F", 4, 6)
-    BLACK_PAWN_6 = ChessPiece.new("Black Pawn 6", "\u265F", 5, 6)
-    BLACK_PAWN_7 = ChessPiece.new("Black Pawn 7", "\u265F", 6, 6)
-    BLACK_PAWN_8 = ChessPiece.new("Black Pawn 8", "\u265F", 7, 6)
-    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E", 1, 7)
-    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D", 1, 8)
-    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C", 0, 7)
-    BLACK_KING = ChessPiece.new("Black King", "\u265A", 3, 7)
-    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B", 4, 7)
+    BLACK_PAWN_1 = ChessPiece.new("Black Pawn 1", "\u265F", 0, 6, 'black')
+    BLACK_PAWN_2 = ChessPiece.new("Black Pawn 2", "\u265F", 1, 6, 'black')
+    BLACK_PAWN_3 = ChessPiece.new("Black Pawn 3", "\u265F", 2, 6, 'black')
+    BLACK_PAWN_4 = ChessPiece.new("Black Pawn 4", "\u265F", 3, 6, 'black')
+    BLACK_PAWN_5 = ChessPiece.new("Black Pawn 5", "\u265F", 4, 6, 'black')
+    BLACK_PAWN_6 = ChessPiece.new("Black Pawn 6", "\u265F", 5, 6, 'black')
+    BLACK_PAWN_7 = ChessPiece.new("Black Pawn 7", "\u265F", 6, 6, 'black')
+    BLACK_PAWN_8 = ChessPiece.new("Black Pawn 8", "\u265F", 7, 6, 'black')
+    BLACK_KNIGHT = ChessPiece.new("Black Knight", "\u265E", 1, 7, 'black')
+    BLACK_BISHOP = ChessPiece.new("Black Bishop", "\u265D", 1, 8, 'black')
+    BLACK_ROOK = ChessPiece.new("Black Rook", "\u265C", 0, 7, 'black')
+    BLACK_KING = ChessPiece.new("Black King", "\u265A", 3, 7, 'black')
+    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B", 4, 7, 'black')
 
-    WHITE_PAWN_1 = ChessPiece.new("White Pawn 1", "\u2659", 0, 1)
-    WHITE_PAWN_2 = ChessPiece.new("White Pawn 2", "\u2659", 1, 0)
-    WHITE_PAWN_3 = ChessPiece.new("White Pawn 3", "\u2659", 2, 0)
-    WHITE_PAWN_4 = ChessPiece.new("White Pawn 4", "\u2659", 3, 0)
-    WHITE_PAWN_5 = ChessPiece.new("White Pawn 5", "\u2659", 4, 0)
-    WHITE_PAWN_6 = ChessPiece.new("White Pawn 6", "\u2659", 5, 0)
-    WHITE_PAWN_7 = ChessPiece.new("White Pawn 7", "\u2659", 6, 0)
-    WHITE_PAWN_8 = ChessPiece.new("White Pawn 8", "\u2659", 7, 0)
-    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658", 1, 0)
-    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657", 2, 0)
-    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656", 0, 0)
-    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 4, 0)
-    WHITE_KING = ChessPiece.new("White King", "\u2654", 3, 0)
+    WHITE_PAWN_1 = ChessPiece.new("White Pawn 1", "\u2659", 0, 1, 'white')
+    WHITE_PAWN_2 = ChessPiece.new("White Pawn 2", "\u2659", 1, 0, 'white')
+    WHITE_PAWN_3 = ChessPiece.new("White Pawn 3", "\u2659", 2, 0, 'white')
+    WHITE_PAWN_4 = ChessPiece.new("White Pawn 4", "\u2659", 3, 0, 'white')
+    WHITE_PAWN_5 = ChessPiece.new("White Pawn 5", "\u2659", 4, 0, 'white')
+    WHITE_PAWN_6 = ChessPiece.new("White Pawn 6", "\u2659", 5, 0, 'white')
+    WHITE_PAWN_7 = ChessPiece.new("White Pawn 7", "\u2659", 6, 0, 'white')
+    WHITE_PAWN_8 = ChessPiece.new("White Pawn 8", "\u2659", 7, 0, 'white')
+    WHITE_KNIGHT = ChessPiece.new("White Knight", "\u2658", 1, 0, 'white')
+    WHITE_BISHOP = ChessPiece.new("White Bishop", "\u2657", 2, 0, 'white')
+    WHITE_ROOK = ChessPiece.new("White Rook", "\u2656", 0, 0, 'white')
+    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 4, 0, 'white')
+    WHITE_KING = ChessPiece.new("White King", "\u2654", 3, 0, 'white')
 end
 
 class ChessBoard < ChessPiece
@@ -533,6 +534,37 @@ class ChessGame < ChessPiece
                 true
             end
         end
+    end
+
+    def legal_moves
+        opponent_pieces = (@current_player.color == :white) ? @black_pieces : @white_pieces
+        opponent_moves = []
+
+        opponent_pieces.flatten.each do |piece|
+            possible_moves =
+            case piece.name
+            when /Pawn/
+                pawn_movement(piece.current_column, piece.current_row, piece.color)
+            when /Rook/
+                rook_movement(piece.current_column, piece.current_row)
+            when /Bishop/
+                bishop_movement(piece.current_column, piece.current_row)
+            when /Knight/
+                knight_movement(piece.current_column, piece.current_row)
+            when /Queen/
+                queen_movement(piece.current_column, piece.current_row)
+            when /King/
+                king_movement(piece.current_column, piece.current_row)
+            end
+
+            if possible_moves
+                opponent_moves.concat(possible_moves)
+            else
+                return false
+            end
+        end
+
+        opponent_moves.any?
     end
 end
 
