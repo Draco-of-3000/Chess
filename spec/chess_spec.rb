@@ -327,7 +327,7 @@ describe ChessGame do
     describe '#get_piece_at' do
         context 'when a piece exists at the specified column and row' do
             it 'should return the correct piece' do
-                piece = ChessPiece.new('Black Pawn 2', "\u265F", 1, 6)
+                piece = ChessPiece.new('Black Pawn 2', "\u265F", 1, 6, 'black')
   
                 game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_1, piece])
                 column = 1
@@ -439,8 +439,8 @@ describe ChessGame do
         context 'when a piece is capture or replaced at a coordinate' do
             it 'replaces piece on the board' do
                 
-                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0)
-                new_piece = ChessPiece.new('New Piece', 'N', 2, 0)
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 'black')
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 'white')
                 game.instance_variable_set(:@board, [
                   [old_piece, nil, nil, nil],
                   [nil, old_piece, nil, nil],
@@ -462,8 +462,8 @@ describe ChessGame do
 
         context 'when there is no piece to replace' do
             it 'does not modify board' do
-                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0)
-                new_piece = ChessPiece.new('New Piece', 'N', 2, 0)
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 'black')
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 'white')
                 game.instance_variable_set(:@board, [
                   [nil, nil, nil, nil],
                   [nil, nil, nil, nil],
@@ -500,10 +500,10 @@ describe ChessGame do
               [nil, nil, nil, nil, nil, nil, nil, nil]
             ])
 
-            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1)
+            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1, 'white')
             piece_choice = 'queen'
             piece_color = :white
-            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7)
+            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7, 'white')
             game.instance_variable_set(:@board, [
                 [nil, nil, nil, nil, nil, nil, nil, nil],
                 [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
@@ -718,4 +718,33 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#legal_moves' do
+        before do
+            game.instance_variable_set(:@current_player, Player.new("Player2", "black"))
+        end
+
+        context 'when there are legal moves available' do
+            it 'returns true' do
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+                allow(game).to receive(:pawn_movement).and_return([[1, 6]])
+                allow(game).to receive(:knight_movement).and_return([[2, 5]])
+                result = game.legal_moves
+                expect(result).to be true
+            end
+        end
+
+        context 'when there are no legal moves available' do
+            it 'returns false' do
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+                allow(game).to receive(:pawn_movement)
+                allow(game).to receive(:knight_movement)
+                result = game.legal_moves
+                expect(result).to be false
+            end
+        end
+    end
+
 end
