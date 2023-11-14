@@ -161,6 +161,7 @@ class ChessGame < ChessPiece
         @king_moved = false
         @rook_moved = false
         @square_under_attack = false
+        @insufficient_material = false
     end
 
     def pawn_movement(column, row, color)
@@ -501,6 +502,37 @@ class ChessGame < ChessPiece
         end
 
         false
+    end
+
+    def find_pieces
+        white_pieces = @white_pieces.flatten
+        black_pieces = @black_pieces.flatten
+
+        # Check if ONLY kings, or ONLY kings AND a knight, or kings AND a bishop of the same color are present.
+        white_condition = white_pieces.all? { |piece| piece.name.include?('King') } && white_pieces.length <= 2
+        black_condition = black_pieces.all? { |piece| piece.name.include?('King') } && black_pieces.length <= 2
+
+        if white_condition && black_condition
+            @insufficient_material = true
+            true
+        else
+            # Check if ONLY kings, or ONLY kings AND a knight, or kings AND a bishop of the same color are present for white pieces.
+            white_condition = white_pieces.all? do |piece|
+                piece.name.include?('King') ||(piece.name.include?('Knight') && white_pieces.all? { |p| p.name.include?('King') || p.name.include?('Knight') }) ||
+                (piece.name.include?('Bishop') && white_pieces.all? { |p| p.name.include?('King') || p.name.include?('Bishop') }) && white_pieces.length <= 3
+            end
+
+            # Check if ONLY kings, or ONLY kings AND a knight, or kings AND a bishop of the same color are present for black pieces.
+            black_condition = black_pieces.all? do |piece|
+                piece.name.include?('King') ||(piece.name.include?('Knight') && black_pieces.all? { |p| p.name.include?('King') || p.name.include?('Knight') }) ||
+                (piece.name.include?('Bishop') && black_pieces.all? { |p| p.name.include?('King') || p.name.include?('Bishop') }) && black_pieces.length <= 3
+            end
+
+            if white_condition && black_condition
+                @insufficient_material = true
+                true
+            end
+        end
     end
 end
 
