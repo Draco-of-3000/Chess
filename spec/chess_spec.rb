@@ -635,4 +635,87 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#find_pieces' do
+        context 'when there are only kings on both sides' do
+            before do
+                white_king_piece = ChessPiece::WHITE_KING
+                black_king_piece = ChessPiece::BLACK_KING
+                game.instance_variable_set(:@white_pieces, [white_king_piece])
+                game.instance_variable_set(:@black_pieces, [black_king_piece])
+            end
+
+            it 'sets @insufficient_material to true' do
+                result = game.find_pieces
+                expect(game.instance_variable_get(:@insufficient_material)).to be true
+            end
+
+            it 'returns true' do
+                result = game.find_pieces
+                expect(result).to be true
+            end
+        end
+
+        context 'when there are kings and a knight on both sides' do
+            before do
+                white_king_piece = ChessPiece::WHITE_KING
+                black_king_piece = ChessPiece::BLACK_KING
+                white_knight_piece = ChessPiece::WHITE_KNIGHT
+                black_knight_piece = ChessPiece::BLACK_KNIGHT
+                white_bishop_piece = ChessPiece::WHITE_BISHOP
+                black_bishop_piece = ChessPiece::BLACK_BISHOP 
+                game.instance_variable_set(:@white_pieces, [white_king_piece, white_knight_piece])
+                game.instance_variable_set(:@black_pieces, [black_king_piece, black_knight_piece])
+            end
+
+            it 'sets @insufficient_material to true' do
+                result = game.find_pieces
+                expect(game.instance_variable_get(:@insufficient_material)).to be true
+            end
+
+            it 'returns true' do
+                result = game.find_pieces
+                expect(result).to be true
+            end
+        end
+
+        context 'when there are kings and a bishop on both sides' do
+            before do
+                white_king_piece = ChessPiece::WHITE_KING
+                black_king_piece = ChessPiece::BLACK_KING
+                white_bishop_piece = ChessPiece::WHITE_BISHOP
+                black_bishop_piece = ChessPiece::BLACK_BISHOP 
+                game.instance_variable_set(:@white_pieces, [white_king_piece, white_king_piece, white_bishop_piece])
+                game.instance_variable_set(:@black_pieces, [black_king_piece, black_king_piece, black_bishop_piece])
+            end
+
+            it 'sets @insufficient_material to true' do
+                result = game.find_pieces
+                expect(game.instance_variable_get(:@insufficient_material)).to be true
+            end
+
+            it 'returns true' do
+                result = game.find_pieces
+                expect(result).to be true
+            end
+        end
+
+        context 'when there are other pieces asides kings, a bishop, or a knight on both sides' do
+            before do
+                white_king_piece = ChessPiece::WHITE_KING
+                black_king_piece = ChessPiece::BLACK_KING
+                white_bishop_piece = ChessPiece::WHITE_BISHOP
+                black_bishop_piece = ChessPiece::BLACK_BISHOP 
+                white_rook_piece = ChessPiece::WHITE_ROOK
+                black_rook_piece = ChessPiece::BLACK_ROOK
+                game.instance_variable_set(:@white_pieces, [white_king_piece, white_rook_piece, white_bishop_piece])
+                game.instance_variable_set(:@black_pieces, [black_king_piece, black_rook_piece, black_bishop_piece])
+            end
+
+            it 'returns nil' do
+                result = game.find_pieces
+                expect(result).to be nil
+            end
+        end
+    end
 end
