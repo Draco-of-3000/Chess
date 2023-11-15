@@ -602,6 +602,21 @@ class ChessGame < ChessPiece
         puts "Illegal move, Make another move"
         return
     end
+
+    def update_board(new_column, new_row, old_column, old_row)
+        piece = get_piece_at(old_column, old_row)
+        return unless piece
+
+        # Remove the piece from its old position
+        @board[old_row][old_column] = nil
+
+        # Place the piece in its new position
+        @board[new_row][new_column] = piece
+
+        # Update the piece's current_column and current_row
+        piece.current_column = new_column
+        piece.current_row = new_row
+    end
 end
 
 
