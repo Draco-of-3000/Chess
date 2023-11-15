@@ -747,4 +747,50 @@ describe ChessGame do
         end
     end
 
+    describe '#stalemate' do
+        context 'when the game is in checkmate' do
+            before do
+                game.instance_variable_set(:@checkmate, true)
+            end
+      
+            it 'returns false' do
+                result = game.stalemate
+                expect(result).to be false
+            end
+        end
+      
+        context 'when there are legal moves available' do
+            before do
+                allow(game).to receive(:legal_moves).and_return(true)
+            end
+      
+            it 'returns false' do
+                result = game.stalemate
+                expect(result).to be false
+            end
+        end
+      
+        context 'when the player is in check' do
+            before do
+                game.instance_variable_set(:@in_check, true)
+            end
+      
+            it 'returns false' do
+                result = game.stalemate
+                expect(result).to be false
+            end
+        end
+      
+        context 'when there are no legal moves and the player is not in check' do
+            before do
+                allow(game).to receive(:legal_moves).and_return(false)
+                game.instance_variable_set(:@in_check, false)
+            end
+      
+            it 'returns true' do
+                result = game.stalemate
+                expect(result).to be true
+            end
+        end
+    end
 end
