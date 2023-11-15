@@ -593,6 +593,10 @@ class ChessGame < ChessPiece
         @player_two = Player.new(@player_two_name, @player_two_color)
         puts "Okay #{@player_one.name}, you're up. Make a move."
     end
+
+    def switch_players(current_player)
+        @current_player = @current_player == @player_one ? @player_two : @player_one
+    end
 end
 
 
