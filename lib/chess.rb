@@ -153,6 +153,10 @@ class ChessGame < ChessPiece
         @white_pieces = [@white_pawns, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         @player_one = ''
         @player_two = ''
+        @player_one_name = ''
+        @player_two_name = ''
+        @player_one_color = 'white'
+        @player_two_color = 'black'
         @player_one_pieces = @white_pieces
         @player_two_pieces = @black_pieces
         @player_one_pieces = nil
@@ -577,6 +581,17 @@ class ChessGame < ChessPiece
         else
             false
         end
+    end
+
+    def assign_players
+        puts "Enter your name Player 1"
+        @player_one_name = gets.chomp.capitalize
+        @player_one = Player.new(@player_one_name, @player_one_color)
+
+        puts "Enter your name Player 2"
+        @player_two_name = gets.chomp.capitalize
+        @player_two = Player.new(@player_two_name, @player_two_color)
+        puts "Okay #{@player_one.name}, you're up. Make a move."
     end
 end
 
