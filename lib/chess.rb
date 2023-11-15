@@ -597,6 +597,11 @@ class ChessGame < ChessPiece
     def switch_players(current_player)
         @current_player = @current_player == @player_one ? @player_two : @player_one
     end
+
+    def illegal_move
+        puts "Illegal move, Make another move"
+        return
+    end
 end
 
 
