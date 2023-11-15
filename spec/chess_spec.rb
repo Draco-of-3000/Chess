@@ -793,4 +793,47 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#update_board' do
+        context 'when a piece moves to a new coordinate' do
+            it 'updates the board correctly' do
+                king_piece = ChessPiece::BLACK_KING
+                king_piece.current_column = 0
+                king_piece.current_row = 7
+
+                white_bishop = ChessPiece::WHITE_BISHOP
+                white_bishop.current_column = 7
+                white_bishop.current_row = 0
+
+                game.instance_variable_set(:@white_pieces, [white_bishop])
+                game.instance_variable_set(:@black_pieces, [king_piece])
+
+                game.instance_variable_set(:@board, [
+                    [king_piece, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, white_bishop]
+                ])
+
+                updated_board = game.instance_variable_set(:@board, [
+                    [nil, king_piece, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, white_bishop]
+                ])
+
+                game.update_board(0, 7, 1, 7)
+                expect(game.instance_variable_get(:@board)).to eq(updated_board)
+            end
+        end
+    end
+
 end
