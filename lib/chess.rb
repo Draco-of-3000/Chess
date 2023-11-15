@@ -159,6 +159,7 @@ class ChessGame < ChessPiece
         @player_two_pieces = nil
         @double_move_made = false
         @in_check = false
+        @checkmate = false
         @king_moved = false
         @rook_moved = false
         @square_under_attack = false
@@ -485,6 +486,7 @@ class ChessGame < ChessPiece
             end
         end
     
+        @checkmate = true
         true
     end
 
@@ -537,7 +539,7 @@ class ChessGame < ChessPiece
     end
 
     def legal_moves
-        opponent_pieces = (@current_player.color == :white) ? @black_pieces : @white_pieces
+        opponent_pieces = (color == :white) ? @black_pieces : @white_pieces
         opponent_moves = []
 
         opponent_pieces.flatten.each do |piece|
@@ -565,6 +567,16 @@ class ChessGame < ChessPiece
         end
 
         opponent_moves.any?
+    end
+
+    def stalemate
+        return false if @checkmate || @in_check == true
+
+        if legal_moves == false && @in_check == false
+            true
+        else
+            false
+        end
     end
 end
 
