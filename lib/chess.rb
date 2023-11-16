@@ -594,6 +594,26 @@ class ChessGame < ChessPiece
         puts "Okay #{@player_one.name}, you're up. Make a move."
     end
 
+    def assign_coordinates
+        puts "Enter current column of piece you wish to move"
+        current_column = gets.chomp.to_i
+
+        until current_column.is_a?(Integer) && current_column.between?(0, 7)
+            puts "Illegal selection, enter an integer between 0 and 7"
+            current_column = gets.chomp.to_i
+        end
+
+        puts "Enter current row of piece you wish to move"
+        current_row = gets.chomp.to_i
+
+        until current_row.is_a?(Integer) && current_row.between?(0, 7)
+            puts "Illegal selection, enter an integer between 0 and 7"
+            current_row = gets.chomp.to_i
+        end
+
+        [current_column, current_row]
+    end
+
     def switch_players(current_player)
         @current_player = @current_player == @player_one ? @player_two : @player_one
     end
