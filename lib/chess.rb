@@ -576,7 +576,7 @@ class ChessGame < ChessPiece
     def stalemate
         return false if @checkmate || @in_check == true
 
-        if legal_moves == false && @in_check == false
+        if legal_moves == false && @in_check == false || @insufficient_material == true
             true
         else
             false
