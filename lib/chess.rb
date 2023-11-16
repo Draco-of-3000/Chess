@@ -285,8 +285,8 @@ class ChessGame < ChessPiece
         queen_moves = rook_result | bishop_result
     end
 
-    def capture_piece(destination_column, destination_row, color)
-        opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
+    def capture_piece(current_column, current_row, destination_column, destination_row)
+        opponent_pieces = @current_player == @player_one ? @black_pieces : @white_pieces
         opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
         
         if opponent_piece
@@ -300,6 +300,8 @@ class ChessGame < ChessPiece
                 @pieces_captured_by_player_two += 1
                 @player_one_pieces_remaining -= 1
             end
+
+            replace_piece(opponent_piece, piece)
         end
     end
 
@@ -349,6 +351,8 @@ class ChessGame < ChessPiece
       
         piece.current_column = new_column
         piece.current_row = new_row
+
+        capture_piece(old_column, old_row, new_column, new_row)
     end
 
     def castling_possible?(color)
@@ -611,7 +615,23 @@ class ChessGame < ChessPiece
             current_row = gets.chomp.to_i
         end
 
-        [current_column, current_row]
+        puts "Enter the column wish to move the piece to"
+        destination_column = gets.chomp.to_i
+
+        until destination_column.is_a?(Integer) && destination_column.between?(0, 7)
+            puts "Illegal selection, enter an integer between 0 and 7"
+            destination_column = gets.chomp.to_i
+        end
+
+        puts "Enter the row wish to move the piece to"
+        destination_row = gets.chomp.to_i
+
+        until destination_row.is_a?(Integer) && destination_row.between?(0, 7)
+            puts "Illegal selection, enter an integer between 0 and 7"
+            destination_row = gets.chomp.to_i
+        end
+
+        [current_column, current_row, destination_column, destination_row]
     end
 
     def switch_players(current_player)
