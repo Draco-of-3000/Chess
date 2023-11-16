@@ -293,7 +293,7 @@ class ChessGame < ChessPiece
             opponent_pieces.delete(opponent_piece)
             puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
     
-            if color == :white
+            if @current_player == @player_one
                 @pieces_captured_by_player_one += 1
                 @player_two_pieces_remaining -= 1
             else
@@ -301,7 +301,7 @@ class ChessGame < ChessPiece
                 @player_one_pieces_remaining -= 1
             end
 
-            replace_piece(opponent_piece, piece)
+            replace_piece(opponent_piece, piece) unless ENV['SKIP_REPLACE_PIECE'] 
         end
     end
 
@@ -352,7 +352,7 @@ class ChessGame < ChessPiece
         piece.current_column = new_column
         piece.current_row = new_row
 
-        capture_piece(old_column, old_row, new_column, new_row)
+        capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
     end
 
     def castling_possible?(color)
