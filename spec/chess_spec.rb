@@ -40,8 +40,8 @@ describe ChessGame do
     let(:white_knight) { ChessPiece::WHITE_KNIGHT }
     let(:white_king) { ChessPiece::WHITE_KING }
     let(:white_queen) { ChessPiece::WHITE_QUEEN }
-    let(:player_one) { Player.new("Player1", "white") }
-    let(:player_two) { Player.new("Player2", "black") }
+    let(:@player_one) { Player.new("Player1", "white") }
+    let(:@player_two) { Player.new("Player2", "black") }
     let(:fake_opponent_piece) { double(start_column: 1, start_row: 4, name: 'black_pawn_1') }
     let(:game) {described_class.new}
 
@@ -265,9 +265,13 @@ describe ChessGame do
     end
 
     describe '#capture_piece' do
+        before do
+            ENV['SKIP_REPLACE_PIECE'] = 'true'
+        end
+
         context "when player one moves to capture an opponent's piece at (1, 4)" do
           it "should capture the opponent's piece and reduce the opponent's piece count by 1" do
-            game.instance_variable_set(:@current_player, 'player_one')
+            game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
       
             opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
@@ -277,7 +281,7 @@ describe ChessGame do
       
             initial_black_pieces_length = game.instance_variable_get(:@black_pieces).length
       
-            game.capture_piece(1, 4, :white)
+            game.capture_piece(1, 6, 1, 4)
       
             updated_black_pieces_length = game.instance_variable_get(:@black_pieces).length
       
@@ -390,6 +394,9 @@ describe ChessGame do
     end
 
     describe '#castling' do
+        before do
+            ENV['SKIP_CAPTURE_PIECE'] = 'true'
+        end
         context 'when castling is valid' do
             it 'should allow kingside castling for white' do
               # Set up the initial board state
