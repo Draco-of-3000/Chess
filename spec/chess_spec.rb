@@ -792,6 +792,18 @@ describe ChessGame do
                 expect(result).to be true
             end
         end
+
+        context "when there's insufficient_material" do
+            before do
+                allow(game).to receive(:legal_moves)
+                game.instance_variable_set(:@insufficient_material, true)
+            end
+      
+            it 'returns true' do
+                result = game.stalemate
+                expect(result).to be true
+            end
+        end
     end
 
     describe '#update_board' do
