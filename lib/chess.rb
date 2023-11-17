@@ -657,6 +657,19 @@ class ChessGame < ChessPiece
         piece.current_column = new_column
         piece.current_row = new_row
     end
+
+    def make_move
+        until @checkmate == true || stalemate == true
+            find_pieces
+            king_in_check?
+            checkmate?
+            stalemate
+            assign_coordinates
+            move_piece(destination_column, destination_row, current_column, current_row)
+            update_board
+            switch_players
+        end
+    end
 end
 
 
