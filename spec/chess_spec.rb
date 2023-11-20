@@ -624,11 +624,11 @@ describe ChessGame do
         let(:game) { ChessGame.new }
     
         context 'when the king is not in check' do
-            it 'returns true for any move' do
+            it 'returns false' do
                 game.instance_variable_set(:@in_check, false)
                 piece = instance_double("Piece", current_row: 0, current_column: 0, name: "Pawn")
                 moves = [[1, 1], [2, 2]]  # Example moves, they don't matter for this test
-                expect(game.checkmate_possible?(piece, moves)).to be_truthy
+                expect(game.checkmate_possible?(piece, moves)).to be_falsey
             end
         end
     
