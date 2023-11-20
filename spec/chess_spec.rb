@@ -47,35 +47,43 @@ describe ChessGame do
 
     describe '#pawn_movement' do
         context 'when the pawn is white' do
+            before do
+                game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
+            end
+
             it 'returns valid moves for a regular forward move' do
-                moves = game.pawn_movement(3, 2, :white)
+                moves = game.pawn_movement(3, 2)
                 expect(moves).to contain_exactly([3, 3])
             end
 
             it 'returns valid moves for a double move on the first turn' do
-                moves = game.pawn_movement(3, 1, :white)
+                moves = game.pawn_movement(3, 1)
                 expect(moves).to contain_exactly([3, 2], [3, 3]) # Assuming (3, 2) and (3, 3) are valid moves
             end
 
             it 'filters out invalid moves' do
-                moves = game.pawn_movement(7, 7, :white)
+                moves = game.pawn_movement(7, 7)
                 expect(moves).to be_empty # Assuming (7, 8) is an invalid move
             end
         end
 
         context 'when the pawn is black' do
+            before do
+                game.instance_variable_set(:@current_player, Player.new("Player2", "black"))
+            end
+            
             it 'returns valid moves for a regular forward move' do
-                moves = game.pawn_movement(3, 5, :black)
+                moves = game.pawn_movement(3, 5)
                 expect(moves).to contain_exactly([3, 4])
             end
 
             it 'returns valid moves for a double move on the first turn' do
-                moves = game.pawn_movement(3, 6, :black)
+                moves = game.pawn_movement(3, 6)
                 expect(moves).to contain_exactly([3, 5], [3, 4])
             end
 
             it 'filters out invalid moves' do
-                moves = game.pawn_movement(0, 0, :black)
+                moves = game.pawn_movement(0, 0)
                 expect(moves).to be_empty 
             end
         end
@@ -305,7 +313,7 @@ describe ChessGame do
                 game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
                 game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
 
-                expect(game.en_passant_possible?(1, 4)).to be(true)
+                expect(game.en_passant_possible?(0, 4)).to be(true)
             end
         end
     end
@@ -359,7 +367,7 @@ describe ChessGame do
 
     describe '#castling_possible?' do
         before do
-            game.instance_variable_set(:@current_player, 'player_two')
+            game.instance_variable_set(:@current_player, :@player_two)
         end
 
         context 'when castling is possible' do
@@ -368,7 +376,7 @@ describe ChessGame do
             end
 
             it 'should return true' do
-                expect(game.castling_possible?(:black)).to be_truthy
+                expect(game.castling_possible?).to be_truthy
             end
         end
 
@@ -379,7 +387,7 @@ describe ChessGame do
             end
         
             it 'should return false' do
-              expect(game.castling_possible?(:black)).to be_falsey
+              expect(game.castling_possible?).to be_falsey
             end
         end
         
@@ -390,7 +398,7 @@ describe ChessGame do
             end
         
             it 'should return false' do
-              expect(game.castling_possible?(:black)).to be_falsey
+              expect(game.castling_possible?).to be_falsey
             end
         end
     end
