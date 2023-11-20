@@ -305,7 +305,7 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def retrieve_pawn(current_column, current_row)
+    def retrieve_pawn(current_column, current_row)
         pawn = get_piece_at(current_column, current_row)
 
         if pawn&.name&.match?(/Pawn/i)
