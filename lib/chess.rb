@@ -369,14 +369,19 @@ class ChessGame < ChessPiece
         valid_moves = case piece.name
         when /pawn/i
             pawn_movement(old_column, old_row, piece.color)
+            en_passant_possible?
         when /king/i
             king_movement(old_column, old_row)
+            @king_moved = true
+            castling_possible?
         when /knight/i
             knight_movement(old_column, old_row)
         when /bishop/i
             bishop_movement(old_column, old_row)
         when /rook/i
             rook_movement(old_column, old_row)
+            @rook_moved = true
+            castling_possible?
         when /queen/i
             queen_movement(old_column, old_row)
         end
