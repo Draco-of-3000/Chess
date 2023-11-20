@@ -484,7 +484,7 @@ class ChessGame < ChessPiece
     end
 
     def checkmate?
-        return false unless @in_check == true
+        return false unless @in_check == true || checkmate_possible? == true
 
         player_pieces = (@current_player == @player_one) ? @white_pieces : @black_pieces
     
