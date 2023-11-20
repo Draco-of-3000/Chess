@@ -305,13 +305,30 @@ class ChessGame < ChessPiece
         end
     end
 
-    def en_passant_possible?(column, row, color)
-        direction = (color == :white) ? 1 : -1
-        fifth_rank = (color == :white) ? 4 : 3
+    #def retrieve_pawn(current_column, current_row)
+        pawn = get_piece_at(current_column, current_row)
 
-        if row == fifth_rank
-            double_move = [column, row + 2 * direction]
-            return true if @double_move_made && pawn_valid_move?(double_move)
+        if pawn&.name&.match?(/Pawn/i)
+            true
+        else
+            false
+        end
+
+        pawn
+    end
+
+    #def en_passant_possible?(current_column, current_row)
+        pawn_piece = retrieve_pawn(current_column, current_row)
+
+        if pawn_piece
+
+            direction = (pawn_piece.color == 'white') ? 1 : -1
+            fifth_rank = (pawn_piece.color == 'white') ? 4 : 3
+
+            if current_row == fifth_rank
+                double_move = [current_column, current_row + 2 * direction]
+                return true if @double_move_made && pawn_valid_move?(double_move)
+            end
         end
 
         false
@@ -335,9 +352,9 @@ class ChessGame < ChessPiece
         end
     end
 
-    def get_piece_at(column, row)
+    def get_piece_at(current_column, current_row)
         piece = @black_pieces.concat(@white_pieces).find do |piece|
-          piece.instance_variable_get(:@start_column) == column && piece.instance_variable_get(:@start_row) == row
+            piece.instance_variable_get(:@current_column) == current_column && piece.instance_variable_get(:@current_row) == current_row
         end
       
         return piece if piece
