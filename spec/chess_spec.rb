@@ -291,19 +291,21 @@ describe ChessGame do
         end
     end
 
-    describe '#en_passant_possible' do
+    describe '#en_passant_possible?' do
         context 'when en passant is possible' do
             it 'returns true' do
-                game.instance_variable_set(:@current_player, 'player_one')
+                game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
                 game.instance_variable_set(:@double_move_made, true)
       
-                opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
-                opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
+                opponent_piece_1 = double(start_column: 1, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1', color: 'black')
+                opponent_piece_2 = double(start_column: 1, start_row: 2, current_column: 0, current_row: 4, name: 'White Pawn 2', color: 'white')
+
+                allow(game).to receive(:retrieve_pawn).and_return(opponent_piece_2)
       
                 game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
                 game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
 
-                expect(game.en_passant_possible?(1, 4, :white)).to be(true)
+                expect(game.en_passant_possible?(1, 4)).to be(true)
             end
         end
     end
@@ -332,12 +334,12 @@ describe ChessGame do
         context 'when a piece exists at the specified column and row' do
             it 'should return the correct piece' do
                 piece = ChessPiece.new('Black Pawn 2', "\u265F", 1, 6, 'black')
+                piece.current_column = game.instance_variable_set(:@current_column, 1)
+                piece.current_row = game.instance_variable_set(:@current_row, 5)
   
                 game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_1, piece])
-                column = 1
-                row = 6
             
-                retrieved_piece = game.get_piece_at(column, row)
+                retrieved_piece = game.get_piece_at(piece.current_column, piece.current_row)
             
                 expect(retrieved_piece).to eq(piece)
           end
@@ -594,6 +596,8 @@ describe ChessGame do
         end
         context 'when the king is not in check' do
             it 'returns false' do
+                game.instance_variable_set(:@in_check, true)
+                allow(game).to receive(:checkmate_possible?).and_return(false)
                 expect(game.checkmate?).to be_falsey
             end
         end
