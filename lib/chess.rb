@@ -170,10 +170,10 @@ class ChessGame < ChessPiece
         @insufficient_material = false
     end
 
-    def pawn_movement(column, row, color)
+    def pawn_movement(column, row)
         pawn_moves = []
     
-        direction = (color == :white) ? 1 : -1
+        direction = (@current_player == @player_one) ? 1 : -1
     
         # Regular forward move
         regular_move = [column, row + direction]
@@ -181,7 +181,7 @@ class ChessGame < ChessPiece
     
         # Double move on the first turn
         double_move = [column, row + 2 * direction]
-        if row == (color == :white ? 1 : 6) && pawn_valid_move?(double_move)
+        if row == (@current_player == @player_one ? 1 : 6) && pawn_valid_move?(double_move)
             pawn_moves << double_move
             @double_move_made = true
         end
@@ -368,17 +368,17 @@ class ChessGame < ChessPiece
       
         valid_moves = case piece.name
         when /pawn/i
-          pawn_movement(old_column, old_row, piece.color)
+            pawn_movement(old_column, old_row, piece.color)
         when /king/i
-          king_movement(old_column, old_row)
+            king_movement(old_column, old_row)
         when /knight/i
-          knight_movement(old_column, old_row)
+            knight_movement(old_column, old_row)
         when /bishop/i
-          bishop_movement(old_column, old_row)
+            bishop_movement(old_column, old_row)
         when /rook/i
-          rook_movement(old_column, old_row)
+            rook_movement(old_column, old_row)
         when /queen/i
-          queen_movement(old_column, old_row)
+            queen_movement(old_column, old_row)
         end
 
         if valid_moves.include?([new_column, new_row])
@@ -390,12 +390,12 @@ class ChessGame < ChessPiece
         end
     end
 
-    def castling_possible?(color)
+    def castling_possible?
         return false if @king_moved == true || @rook_moved == true
 
         # Determine the column of the king and rook based on the color
-        king_column = (color == :white) ? 4 : 3
-        rook_column = (color == :white) ? 7 : 0
+        king_column = (@current_player == @player_one) ? 4 : 3
+        rook_column = (@current_player == @player_one) ? 7 : 0
 
         # Check if the king and rook are present at their starting positions
         return false unless get_piece_at(king_column, 0)&.name == "#{color.to_s.capitalize} King"
@@ -509,7 +509,7 @@ class ChessGame < ChessPiece
         player_pieces.flatten.each do |piece|
             case piece.name
             when /Pawn/
-                pawn_moves = pawn_movement(piece.current_column, piece.current_row, @current_player)
+                pawn_moves = pawn_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, pawn_moves)
             when /Rook/
                 rook_moves = rook_movement(piece.current_column, piece.current_row)
@@ -594,7 +594,7 @@ class ChessGame < ChessPiece
             possible_moves =
             case piece.name
             when /Pawn/
-                pawn_movement(piece.current_column, piece.current_row, piece.color)
+                pawn_movement(piece.current_column, piece.current_row)
             when /Rook/
                 rook_movement(piece.current_column, piece.current_row)
             when /Bishop/
