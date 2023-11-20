@@ -349,10 +349,28 @@ class ChessGame < ChessPiece
         piece = get_piece_at(old_column, old_row)
         return unless piece
       
-        piece.current_column = new_column
-        piece.current_row = new_row
+        valid_moves = case piece.name
+        when /pawn/i
+          pawn_movement(old_column, old_row, piece.color)
+        when /king/i
+          king_movement(old_column, old_row)
+        when /knight/i
+          knight_movement(old_column, old_row)
+        when /bishop/i
+          bishop_movement(old_column, old_row)
+        when /rook/i
+          rook_movement(old_column, old_row)
+        when /queen/i
+          queen_movement(old_column, old_row)
+        end
 
-        capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+        if valid_moves.include?([new_column, new_row])
+            capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+            piece.current_column = new_column
+            piece.current_row = new_row
+        else
+            illegal_move
+        end
     end
 
     def castling_possible?(color)
@@ -499,20 +517,25 @@ class ChessGame < ChessPiece
     end
 
     def checkmate_possible?(piece, moves)
-        return true unless @in_check == true
+        return false unless @in_check == true
         moves.each do |move|
             # Simulate the move and check if it gets the king out of check
             @board[move[1]][move[0]], @board[piece.current_row][piece.current_column] = piece, nil
 
             if @in_check == false
+                # If the king is not in check after the move, it's not checkmate
                 @board[piece.current_row][piece.current_column] = piece
                 @board[move[1]][move[0]] = nil
-            else
-                return true
+                return false
             end
+
+            # Restore the board for the next iteration
+            @board[piece.current_row][piece.current_column] = piece
+            @board[move[1]][move[0]] = nil
         end
 
-        false
+        # If no move gets the king out of check, it's checkmate
+        true
     end
 
     def find_pieces
