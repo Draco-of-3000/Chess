@@ -317,7 +317,7 @@ class ChessGame < ChessPiece
         pawn
     end
 
-    #def en_passant_possible?(current_column, current_row)
+    def en_passant_possible?(current_column, current_row)
         pawn_piece = retrieve_pawn(current_column, current_row)
 
         if pawn_piece
