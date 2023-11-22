@@ -101,19 +101,19 @@ class ChessBoard < ChessPiece
         puts seperator
         puts "8 |   #{@black_rook.unicode}   |   #{@black_knight.unicode}   |   #{@black_bishop.unicode}   |   #{@black_queen.unicode}   |   #{@black_king.unicode}   |   #{@black_bishop.unicode}   |   #{@black_knight.unicode}   |   #{@black_rook.unicode}   |"
         puts seperator
-        puts "7 |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |   #{@black_pawn.unicode}   |"
+        puts "7 |   #{@black_pawn_1.unicode}   |   #{@black_pawn_2.unicode}   |   #{@black_pawn_3.unicode}   |   #{@black_pawn_4.unicode}   |   #{@black_pawn_5.unicode}   |   #{@black_pawn_6.unicode}   |   #{@black_pawn_7.unicode}   |   #{@black_pawn_8.unicode}   |"
         puts seperator
-        puts "6 |   #{label_at(16)}  |   #{label_at(17)}  |   #{label_at(18)}  |   #{label_at(19)}  |   #{label_at(20)}  |   #{label_at(21)}  |   #{label_at(22)}  |   #{label_at(23)}  |"
+        puts "6 |   #{@board[16]}    |   #{@board[17]}    |   #{@board[18]}    |   #{@board[19]}    |   #{@board[20]}    |   #{@board[21]}    |   #{@board[22]}    |   #{@board[23]}    |"
         puts seperator
-        puts "5 |   #{label_at(24)}  |   #{label_at(25)}  |   #{label_at(26)}  |   #{label_at(27)}  |   #{label_at(28)}  |   #{label_at(29)}  |   #{label_at(30)}  |   #{label_at(31)}  |"
+        puts "5 |   #{@board[24]}    |   #{@board[25]}    |   #{@board[26]}    |   #{@board[27]}    |   #{@board[28]}    |   #{@board[29]}    |   #{@board[30]}    |   #{@board[31]}    |"
         puts seperator
-        puts "4 |   #{label_at(32)}  |   #{label_at(33)}  |   #{label_at(34)}  |   #{label_at(35)}  |   #{label_at(36)}  |   #{label_at(37)}  |   #{label_at(38)}  |   #{label_at(39)}  |"
+        puts "4 |   #{@board[32]}    |   #{@board[33]}    |   #{@board[34]}    |   #{@board[35]}    |   #{@board[36]}    |   #{@board[37]}    |   #{@board[38]}    |   #{@board[39]}    |"
         puts seperator
-        puts "3 |   #{label_at(40)}  |   #{label_at(41)}  |   #{label_at(42)}  |   #{label_at(43)}  |   #{label_at(44)}  |   #{label_at(45)}  |   #{label_at(46)}  |   #{label_at(47)}  |"
+        puts "3 |   #{@board[40]}    |   #{@board[41]}    |   #{@board[42]}    |   #{@board[43]}    |   #{@board[44]}    |   #{@board[45]}    |   #{@board[46]}    |   #{@board[47]}    |"
         puts seperator
-        puts "2 |   #{@white_rook.unicode}   |   #{@white_knight.unicode}   |   #{@white_bishop.unicode}   |   #{@white_queen.unicode}   |   #{@white_king.unicode}   |   #{@white_bishop.unicode}   |   #{@white_knight.unicode}   |   #{@white_rook.unicode}   |"
+        puts "2 |   #{@white_pawn_1.unicode}   |   #{@white_pawn_2.unicode}   |   #{@white_pawn_3.unicode}   |   #{@white_pawn_4.unicode}   |   #{@white_pawn_5.unicode}   |   #{@white_pawn_6.unicode}   |   #{@white_pawn_7.unicode}   |   #{@white_pawn_8.unicode}   |"
         puts seperator
-        puts "1 |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |   #{@white_pawn.unicode}   |"
+        puts "1 |   #{@white_rook.unicode}   |   #{@white_knight.unicode}   |   #{@white_bishop.unicode}   |   #{@white_queen.unicode}   |   #{@white_king.unicode}   |   #{@white_bishop.unicode}   |   #{@white_knight.unicode}   |   #{@white_rook.unicode}   |"
         puts seperator
         puts "\n"
     end
@@ -728,5 +728,5 @@ class ChessGame < ChessPiece
 end
 
 
-#game = ChessBoard.new
-#game.display_board
+game = ChessBoard.new
+game.display_board
