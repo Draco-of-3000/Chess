@@ -161,10 +161,10 @@ class ChessGame < ChessPiece
         @player_two_pieces_remaining = 16
         @white_pawns = [ChessPiece::WHITE_PAWN_1, ChessPiece::WHITE_PAWN_2, ChessPiece::WHITE_PAWN_3, ChessPiece::WHITE_PAWN_4, ChessPiece::WHITE_PAWN_5, ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_PAWN_7, ChessPiece::WHITE_PAWN_8]
         @black_pawns = [ChessPiece::BLACK_PAWN_1, ChessPiece::BLACK_PAWN_2, ChessPiece::BLACK_PAWN_3, ChessPiece::BLACK_PAWN_4, ChessPiece::BLACK_PAWN_5, ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_PAWN_7, ChessPiece::BLACK_PAWN_8]
-        @black_pieces = [@black_pawns, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
-        @white_pieces = [@white_pawns, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
-        @major_black_pieces = [ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
-        @major_white_pieces = [ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
+        @black_pieces = [@black_pawns, ChessPiece::BLACK_KNIGHT_1, ChessPiece::BLACK_KNIGHT_2, ChessPiece::BLACK_BISHOP_1, ChessPiece::BLACK_BISHOP_2, ChessPiece::BLACK_ROOK_1, ChessPiece::BLACK_ROOK_2, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        @white_pieces = [@white_pawns, ChessPiece::WHITE_KNIGHT_1, ChessPiece::WHITE_KNIGHT_2, ChessPiece::WHITE_BISHOP_1, ChessPiece::WHITE_BISHOP_2, ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_ROOK_2, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
+        @major_black_pieces = [ChessPiece::BLACK_KNIGHT_1, ChessPiece::BLACK_KNIGHT_2, ChessPiece::BLACK_BISHOP_1, ChessPiece::BLACK_BISHOP_2, ChessPiece::BLACK_ROOK_1, ChessPiece::BLACK_ROOK_2, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        @major_white_pieces = [ChessPiece::WHITE_KNIGHT_1, ChessPiece::WHITE_KNIGHT_2, ChessPiece::WHITE_BISHOP_1, ChessPiece::WHITE_BISHOP_2, ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_ROOK_2, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         @player_one = ''
         @player_two = ''
         @player_one_name = ''
