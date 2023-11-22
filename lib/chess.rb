@@ -151,6 +151,8 @@ class ChessGame < ChessPiece
         @black_pawns = [ChessPiece::BLACK_PAWN_1, ChessPiece::BLACK_PAWN_2, ChessPiece::BLACK_PAWN_3, ChessPiece::BLACK_PAWN_4, ChessPiece::BLACK_PAWN_5, ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_PAWN_7, ChessPiece::BLACK_PAWN_8]
         @black_pieces = [@black_pawns, ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
         @white_pieces = [@white_pawns, ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
+        @major_black_pieces = [ChessPiece::BLACK_KNIGHT, ChessPiece::BLACK_BISHOP, ChessPiece::BLACK_ROOK, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        @major_white_pieces = [ChessPiece::WHITE_KNIGHT, ChessPiece::WHITE_BISHOP, ChessPiece::WHITE_ROOK, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         @player_one = ''
         @player_two = ''
         @player_one_name = ''
@@ -168,6 +170,18 @@ class ChessGame < ChessPiece
         @rook_moved = false
         @square_under_attack = false
         @insufficient_material = false
+    end
+
+    def setup_pieces(color)
+        major_pieces = color == :white ? 7 : 0
+        pawns = color == :white ? 6 : 1
+
+        @board[major_pieces] = (
+            color == :white ? ["\u2656", "\u2658", "\u2657", "\u2655", "\u2654", "\u2657", "\u2658", "\u2656"] :
+                             ["\u265C", "\u265E", "\u265D", "\u265B", "\u265A", "\u265D", "\u265E", "\u265C"]
+        )
+
+        @board[pawns] = Array.new(8, color == :white ? "\u2659" : "\u265F")
     end
 
     def pawn_movement(column, row)
@@ -728,5 +742,5 @@ class ChessGame < ChessPiece
 end
 
 
-game = ChessBoard.new
-game.display_board
+#game = ChessBoard.new
+#game.display_board
