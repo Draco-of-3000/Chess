@@ -285,7 +285,7 @@ describe ChessGame do
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
             game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
-            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
       
             initial_black_pieces_length = game.instance_variable_get(:@black_pieces).length
       
@@ -311,7 +311,7 @@ describe ChessGame do
                 allow(game).to receive(:retrieve_pawn).and_return(opponent_piece_2)
       
                 game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
-                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
 
                 expect(game.en_passant_possible?(0, 4)).to be(true)
             end
@@ -327,7 +327,7 @@ describe ChessGame do
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
             game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
-            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+            game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
 
             # Capture the pawn en passant
             game.en_passant_capture(1, 4, :white)
@@ -561,7 +561,7 @@ describe ChessGame do
                 king_piece.current_column = 0
                 king_piece.current_row = 7
 
-                white_bishop = ChessPiece::WHITE_BISHOP
+                white_bishop = ChessPiece::WHITE_BISHOP_1
                 white_bishop.current_column = 7
                 white_bishop.current_row = 0
 
@@ -679,10 +679,10 @@ describe ChessGame do
             before do
                 white_king_piece = ChessPiece::WHITE_KING
                 black_king_piece = ChessPiece::BLACK_KING
-                white_knight_piece = ChessPiece::WHITE_KNIGHT
-                black_knight_piece = ChessPiece::BLACK_KNIGHT
-                white_bishop_piece = ChessPiece::WHITE_BISHOP
-                black_bishop_piece = ChessPiece::BLACK_BISHOP 
+                white_knight_piece = ChessPiece::WHITE_KNIGHT_1
+                black_knight_piece = ChessPiece::BLACK_KNIGHT_1
+                white_bishop_piece = ChessPiece::WHITE_BISHOP_1
+                black_bishop_piece = ChessPiece::BLACK_BISHOP_1
                 game.instance_variable_set(:@white_pieces, [white_king_piece, white_knight_piece])
                 game.instance_variable_set(:@black_pieces, [black_king_piece, black_knight_piece])
             end
@@ -702,8 +702,8 @@ describe ChessGame do
             before do
                 white_king_piece = ChessPiece::WHITE_KING
                 black_king_piece = ChessPiece::BLACK_KING
-                white_bishop_piece = ChessPiece::WHITE_BISHOP
-                black_bishop_piece = ChessPiece::BLACK_BISHOP 
+                white_bishop_piece = ChessPiece::WHITE_BISHOP_1
+                black_bishop_piece = ChessPiece::BLACK_BISHOP_1 
                 game.instance_variable_set(:@white_pieces, [white_king_piece, white_king_piece, white_bishop_piece])
                 game.instance_variable_set(:@black_pieces, [black_king_piece, black_king_piece, black_bishop_piece])
             end
@@ -723,12 +723,13 @@ describe ChessGame do
             before do
                 white_king_piece = ChessPiece::WHITE_KING
                 black_king_piece = ChessPiece::BLACK_KING
-                white_bishop_piece = ChessPiece::WHITE_BISHOP
-                black_bishop_piece = ChessPiece::BLACK_BISHOP 
-                white_rook_piece = ChessPiece::WHITE_ROOK
-                black_rook_piece = ChessPiece::BLACK_ROOK
-                game.instance_variable_set(:@white_pieces, [white_king_piece, white_rook_piece, white_bishop_piece])
-                game.instance_variable_set(:@black_pieces, [black_king_piece, black_rook_piece, black_bishop_piece])
+                white_knight_piece = ChessPiece::WHITE_KNIGHT_1
+                black_knight_piece = ChessPiece::BLACK_KNIGHT_1
+                white_bishop_piece = ChessPiece::WHITE_BISHOP_1
+                black_bishop_piece = ChessPiece::BLACK_BISHOP_1
+                white_pawn_1 = ChessPiece::WHITE_PAWN_1
+                game.instance_variable_set(:@white_pieces, [white_king_piece, white_knight_piece, white_pawn_1])
+                game.instance_variable_set(:@black_pieces, [black_king_piece, black_knight_piece])
             end
 
             it 'returns nil' do
@@ -745,8 +746,8 @@ describe ChessGame do
 
         context 'when there are legal moves available' do
             it 'returns true' do
-                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT])
-                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT_1])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
                 allow(game).to receive(:pawn_movement).and_return([[1, 6]])
                 allow(game).to receive(:knight_movement).and_return([[2, 5]])
                 result = game.legal_moves
@@ -756,8 +757,8 @@ describe ChessGame do
 
         context 'when there are no legal moves available' do
             it 'returns false' do
-                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT])
-                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT])
+                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_KNIGHT_1])
+                game.instance_variable_set(:@white_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
                 allow(game).to receive(:pawn_movement)
                 allow(game).to receive(:knight_movement)
                 result = game.legal_moves
@@ -832,7 +833,7 @@ describe ChessGame do
                 king_piece.current_column = 0
                 king_piece.current_row = 7
 
-                white_bishop = ChessPiece::WHITE_BISHOP
+                white_bishop = ChessPiece::WHITE_BISHOP_1
                 white_bishop.current_column = 7
                 white_bishop.current_row = 0
 
