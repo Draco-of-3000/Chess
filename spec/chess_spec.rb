@@ -867,4 +867,14 @@ describe ChessGame do
         end
     end
 
+    describe '#check_winner' do
+        context 'when checkmate' do
+            it 'declares winner' do
+                game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
+                game.instance_variable_set(:@player_one_name, 'Draco')
+                game.instance_variable_set(:@checkmate, true)
+                expect{game.check_winner}.to output("Draco wins the game! Checkmate!\n").to_stdout
+            end
+        end
+    end
 end
