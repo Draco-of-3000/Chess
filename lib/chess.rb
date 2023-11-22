@@ -68,9 +68,12 @@ class ChessBoard < ChessPiece
         @black_pawn_6 = ChessPiece::BLACK_PAWN_6
         @black_pawn_7 = ChessPiece::BLACK_PAWN_7
         @black_pawn_8 = ChessPiece::BLACK_PAWN_8
-        @black_knight = ChessPiece::BLACK_KNIGHT
-        @black_bishop = ChessPiece::BLACK_BISHOP
-        @black_rook = ChessPiece::BLACK_ROOK
+        @black_knight_1 = ChessPiece::BLACK_KNIGHT_1
+        @black_bishop_1 = ChessPiece::BLACK_BISHOP_1
+        @black_rook_1 = ChessPiece::BLACK_ROOK_1
+        @black_knight_2 = ChessPiece::BLACK_KNIGHT_2
+        @black_bishop_2 = ChessPiece::BLACK_BISHOP_2
+        @black_rook_2 = ChessPiece::BLACK_ROOK_2
         @black_king = ChessPiece::BLACK_KING
         @black_queen = ChessPiece::BLACK_QUEEN
 
@@ -82,9 +85,12 @@ class ChessBoard < ChessPiece
         @white_pawn_6 = ChessPiece::WHITE_PAWN_6
         @white_pawn_7 = ChessPiece::WHITE_PAWN_7
         @white_pawn_8 = ChessPiece::WHITE_PAWN_8
-        @white_knight = ChessPiece::WHITE_KNIGHT
-        @white_bishop = ChessPiece::WHITE_BISHOP
-        @white_rook = ChessPiece::WHITE_ROOK
+        @white_knight_1 = ChessPiece::WHITE_KNIGHT_1
+        @white_bishop_1 = ChessPiece::WHITE_BISHOP_1
+        @white_rook_1= ChessPiece::WHITE_ROOK_1
+        @white_knight_2 = ChessPiece::WHITE_KNIGHT_2
+        @white_bishop_2 = ChessPiece::WHITE_BISHOP_2
+        @white_rook_2= ChessPiece::WHITE_ROOK_2
         @white_king = ChessPiece::WHITE_KING
         @white_queen = ChessPiece::WHITE_QUEEN
     end
