@@ -703,6 +703,16 @@ class ChessGame < ChessPiece
         piece.current_row = new_row
     end
 
+    def check_winner
+        if @checkmate == true
+            if @current_player == @player_one 
+                puts "#{@player_one_name} wins the game! Checkmate!"
+            elsif @current_player == @player_two
+                puts "#{@player_two_name} wins the game! Checkmate!"
+            end
+        end
+    end
+
     def make_move
         until @checkmate == true || stalemate == true
             find_pieces
