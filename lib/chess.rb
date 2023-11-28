@@ -409,14 +409,13 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def get_piece_at(column, row)
-        #piece = @board[row][column]
+    def get_piece_at(column, row)
+        piece = @board[row][column]
 
-        #return piece if piece
+        return piece if piece
       
-        #nil
-    #end
-      
+        nil
+    end
 
     def move_piece(new_column, new_row, old_column, old_row)
         piece = get_piece_at(old_column, old_row)
