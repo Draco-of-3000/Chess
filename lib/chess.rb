@@ -214,8 +214,8 @@ class ChessGame < ChessPiece
     end
 
     def display_updated_board
-        puts ChessPiece::numbers
-        puts ChessPiece::seperator
+        puts numbers
+        puts seperator
         
         7.downto(0) do |row|
           print "#{row} |"
