@@ -104,28 +104,28 @@ class ChessBoard < ChessPiece
         "--+-------+-------+-------+-------+-------+-------+-------+-------+"
     end
 
-    def letters
-        "      a       b       c       d       e       f       g       h"
+    def numbers
+        "      0       1       2       3       4       5       6       7"
     end
 
     def display_board
-        puts letters
+        puts numbers
         puts seperator
-        puts "8 |   #{@black_rook.unicode}   |   #{@black_knight.unicode}   |   #{@black_bishop.unicode}   |   #{@black_queen.unicode}   |   #{@black_king.unicode}   |   #{@black_bishop.unicode}   |   #{@black_knight.unicode}   |   #{@black_rook.unicode}   |"
+        puts "7 |   #{@black_rook_1.unicode}   |   #{@black_knight_1.unicode}   |   #{@black_bishop_1.unicode}   |   #{@black_queen.unicode}   |   #{@black_king.unicode}   |   #{@black_bishop_2.unicode}   |   #{@black_knight_2.unicode}   |   #{@black_rook_2.unicode}   |"
         puts seperator
-        puts "7 |   #{@black_pawn_1.unicode}   |   #{@black_pawn_2.unicode}   |   #{@black_pawn_3.unicode}   |   #{@black_pawn_4.unicode}   |   #{@black_pawn_5.unicode}   |   #{@black_pawn_6.unicode}   |   #{@black_pawn_7.unicode}   |   #{@black_pawn_8.unicode}   |"
+        puts "6 |   #{@black_pawn_1.unicode}   |   #{@black_pawn_2.unicode}   |   #{@black_pawn_3.unicode}   |   #{@black_pawn_4.unicode}   |   #{@black_pawn_5.unicode}   |   #{@black_pawn_6.unicode}   |   #{@black_pawn_7.unicode}   |   #{@black_pawn_8.unicode}   |"
         puts seperator
-        puts "6 |   #{@board[16]}    |   #{@board[17]}    |   #{@board[18]}    |   #{@board[19]}    |   #{@board[20]}    |   #{@board[21]}    |   #{@board[22]}    |   #{@board[23]}    |"
+        puts "5 |  #{"0, 5"} |  #{"1, 5"} |  #{"2, 5"} |  #{"3, 5"} |  #{"4, 5"} |  #{"5, 5"} |  #{"6, 5"} |  #{"7, 5"} |"
         puts seperator
-        puts "5 |   #{@board[24]}    |   #{@board[25]}    |   #{@board[26]}    |   #{@board[27]}    |   #{@board[28]}    |   #{@board[29]}    |   #{@board[30]}    |   #{@board[31]}    |"
+        puts "4 |  #{"0, 4"} |  #{"1, 4"} |  #{"2, 4"} |  #{"3, 4"} |  #{"4, 4"} |  #{"5, 4"} |  #{"6, 4"} |  #{"7, 4"} |"
         puts seperator
-        puts "4 |   #{@board[32]}    |   #{@board[33]}    |   #{@board[34]}    |   #{@board[35]}    |   #{@board[36]}    |   #{@board[37]}    |   #{@board[38]}    |   #{@board[39]}    |"
+        puts "3 |  #{"0, 3"} |  #{"1, 3"} |  #{"2, 4"} |  #{"3, 3"} |  #{"4, 3"} |  #{"5, 3"} |  #{"6, 3"} |  #{"7, 3"} |"
         puts seperator
-        puts "3 |   #{@board[40]}    |   #{@board[41]}    |   #{@board[42]}    |   #{@board[43]}    |   #{@board[44]}    |   #{@board[45]}    |   #{@board[46]}    |   #{@board[47]}    |"
+        puts "2 |  #{"0, 2"} |  #{"1, 2"} |  #{"2, 4"} |  #{"3, 2"} |  #{"4, 2"} |  #{"5, 2"} |  #{"6, 2"} |  #{"7, 2"} |"
         puts seperator
-        puts "2 |   #{@white_pawn_1.unicode}   |   #{@white_pawn_2.unicode}   |   #{@white_pawn_3.unicode}   |   #{@white_pawn_4.unicode}   |   #{@white_pawn_5.unicode}   |   #{@white_pawn_6.unicode}   |   #{@white_pawn_7.unicode}   |   #{@white_pawn_8.unicode}   |"
+        puts "1 |   #{@white_pawn_1.unicode}   |   #{@white_pawn_2.unicode}   |   #{@white_pawn_3.unicode}   |   #{@white_pawn_4.unicode}   |   #{@white_pawn_5.unicode}   |   #{@white_pawn_6.unicode}   |   #{@white_pawn_7.unicode}   |   #{@white_pawn_8.unicode}   |"
         puts seperator
-        puts "1 |   #{@white_rook.unicode}   |   #{@white_knight.unicode}   |   #{@white_bishop.unicode}   |   #{@white_queen.unicode}   |   #{@white_king.unicode}   |   #{@white_bishop.unicode}   |   #{@white_knight.unicode}   |   #{@white_rook.unicode}   |"
+        puts "0 |   #{@white_rook_1.unicode}   |   #{@white_knight_1.unicode}   |   #{@white_bishop_1.unicode}   |   #{@white_queen.unicode}   |   #{@white_king.unicode}   |   #{@white_bishop_2.unicode}   |   #{@white_knight_2.unicode}   |   #{@white_rook_2.unicode}   |"
         puts seperator
         puts "\n"
     end
@@ -205,6 +205,28 @@ class ChessGame < ChessPiece
         end
     end
 
+    =begin
+    def display_updated_board
+        puts numbers
+        puts seperator
+        
+        7.downto(0) do |row|
+          print "#{row} |"
+          
+          0.upto(7) do |col|
+            piece = get_piece_at(col, row)
+            if piece.nil?
+              print "  #{row}, #{col} |"
+            else
+              print "   #{piece.unicode}   |"
+            end
+          end
+          
+          puts "\n--+-------+-------+-------+-------+-------+-------+-------+-------+"
+        end
+    end
+    =end
+    
     def pawn_movement(column, row)
         pawn_moves = []
     
@@ -387,15 +409,14 @@ class ChessGame < ChessPiece
         end
     end
 
-    def get_piece_at(current_column, current_row)
-        piece = @black_pieces.concat(@white_pieces).find do |piece|
-            piece.instance_variable_get(:@current_column) == current_column && piece.instance_variable_get(:@current_row) == current_row
-        end
+    #def get_piece_at(column, row)
+        #piece = @board[row][column]
+
+        #return piece if piece
       
-        return piece if piece
+        #nil
+    #end
       
-        nil
-    end
 
     def move_piece(new_column, new_row, old_column, old_row)
         piece = get_piece_at(old_column, old_row)
@@ -765,3 +786,6 @@ end
 
 #game = ChessBoard.new
 #game.display_board
+#hoe = ChessGame.new
+#hoe.setup_board
+#hoe.display_updated_board
