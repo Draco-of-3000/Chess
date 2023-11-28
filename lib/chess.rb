@@ -209,6 +209,10 @@ class ChessGame < ChessPiece
         "--+-------+-------+-------+-------+-------+-------+-------+-------+"
     end
 
+    def numbers
+        "      0       1       2       3       4       5       6       7"
+    end
+
     def display_updated_board
         puts ChessPiece::numbers
         puts ChessPiece::seperator
