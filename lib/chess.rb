@@ -205,9 +205,13 @@ class ChessGame < ChessPiece
         end
     end
 
+    def seperator
+        "--+-------+-------+-------+-------+-------+-------+-------+-------+"
+    end
+
     def display_updated_board
-        puts numbers
-        puts seperator
+        puts ChessPiece::numbers
+        puts ChessPiece::seperator
         
         7.downto(0) do |row|
           print "#{row} |"
@@ -783,6 +787,6 @@ end
 
 #game = ChessBoard.new
 #game.display_board
-#hoe = ChessGame.new
-#hoe.setup_board
-#hoe.display_updated_board
+hoe = ChessGame.new
+hoe.setup_board
+hoe.display_updated_board
