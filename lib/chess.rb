@@ -34,25 +34,25 @@ class ChessPiece
     BLACK_BISHOP_2 = ChessPiece.new("Black Bishop 2", "\u265D", 5, 7, 'black')
     BLACK_ROOK_1 = ChessPiece.new("Black Rook 1", "\u265C", 0, 7, 'black')
     BLACK_ROOK_2 = ChessPiece.new("Black Rook 2", "\u265C", 7, 7, 'black')
-    BLACK_KING = ChessPiece.new("Black King", "\u265A", 3, 7, 'black')
-    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B", 4, 7, 'black')
+    BLACK_KING = ChessPiece.new("Black King", "\u265A", 4, 7, 'black')
+    BLACK_QUEEN = ChessPiece.new("Black Queen", "\u265B", 3, 7, 'black')
 
     WHITE_PAWN_1 = ChessPiece.new("White Pawn 1", "\u2659", 0, 1, 'white')
-    WHITE_PAWN_2 = ChessPiece.new("White Pawn 2", "\u2659", 1, 0, 'white')
-    WHITE_PAWN_3 = ChessPiece.new("White Pawn 3", "\u2659", 2, 0, 'white')
-    WHITE_PAWN_4 = ChessPiece.new("White Pawn 4", "\u2659", 3, 0, 'white')
-    WHITE_PAWN_5 = ChessPiece.new("White Pawn 5", "\u2659", 4, 0, 'white')
-    WHITE_PAWN_6 = ChessPiece.new("White Pawn 6", "\u2659", 5, 0, 'white')
-    WHITE_PAWN_7 = ChessPiece.new("White Pawn 7", "\u2659", 6, 0, 'white')
-    WHITE_PAWN_8 = ChessPiece.new("White Pawn 8", "\u2659", 7, 0, 'white')
+    WHITE_PAWN_2 = ChessPiece.new("White Pawn 2", "\u2659", 1, 1, 'white')
+    WHITE_PAWN_3 = ChessPiece.new("White Pawn 3", "\u2659", 2, 1, 'white')
+    WHITE_PAWN_4 = ChessPiece.new("White Pawn 4", "\u2659", 3, 1, 'white')
+    WHITE_PAWN_5 = ChessPiece.new("White Pawn 5", "\u2659", 4, 1, 'white')
+    WHITE_PAWN_6 = ChessPiece.new("White Pawn 6", "\u2659", 5, 1, 'white')
+    WHITE_PAWN_7 = ChessPiece.new("White Pawn 7", "\u2659", 6, 1, 'white')
+    WHITE_PAWN_8 = ChessPiece.new("White Pawn 8", "\u2659", 7, 1, 'white')
     WHITE_KNIGHT_1 = ChessPiece.new("White Knight 1", "\u2658", 1, 0, 'white')
     WHITE_KNIGHT_2 = ChessPiece.new("White Knight 2", "\u2658", 6, 0, 'white')
     WHITE_BISHOP_1 = ChessPiece.new("White Bishop 1", "\u2657", 2, 0, 'white')
     WHITE_BISHOP_2 = ChessPiece.new("White Bishop 2", "\u2657", 5, 0, 'white')
     WHITE_ROOK_1 = ChessPiece.new("White Rook 1", "\u2656", 0, 0, 'white')
     WHITE_ROOK_2 = ChessPiece.new("White Rook 2", "\u2656", 7, 0, 'white')
-    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 4, 0, 'white')
-    WHITE_KING = ChessPiece.new("White King", "\u2654", 3, 0, 'white')
+    WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 3, 0, 'white')
+    WHITE_KING = ChessPiece.new("White King", "\u2654", 4, 0, 'white')
 end
 
 class ChessBoard < ChessPiece
@@ -150,7 +150,7 @@ class ChessBoard < ChessPiece
 end
 
 class ChessGame < ChessPiece
-
+    attr_accessor :chessboard, :board, :player_one_pieces, :player_pieces
     def initialize
         @chessboard = ChessBoard.new
         @board = @chessboard.board
@@ -184,17 +184,7 @@ class ChessGame < ChessPiece
         @insufficient_material = false
     end
 
-    def setup_pieces(color)
-        major_pieces = color == :white ? 7 : 0
-        pawns = color == :white ? 6 : 1
-
-        @board[major_pieces] = (
-            color == :white ? ["\u2656", "\u2658", "\u2657", "\u2655", "\u2654", "\u2657", "\u2658", "\u2656"] :
-                             ["\u265C", "\u265E", "\u265D", "\u265B", "\u265A", "\u265D", "\u265E", "\u265C"]
-        )
-
-        @board[pawns] = Array.new(8, color == :white ? "\u2659" : "\u265F")
-    end
+    
 
     def pawn_movement(column, row)
         pawn_moves = []
