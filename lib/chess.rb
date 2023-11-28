@@ -195,7 +195,15 @@ class ChessGame < ChessPiece
         @board
     end
 
-    
+    def setup_pieces(pieces)
+        pieces.each do |piece|
+            if piece.start_column && piece.start_row
+                column = piece.start_column
+                row = piece.start_row
+                @board[row][column] = piece
+            end
+        end
+    end
 
     def pawn_movement(column, row)
         pawn_moves = []
