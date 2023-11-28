@@ -341,15 +341,10 @@ describe ChessGame do
     describe '#get_piece_at' do
         context 'when a piece exists at the specified column and row' do
             it 'should return the correct piece' do
-                piece = ChessPiece.new('Black Pawn 2', "\u265F", 1, 6, 'black')
-                piece.current_column = game.instance_variable_set(:@current_column, 1)
-                piece.current_row = game.instance_variable_set(:@current_row, 5)
-  
-                game.instance_variable_set(:@black_pieces, [ChessPiece::BLACK_PAWN_1, piece])
+                game.setup_board
+                retrieved_piece = game.get_piece_at(1, 6)
             
-                retrieved_piece = game.get_piece_at(piece.current_column, piece.current_row)
-            
-                expect(retrieved_piece).to eq(piece)
+                expect(retrieved_piece).to eq(ChessPiece::BLACK_PAWN_2)
           end
         end
       
