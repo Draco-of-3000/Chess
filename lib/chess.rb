@@ -205,7 +205,6 @@ class ChessGame < ChessPiece
         end
     end
 
-    =begin
     def display_updated_board
         puts numbers
         puts seperator
@@ -225,7 +224,6 @@ class ChessGame < ChessPiece
           puts "\n--+-------+-------+-------+-------+-------+-------+-------+-------+"
         end
     end
-    =end
     
     def pawn_movement(column, row)
         pawn_moves = []
