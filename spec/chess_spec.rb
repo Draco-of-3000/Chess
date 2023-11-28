@@ -878,4 +878,32 @@ describe ChessGame do
             end
         end
     end
+
+    describe '#setup_board' do
+        context 'when board is set up' do
+            it 'sets up major black pieces' do
+                major_black_pieces = [ChessPiece::BLACK_ROOK_1, ChessPiece::BLACK_KNIGHT_1, ChessPiece::BLACK_BISHOP_1, ChessPiece::BLACK_QUEEN, ChessPiece::BLACK_KING, ChessPiece::BLACK_BISHOP_2, ChessPiece::BLACK_KNIGHT_2, ChessPiece::BLACK_ROOK_2]
+                game.setup_board
+                expect(game.board[7]).to eq(major_black_pieces)
+            end
+
+            it 'sets up major white pieces' do
+                major_white_pieces = [ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_KNIGHT_1, ChessPiece::WHITE_BISHOP_1, ChessPiece::WHITE_QUEEN, ChessPiece::WHITE_KING, ChessPiece::WHITE_BISHOP_2, ChessPiece::WHITE_KNIGHT_2, ChessPiece::WHITE_ROOK_2]
+                game.setup_board
+                expect(game.board[0]).to eq(major_white_pieces)
+            end
+
+            it 'sets up black pawns' do
+                black_pawns = [ChessPiece::BLACK_PAWN_1, ChessPiece::BLACK_PAWN_2, ChessPiece::BLACK_PAWN_3, ChessPiece::BLACK_PAWN_4, ChessPiece::BLACK_PAWN_5, ChessPiece::BLACK_PAWN_6, ChessPiece::BLACK_PAWN_7, ChessPiece::BLACK_PAWN_8]
+                game.setup_board
+                expect(game.board[6]).to eq(black_pawns)
+            end
+
+            it 'sets up white pawns' do
+                white_pawns = [ChessPiece::WHITE_PAWN_1, ChessPiece::WHITE_PAWN_2, ChessPiece::WHITE_PAWN_3, ChessPiece::WHITE_PAWN_4, ChessPiece::WHITE_PAWN_5, ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_PAWN_7, ChessPiece::WHITE_PAWN_8]
+                game.setup_board
+                expect(game.board[1]).to eq(white_pawns)
+            end
+        end    
+    end
 end
