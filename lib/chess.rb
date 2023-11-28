@@ -184,6 +184,17 @@ class ChessGame < ChessPiece
         @insufficient_material = false
     end
 
+    def setup_board
+        @board
+
+        setup_pieces(@major_black_pieces)
+        setup_pieces(@major_white_pieces)
+        setup_pieces(@white_pawns)
+        setup_pieces(@black_pawns)
+
+        @board
+    end
+
     
 
     def pawn_movement(column, row)
