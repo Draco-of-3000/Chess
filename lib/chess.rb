@@ -701,6 +701,7 @@ class ChessGame < ChessPiece
         puts "Enter your name Player 2"
         @player_two_name = gets.chomp.capitalize
         @player_two = Player.new(@player_two_name, @player_two_color)
+        @current_player = @player_one
         puts "Okay #{@player_one.name}, you're up. Make a move."
     end
 
