@@ -768,14 +768,17 @@ class ChessGame < ChessPiece
         if @checkmate == true
             if @current_player == @player_one 
                 puts "#{@player_one_name} wins the game! Checkmate!"
+                return true
             elsif @current_player == @player_two
                 puts "#{@player_two_name} wins the game! Checkmate!"
+                return true
             end
         end
+        false
     end
 
     def make_move
-        until @checkmate == true || stalemate == true
+        until @checkmate == true || stalemate == true || check_winner == true
             assign_coordinates
             move_piece(destination_column, destination_row, current_column, current_row)
             update_board
