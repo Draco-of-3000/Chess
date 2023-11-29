@@ -430,7 +430,7 @@ class ChessGame < ChessPiece
         valid_moves = case piece.name
         when /pawn/i
             pawn_movement(old_column, old_row)
-            en_passant_possible?
+            en_passant_possible?(old_column, old_row)
         when /king/i
             king_movement(old_column, old_row)
             @king_moved = true
