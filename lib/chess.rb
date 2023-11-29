@@ -776,13 +776,14 @@ class ChessGame < ChessPiece
 
     def make_move
         until @checkmate == true || stalemate == true
+            assign_coordinates
+            move_piece(destination_column, destination_row, current_column, current_row)
+            update_board
+            display_updated_board
             find_pieces
             king_in_check?
             checkmate?
             stalemate
-            assign_coordinates
-            move_piece(destination_column, destination_row, current_column, current_row)
-            update_board
             switch_players
         end
     end
@@ -791,6 +792,6 @@ end
 
 #game = ChessBoard.new
 #game.display_board
-hoe = ChessGame.new
-hoe.setup_board
-hoe.display_updated_board
+#hoe = ChessGame.new
+#hoe.setup_board
+#hoe.display_updated_board
