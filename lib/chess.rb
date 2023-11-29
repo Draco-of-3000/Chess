@@ -653,7 +653,7 @@ class ChessGame < ChessPiece
     end
 
     def legal_moves
-        opponent_pieces = (color == :white) ? @black_pieces : @white_pieces
+        opponent_pieces = (@current_player == @player_one) ? @black_pieces : @white_pieces
         opponent_moves = []
 
         opponent_pieces.flatten.each do |piece|
@@ -788,13 +788,19 @@ class ChessGame < ChessPiece
             checkmate?
             stalemate
             switch_players
+            check_winner
         end
+    end
+
+    def play_game
+        assign_players
+        setup_board
+        make_move
     end
 end
 
 
-#game = ChessBoard.new
-#game.display_board
-#hoe = ChessGame.new
-#hoe.setup_board
-#hoe.display_updated_board
+game = ChessBoard.new
+game.display_board
+hoe = ChessGame.new
+hoe.play_game
