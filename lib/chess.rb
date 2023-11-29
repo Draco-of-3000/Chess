@@ -429,7 +429,7 @@ class ChessGame < ChessPiece
       
         valid_moves = case piece.name
         when /pawn/i
-            pawn_movement(old_column, old_row, piece.color)
+            pawn_movement(old_column, old_row)
             en_passant_possible?
         when /king/i
             king_movement(old_column, old_row)
@@ -706,7 +706,7 @@ class ChessGame < ChessPiece
     end
 
     def assign_coordinates
-        puts "Enter current column of piece you wish to move"
+        puts "Enter current column of piece you wish to move from"
         current_column = gets.chomp.to_i
 
         until current_column.is_a?(Integer) && current_column.between?(0, 7)
@@ -714,7 +714,7 @@ class ChessGame < ChessPiece
             current_column = gets.chomp.to_i
         end
 
-        puts "Enter current row of piece you wish to move"
+        puts "Enter current row of piece you wish to move from"
         current_row = gets.chomp.to_i
 
         until current_row.is_a?(Integer) && current_row.between?(0, 7)
@@ -739,6 +739,7 @@ class ChessGame < ChessPiece
         end
 
         [current_column, current_row, destination_column, destination_row]
+        move_piece(destination_column, destination_row, current_column, current_row)
     end
 
     def switch_players(current_player)
@@ -779,9 +780,8 @@ class ChessGame < ChessPiece
     end
 
     def make_move
-        until @checkmate == true || stalemate == true || check_winner == true
+        until check_winner == true
             assign_coordinates
-            move_piece(destination_column, destination_row, current_column, current_row)
             update_board
             display_updated_board
             find_pieces
