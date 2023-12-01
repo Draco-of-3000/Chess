@@ -430,7 +430,7 @@ class ChessGame < ChessPiece
         valid_moves = case piece.name
         when /pawn/i
             pawn_movement(old_column, old_row)
-            en_passant_possible?(old_column, old_row)
+            #en_passant_possible?(old_column, old_row)
         when /king/i
             king_movement(old_column, old_row)
             @king_moved = true
@@ -447,10 +447,13 @@ class ChessGame < ChessPiece
             queen_movement(old_column, old_row)
         end
 
+        puts valid_moves
+
         if valid_moves.include?([new_column, new_row])
-            capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+            #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
             piece.current_column = new_column
             piece.current_row = new_row
+            update_board(new_column, new_row, old_column, old_row)
         else
             illegal_move
         end
@@ -742,8 +745,15 @@ class ChessGame < ChessPiece
         move_piece(destination_column, destination_row, current_column, current_row)
     end
 
-    def switch_players(current_player)
+    def switch_players
         @current_player = @current_player == @player_one ? @player_two : @player_one
+
+        current_player_name = case @current_player
+        when @player_one then @player_one_name
+        when @player_two then @player_two_name
+        end
+
+        puts "current player is now #{current_player_name}"
     end
 
     def illegal_move
@@ -782,7 +792,9 @@ class ChessGame < ChessPiece
     def make_move
         until check_winner == true
             assign_coordinates
-            update_board
+            display_updated_board
+            switch_players
+            assign_coordinates
             display_updated_board
             find_pieces
             king_in_check?
