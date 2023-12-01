@@ -480,8 +480,8 @@ class ChessGame < ChessPiece
 
     def castling(color)
         # Assuming castling is valid and already checked
-        king_column = (color == :white) ? 4 : 3
-        rook_column = (color == :white) ? 7 : 0
+        king_column = (@current_player == @player_one) ? 4 : 3
+        rook_column = (@current_player == @player_one) ? 7 : 0
       
         if rook_column == 7
           # Kingside castling for white
