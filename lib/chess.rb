@@ -577,22 +577,22 @@ class ChessGame < ChessPiece
         # Check each piece's possible moves to see if any move can get the king out of check
         player_pieces.flatten.each do |piece|
             case piece.name
-            when /Pawn/
+            when /pawn/i
                 pawn_moves = pawn_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, pawn_moves)
-            when /Rook/
+            when /rook/i
                 rook_moves = rook_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, rook_moves)
-            when /Bishop/
+            when /bishop/i
                 bishop_moves = bishop_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, bishop_moves)
-            when /Knight/
+            when /knight/i
                 knight_moves = knight_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, knight_moves)
-            when /Queen/
+            when /queen/i
                 queen_moves = queen_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, queen_moves)
-            when /King/
+            when /king/i
                 king_moves = king_movement(piece.current_column, piece.current_row)
                 return false unless checkmate_possible?(piece, king_moves)
             end
