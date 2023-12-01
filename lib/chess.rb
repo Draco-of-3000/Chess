@@ -478,7 +478,7 @@ class ChessGame < ChessPiece
         true
     end
 
-    def castling(color)
+    def castling
         # Assuming castling is valid and already checked
         king_column = (@current_player == @player_one) ? 4 : 3
         rook_column = (@current_player == @player_one) ? 7 : 0
