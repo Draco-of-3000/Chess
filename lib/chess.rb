@@ -349,7 +349,7 @@ class ChessGame < ChessPiece
     end
 
     def capture_piece(current_column, current_row, destination_column, destination_row)
-        opponent_pieces = @current_player == @player_one ? @black_pieces : @white_pieces
+        opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
         opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
         
         if opponent_piece
@@ -398,7 +398,7 @@ class ChessGame < ChessPiece
     end
 
     def en_passant_capture(destination_column, destination_row, color)
-        opponent_pieces = @current_player == 'player_one' ? @black_pieces : @white_pieces
+        opponent_pieces = @current_player == 'player_one' ? @player_two_pieces : @player_one_pieces
         opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
 
         if opponent_piece
@@ -540,7 +540,7 @@ class ChessGame < ChessPiece
     def king_in_check?
         king_piece = @current_player == @player_one ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
 
-        opponent_pieces = @current_player == @player_one ? @black_pieces : @white_pieces
+        opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
 
         opponent_pieces.flatten.each do |piece|
             possible_moves =
@@ -570,31 +570,31 @@ class ChessGame < ChessPiece
     end
 
     def checkmate?
-        return false unless @in_check == true || checkmate_possible? == true
+        return false unless @in_check == true
 
-        player_pieces = (@current_player == @player_one) ? @white_pieces : @black_pieces
+        player_pieces = (@current_player == @player_one) ? @player_one_pieces : @player_two_pieces
     
         # Check each piece's possible moves to see if any move can get the king out of check
         player_pieces.flatten.each do |piece|
             case piece.name
             when /pawn/i
                 pawn_moves = pawn_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, pawn_moves)
+                return false unless checkmate_escapable?(piece, pawn_moves)
             when /rook/i
                 rook_moves = rook_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, rook_moves)
+                return false unless checkmate_escapable?(piece, rook_moves)
             when /bishop/i
                 bishop_moves = bishop_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, bishop_moves)
+                return false unless checkmate_escapable?(piece, bishop_moves)
             when /knight/i
                 knight_moves = knight_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, knight_moves)
+                return false unless checkmate_escapable?(piece, knight_moves)
             when /queen/i
                 queen_moves = queen_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, queen_moves)
+                return false unless checkmate_escapable?(piece, queen_moves)
             when /king/i
                 king_moves = king_movement(piece.current_column, piece.current_row)
-                return false unless checkmate_possible?(piece, king_moves)
+                return false unless checkmate_escapable?(piece, king_moves)
             end
         end
     
@@ -602,7 +602,7 @@ class ChessGame < ChessPiece
         true
     end
 
-    def checkmate_possible?(piece, moves)
+    def checkmate_escapable?(piece, moves)
         return false unless @in_check == true
         moves.each do |move|
             # Simulate the move and check if it gets the king out of check
@@ -621,12 +621,12 @@ class ChessGame < ChessPiece
         end
 
         # If no move gets the king out of check, it's checkmate
-        true
+        false
     end
 
     def find_pieces
-        white_pieces = @white_pieces.flatten
-        black_pieces = @black_pieces.flatten
+        white_pieces = @player_one_pieces.flatten
+        black_pieces = @player_two_pieces.flatten
 
         # Check if ONLY kings, or ONLY kings AND a knight, or kings AND a bishop of the same color are present.
         white_condition = white_pieces.all? { |piece| piece.name.include?('King') } && white_pieces.length <= 2
@@ -656,7 +656,7 @@ class ChessGame < ChessPiece
     end
 
     def legal_moves
-        opponent_pieces = (@current_player == @player_one) ? @black_pieces : @white_pieces
+        opponent_pieces = (@current_player == @player_one) ? @player_two_pieces : @player_one_pieces
         opponent_moves = []
 
         opponent_pieces.flatten.each do |piece|
@@ -794,13 +794,10 @@ class ChessGame < ChessPiece
             assign_coordinates
             display_updated_board
             switch_players
-            assign_coordinates
-            display_updated_board
             find_pieces
-            #king_in_check?
+            king_in_check?
             #checkmate?
             #stalemate
-            switch_players
             check_winner
         end
     end
@@ -816,4 +813,4 @@ end
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-hoe.play_game
+#hoe.play_game
