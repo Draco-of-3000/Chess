@@ -538,16 +538,16 @@ class ChessGame < ChessPiece
     end
 
     def king_in_check?
-        king_piece = color == :white ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
+        king_piece = @current_player == @player_one ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
 
-        opponent_pieces = color == :white ? @black_pieces : @white_pieces
+        opponent_pieces = @current_player == @player_one ? @black_pieces : @white_pieces
 
         opponent_pieces.flatten.each do |piece|
             possible_moves =
             
             case piece.name
             when /Pawn/
-                pawn_movement(piece.current_column, piece.current_row, color)
+                pawn_movement(piece.current_column, piece.current_row)
             when /Rook/
                 rook_movement(piece.current_column, piece.current_row)
             when /Bishop/
