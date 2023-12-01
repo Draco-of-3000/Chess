@@ -599,7 +599,7 @@ describe ChessGame do
         context 'when the king is not in check' do
             it 'returns false' do
                 game.instance_variable_set(:@in_check, false)
-                allow(game).to receive(:checkmate_possible?).and_return(false)
+                allow(game).to receive(:checkmate_escapable?).and_return(false)
                 expect(game.checkmate?).to be_falsey
             end
         end
@@ -607,7 +607,7 @@ describe ChessGame do
         context 'when the king is in checkmate' do
             it 'returns true' do
                 game.instance_variable_set(:@in_check, true)
-                allow(game).to receive(:checkmate_possible?).and_return(false)
+                allow(game).to receive(:checkmate_escapable?).and_return(false)
                 allow(game).to receive(:checkmate?).and_return(true)
                 result = game.checkmate?
                 expect(result).to be_truthy
@@ -618,7 +618,7 @@ describe ChessGame do
             it 'returns falsey checkmate' do
                 game.instance_variable_set(:@in_check, true)
 
-                allow(game).to receive(:checkmate_possible?).and_return(true)
+                allow(game).to receive(:checkmate_escapable?).and_return(true)
                 allow(game).to receive(:checkmate?).and_return(false)
                 result = game.checkmate?
                 expect(result).to be_falsey
@@ -626,7 +626,7 @@ describe ChessGame do
         end
     end
 
-    describe '#checkmate_possible?' do
+    describe '#checkmate_escapable?' do
         let(:game) { ChessGame.new }
     
         context 'when the king is not in check' do
@@ -634,17 +634,17 @@ describe ChessGame do
                 game.instance_variable_set(:@in_check, false)
                 piece = instance_double("Piece", current_row: 0, current_column: 0, name: "Pawn")
                 moves = [[1, 1], [2, 2]]  # Example moves, they don't matter for this test
-                expect(game.checkmate_possible?(piece, moves)).to be_falsey
+                expect(game.checkmate_escapable?(piece, moves)).to be_falsey
             end
         end
     
         context 'when the king is in check' do
             it 'returns false for any move' do
                 game.instance_variable_set(:@in_check, true)
-                allow(game).to receive(:checkmate_possible?).and_return(false)
+                allow(game).to receive(:checkmate_escapable?).and_return(false)
                 piece = instance_double("Piece", current_row: 0, current_column: 0, name: "Pawn")
                 moves = [[1, 1], [2, 2]]  # Example moves, they don't matter for this test
-                expect(game.checkmate_possible?(piece, moves)).to be_falsey
+                expect(game.checkmate_escapable?(piece, moves)).to be_falsey
             end
         end
     end
