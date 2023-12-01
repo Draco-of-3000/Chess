@@ -511,7 +511,7 @@ class ChessGame < ChessPiece
 
         return unless (@black_pawns.include?(pawn) || @white_pawns.include?(pawn)) && (row == 0 || row == 7)
 
-        piece_color = (current_player == @player_one) ? :white : :black
+        piece_color = (current_player == @player_one) ? 'white' : 'black'
 
         puts "#{current_player.capitalize}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
         piece_choice = gets.chomp.downcase
@@ -524,13 +524,13 @@ class ChessGame < ChessPiece
         new_piece = case piece_choice
         
         when 'queen'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Queen", (piece_color == :white ? "\u2655" : "\u265B"))
+          ChessPiece.new("#{piece_color.to_s.capitalize} Queen", (piece_color == 'white' ? "\u2655" : "\u265B"))
         when 'rook'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Rook", (piece_color == :white ? "\u2656" : "\u265C"))
+          ChessPiece.new("#{piece_color.to_s.capitalize} Rook", (piece_color == 'white' ? "\u2656" : "\u265C"))
         when 'bishop'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Bishop", (piece_color == :white ? "\u2657" : "\u265D"))
+          ChessPiece.new("#{piece_color.to_s.capitalize} Bishop", (piece_color == 'white' ? "\u2657" : "\u265D"))
         when 'knight'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Knight", (piece_color == :white ? "\u2658" : "\u265E"))
+          ChessPiece.new("#{piece_color.to_s.capitalize} Knight", (piece_color == 'white' ? "\u2658" : "\u265E"))
         end
 
         replace_piece(pawn, new_piece)
