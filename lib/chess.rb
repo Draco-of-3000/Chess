@@ -223,7 +223,7 @@ class ChessGame < ChessPiece
           0.upto(7) do |col|
             piece = get_piece_at(col, row)
             if piece.nil?
-              print "  #{row}, #{col} |"
+              print "  #{col}, #{row} |"
             else
               print "   #{piece.unicode}   |"
             end
@@ -546,17 +546,17 @@ class ChessGame < ChessPiece
             possible_moves =
             
             case piece.name
-            when /Pawn/
+            when /pawn/i
                 pawn_movement(piece.current_column, piece.current_row)
-            when /Rook/
+            when /rook/i
                 rook_movement(piece.current_column, piece.current_row)
-            when /Bishop/
+            when /bishop/i
                 bishop_movement(piece.current_column, piece.current_row)
-            when /Knight/
+            when /knight/i
                 knight_movement(piece.current_column, piece.current_row)
-            when /Queen/
+            when /queen/i
                 queen_movement(piece.current_column, piece.current_row)
-            when /King/
+            when /king/i
                 king_movement(piece.current_column, piece.current_row)
             end
 
@@ -797,9 +797,9 @@ class ChessGame < ChessPiece
             assign_coordinates
             display_updated_board
             find_pieces
-            king_in_check?
-            checkmate?
-            stalemate
+            #king_in_check?
+            #checkmate?
+            #stalemate
             switch_players
             check_winner
         end
