@@ -769,13 +769,31 @@ class ChessGame < ChessPiece
     end
 
     def assign_players
-        puts "Enter your name Player 1"
-        @player_one_name = gets.chomp.capitalize
-        @player_one = Player.new(@player_one_name, @player_one_color)
+        loop do
+            puts "Enter your name Player 1"
+            @player_one_name = gets.chomp.capitalize
+        
+            # Check if the name contains only alphanumerical characters
+            if @player_one_name.match?(/\A[a-zA-Z]+\z/)
+                @player_one = Player.new(@player_one_name, @player_one_color)
+                break
+            else
+                puts "Invalid name. Please use only alphanumerical characters."
+            end
+        end
 
-        puts "Enter your name Player 2"
-        @player_two_name = gets.chomp.capitalize
-        @player_two = Player.new(@player_two_name, @player_two_color)
+        loop do
+            puts "Enter your name Player 2"
+            @player_two_name = gets.chomp.capitalize
+        
+            if @player_two_name.match?(/\A[a-zA-Z]+\z/)
+                @player_two = Player.new(@player_two_name, @player_two_color)
+                break
+            else
+                puts "Invalid name. Please use only alphanumerical characters."
+            end
+        end
+        
         @current_player = @player_one
         puts "Okay #{@player_one.name}, you're up. Make a move."
     end
