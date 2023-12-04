@@ -205,6 +205,23 @@ class ChessGame < ChessPiece
         end
     end
 
+    def scan_board
+        @player_one_pieces = []
+        @player_two_pieces = []
+      
+        @board.each do |row|
+            row.each do |piece|
+            next if piece.nil?
+      
+            if piece.color == 'white'
+                @player_one_pieces << piece
+            elsif piece.color == 'black'
+                @player_two_pieces << piece
+            end
+          end
+        end
+    end
+      
     def seperator
         "--+-------+-------+-------+-------+-------+-------+-------+-------+"
     end
