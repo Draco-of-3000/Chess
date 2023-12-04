@@ -538,11 +538,31 @@ class ChessGame < ChessPiece
     end
 
     def king_in_check?
-        king_piece = @current_player == @player_one ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
+        king_piece = nil
+        opponent_pieces = []
 
-        opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
+        # Iterate through the board to find opponent pieces and the current player's king
+        @board.each do |row|
+            row.each do |piece|
+                next if piece.nil?  # Skip empty cells
 
-        opponent_pieces.flatten.each do |piece|
+                if @current_player == @player_one
+                    if piece.color == 'black'
+                        opponent_pieces << piece
+                    elsif piece.color == 'white' && piece.name =~ /king/i
+                        king_piece = piece
+                    end
+                elsif @current_player == @player_two
+                    if piece.color == 'white'
+                        opponent_pieces << piece
+                    elsif piece.color == 'black' && piece.name =~ /king/i
+                        king_piece = piece
+                    end
+                end
+            end
+        end
+
+        opponent_pieces.each do |piece|
             possible_moves =
             
             case piece.name
