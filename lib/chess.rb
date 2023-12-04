@@ -477,7 +477,6 @@ class ChessGame < ChessPiece
         else
             illegal_move
         end
-        puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
     end
 
     def castling_possible?
@@ -735,40 +734,44 @@ class ChessGame < ChessPiece
     end
 
     def assign_coordinates
-        puts "Enter current column of piece you wish to move from"
-        current_column = gets.chomp.to_i
-
-        until current_column.is_a?(Integer) && current_column.between?(0, 7)
-            puts "Illegal selection, enter an integer between 0 and 7"
+        loop do
+            puts "Enter current column of piece you wish to move from"
             current_column = gets.chomp.to_i
-        end
 
-        puts "Enter current row of piece you wish to move from"
-        current_row = gets.chomp.to_i
+            until current_column.is_a?(Integer) && current_column.between?(0, 7)
+                puts "Illegal selection, enter an integer between 0 and 7 for current column"
+                current_column = gets.chomp.to_i
+            end
 
-        until current_row.is_a?(Integer) && current_row.between?(0, 7)
-            puts "Illegal selection, enter an integer between 0 and 7"
+            puts "Enter current row of piece you wish to move from"
             current_row = gets.chomp.to_i
-        end
 
-        puts "Enter the column wish to move the piece to"
-        destination_column = gets.chomp.to_i
+            until current_row.is_a?(Integer) && current_row.between?(0, 7)
+                puts "Illegal selection, enter an integer between 0 and 7 for current row"
+                current_row = gets.chomp.to_i
+            end
 
-        until destination_column.is_a?(Integer) && destination_column.between?(0, 7)
-            puts "Illegal selection, enter an integer between 0 and 7"
+            puts "Enter the destination column you wish to move to"
             destination_column = gets.chomp.to_i
-        end
 
-        puts "Enter the row wish to move the piece to"
-        destination_row = gets.chomp.to_i
+            until destination_column.is_a?(Integer) && destination_column.between?(0, 7)
+                puts "Illegal selection, enter an integer between 0 and 7 for destination column"
+                destination_column = gets.chomp.to_i
+            end
 
-        until destination_row.is_a?(Integer) && destination_row.between?(0, 7)
-            puts "Illegal selection, enter an integer between 0 and 7"
+            puts "Enter the destination row you wish to move to"
             destination_row = gets.chomp.to_i
-        end
 
-        [current_column, current_row, destination_column, destination_row]
-        move_piece(destination_column, destination_row, current_column, current_row)
+            until destination_row.is_a?(Integer) && destination_row.between?(0, 7)
+                puts "Illegal selection, enter an integer between 0 and 7 for destination row"
+                destination_row = gets.chomp.to_i
+            end
+
+            [current_column, current_row, destination_column, destination_row]
+            move = move_piece(destination_column, destination_row, current_column, current_row)
+
+            break if move
+        end
     end
 
     def switch_players
