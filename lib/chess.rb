@@ -442,41 +442,88 @@ class ChessGame < ChessPiece
     end
 
     def move_piece(new_column, new_row, old_column, old_row)
-        piece = get_piece_at(old_column, old_row)
-        return unless piece
-      
-        valid_moves = case piece.name
-        when /pawn/i
-            pawn_movement(old_column, old_row)
-            #en_passant_possible?(old_column, old_row)
-        when /king/i
-            king_movement(old_column, old_row)
-            @king_moved = true
-            castling_possible?
-        when /knight/i
-            knight_movement(old_column, old_row)
-        when /bishop/i
-            bishop_movement(old_column, old_row)
-        when /rook/i
-            rook_movement(old_column, old_row)
-            @rook_moved = true
-            castling_possible?
-        when /queen/i
-            queen_movement(old_column, old_row)
+        if @current_player == @player_one
+            piece = get_piece_at(old_column, old_row)
+            return unless piece
+
+            if piece.color == @player_one_color
+                valid_moves = case piece.name
+                when /pawn/i
+                    pawn_movement(old_column, old_row)
+                    #en_passant_possible?(old_column, old_row)
+                when /king/i
+                    king_movement(old_column, old_row)
+                    @king_moved = true
+                    castling_possible?
+                when /knight/i
+                    knight_movement(old_column, old_row)
+                when /bishop/i
+                    bishop_movement(old_column, old_row)
+                when /rook/i
+                    rook_movement(old_column, old_row)
+                    @rook_moved = true
+                    castling_possible?
+                when /queen/i
+                    queen_movement(old_column, old_row)
+                end
+    
+                puts "#{valid_moves}"
+    
+                if valid_moves.include?([new_column, new_row])
+                    #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+                    piece.current_column = new_column
+                    piece.current_row = new_row
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+                    update_board(piece.current_column, piece.current_row, old_column, old_row)
+                    #king_in_check?
+                else
+                    illegal_move
+                end
+            else
+                puts "Illegal selection, select a white piece!"
+            end
+        elsif @current_player == @player_one
+            piece = get_piece_at(old_column, old_row)
+            return unless piece
+
+            if piece.color == @player_two_color
+                valid_moves = case piece.name
+                when /pawn/i
+                    pawn_movement(old_column, old_row)
+                    #en_passant_possible?(old_column, old_row)
+                when /king/i
+                    king_movement(old_column, old_row)
+                    @king_moved = true
+                    castling_possible?
+                when /knight/i
+                    knight_movement(old_column, old_row)
+                when /bishop/i
+                    bishop_movement(old_column, old_row)
+                when /rook/i
+                    rook_movement(old_column, old_row)
+                    @rook_moved = true
+                    castling_possible?
+                when /queen/i
+                    queen_movement(old_column, old_row)
+                end
+    
+                puts "#{valid_moves}"
+    
+                if valid_moves.include?([new_column, new_row])
+                    #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+                    piece.current_column = new_column
+                    piece.current_row = new_row
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+                    update_board(piece.current_column, piece.current_row, old_column, old_row)
+                    #king_in_check?
+                else
+                    illegal_move
+                end
+            else
+                puts "Illegal selection, select a black piece!"
+            end
         end
 
-        puts "#{valid_moves}"
-
-        if valid_moves.include?([new_column, new_row])
-            #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
-            piece.current_column = new_column
-            piece.current_row = new_row
-            puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
-            update_board(piece.current_column, piece.current_row, old_column, old_row)
-            #king_in_check?
-        else
-            illegal_move
-        end
     end
 
     def castling_possible?
