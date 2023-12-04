@@ -197,7 +197,7 @@ class ChessGame < ChessPiece
 
     def setup_pieces(pieces)
         pieces.each do |piece|
-            if piece.start_column && piece.start_row && piece.current_column && piece.current_row
+            if piece.start_column && piece.start_row #&& piece.current_column && piece.current_row
                 column = piece.start_column
                 row = piece.start_row
                 @board[row][column] = piece
@@ -213,9 +213,9 @@ class ChessGame < ChessPiece
             row.each do |piece|
             next if piece.nil?
       
-            if piece.color == 'white'
+            if piece.color == 'white' && piece.start_column && piece.start_row && piece.current_column && piece.current_row
                 @player_one_pieces << piece
-            elsif piece.color == 'black'
+            elsif piece.color == 'black' && piece.start_column && piece.start_row && piece.current_column && piece.current_row
                 @player_two_pieces << piece
             end
           end
@@ -239,10 +239,10 @@ class ChessGame < ChessPiece
           
           0.upto(7) do |col|
             piece = get_piece_at(col, row)
-            if piece.nil?
-              print "  #{col}, #{row} |"
+            if piece
+                print "   #{piece.unicode}   |"
             else
-              print "   #{piece.unicode}   |"
+                print "  #{col}, #{row} |"
             end
           end
           
@@ -465,18 +465,19 @@ class ChessGame < ChessPiece
             queen_movement(old_column, old_row)
         end
 
-        puts valid_moves
+        puts "#{valid_moves}"
 
         if valid_moves.include?([new_column, new_row])
             #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
             piece.current_column = new_column
             piece.current_row = new_row
-            puts "current column = #{new_column}, current row #{new_row}"
-            king_in_check?
+            puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
             update_board(piece.current_column, piece.current_row, old_column, old_row)
+            #king_in_check?
         else
             illegal_move
         end
+        puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
     end
 
     def castling_possible?
@@ -819,10 +820,10 @@ class ChessGame < ChessPiece
             assign_coordinates
             display_updated_board
             find_pieces
-            #king_in_check?
+            king_in_check?
+            checkmate?
+            stalemate
             switch_players
-            #checkmate?
-            #stalemate
             check_winner
         end
     end
