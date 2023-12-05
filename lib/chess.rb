@@ -252,18 +252,34 @@ class ChessGame < ChessPiece
     
     def pawn_movement(column, row)
         pawn_moves = []
-    
-        direction = (@current_player == @player_one) ? 1 : -1
-    
-        # Regular forward move
-        regular_move = [column, row + direction]
-        pawn_moves << regular_move if pawn_valid_move?(regular_move)
-    
-        # Double move on the first turn
-        double_move = [column, row + 2 * direction]
-        if row == (@current_player == @player_one ? 1 : 6) && pawn_valid_move?(double_move)
-            pawn_moves << double_move
-            @double_move_made = true
+
+        piece = get_piece_at(column, row)
+
+        if piece.color == @player_one_color
+            direction = 1
+            regular_move = [column, row + direction]
+            pawn_moves << regular_move if pawn_valid_move?(regular_move)
+
+            # Double move on the first turn
+            double_move = [column, row + 2 * direction]
+
+            if row == 1 && pawn_valid_move?(double_move)
+                pawn_moves << double_move
+                @double_move_made = true
+            end
+
+        elsif piece.color == @player_two_color
+            direction = -1
+            regular_move = [column, row + direction]
+            pawn_moves << regular_move if pawn_valid_move?(regular_move)
+
+            # Double move on the first turn
+            double_move = [column, row + 2 * direction]
+
+            if row == 6 && pawn_valid_move?(double_move)
+                pawn_moves << double_move
+                @double_move_made = true
+            end
         end
 
         pawn_moves
@@ -482,7 +498,7 @@ class ChessGame < ChessPiece
             else
                 puts "Illegal selection, select a white piece!"
             end
-        elsif @current_player == @player_one
+        elsif @current_player == @player_two
             piece = get_piece_at(old_column, old_row)
             return unless piece
 
@@ -837,6 +853,7 @@ class ChessGame < ChessPiece
 
             break if move
         end
+        
     end
 
     def switch_players
