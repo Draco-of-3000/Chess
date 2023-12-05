@@ -48,7 +48,9 @@ describe ChessGame do
     describe '#pawn_movement' do
         context 'when the pawn is white' do
             before do
-                game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
+                piece = double(start_column: 1, start_row: 2, current_column: 0, current_row: 4, name: 'White Pawn 2', color: 'white')
+
+                allow(game).to receive(:get_piece_at).and_return(piece)
             end
 
             it 'returns valid moves for a regular forward move' do
@@ -69,7 +71,10 @@ describe ChessGame do
 
         context 'when the pawn is black' do
             before do
-                game.instance_variable_set(:@current_player, Player.new("Player2", "black"))
+                piece = double(start_column: 1, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1', color: 'black')
+                opponent_piece_2 = double(start_column: 1, start_row: 2, current_column: 0, current_row: 4, name: 'White Pawn 2', color: 'white')
+
+                allow(game).to receive(:get_piece_at).and_return(piece)
             end
             
             it 'returns valid moves for a regular forward move' do
@@ -450,8 +455,8 @@ describe ChessGame do
         context 'when a piece is capture or replaced at a coordinate' do
             it 'replaces piece on the board' do
                 
-                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 'black')
-                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 'white')
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 1, 0, 'black')
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 2, 0, 'white')
                 game.instance_variable_set(:@board, [
                   [old_piece, nil, nil, nil],
                   [nil, old_piece, nil, nil],
@@ -473,8 +478,8 @@ describe ChessGame do
 
         context 'when there is no piece to replace' do
             it 'does not modify board' do
-                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 'black')
-                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 'white')
+                old_piece = ChessPiece.new('Old Piece', 'O', 1, 0, 1, 0, 'black')
+                new_piece = ChessPiece.new('New Piece', 'N', 2, 0, 2, 0, 'white')
                 game.instance_variable_set(:@board, [
                   [nil, nil, nil, nil],
                   [nil, nil, nil, nil],
@@ -511,10 +516,10 @@ describe ChessGame do
               [nil, nil, nil, nil, nil, nil, nil, nil]
             ])
 
-            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1, 'white')
+            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1, 0, 1, 'white')
             piece_choice = 'queen'
             piece_color = :white
-            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7, 'white')
+            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7, 0, 7, 'white')
             game.instance_variable_set(:@board, [
                 [nil, nil, nil, nil, nil, nil, nil, nil],
                 [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
