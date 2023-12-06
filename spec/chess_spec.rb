@@ -503,53 +503,43 @@ describe ChessGame do
     end
 
     describe '#pawn_promotion' do
-        it 'promotes a pawn to a queen' do
+        context 'when a pawn reaches promotion rank' do
+            let(:pawn) { instance_double(ChessPiece, name: 'White Pawn 1', unicode: "\u2659", start_column: 0, start_row: 1, current_column: 0, current_row: 7, color: 'white') }
+            let(:new_piece) { instance_double(ChessPiece, name: 'White Queen 3', unicode: "\u2655", start_column: 0, start_row: 1, current_column: 0, current_row: 7, color: 'white') }
+
+            before do
+                allow(game).to receive(:gets).and_return('queen')
+                game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
+            end
             
-            game.pawn_promotion(0, 7, @current_player)
-            game.instance_variable_set(:@current_player, 'player_one')
-            game.instance_variable_set(:@board, [
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [ChessPiece::WHITE_PAWN_1, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil]
-            ])
+            it 'promotes a pawn to a queen' do
+                some_piece = ChessPiece::WHITE_KING
 
-            pawn = ChessPiece.new('White Pawn 1', "\u2659", 0, 1, 0, 1, 'white')
-            piece_choice = 'queen'
-            piece_color = :white
-            new_piece = ChessPiece.new('White Queen', "\u2655", 0, 7, 0, 7, 'white')
-            game.instance_variable_set(:@board, [
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil]
-            ])
+                game.instance_variable_set(:@player_one_pieces, [pawn, some_piece])
+                game.instance_variable_set(:@board, [
+                    [pawn, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, some_piece, nil, nil, nil]
+                ])
 
-            updated_board = [
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [ChessPiece::WHITE_QUEEN, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil]
-            ]
-
-            
-    
-            # Stub the replace_piece method to update the game's board
-            allow(game).to receive(:replace_piece).with(pawn, new_piece)
-
-            expect(game.instance_variable_get(:@board)).to eq(updated_board)   
+                updated_board = game.instance_variable_set(:@board, [
+                    [new_piece, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, nil, nil, nil, nil],
+                    [nil, nil, nil, nil, some_piece, nil, nil, nil]
+                ])
+                game.pawn_promotion(0, 7)
+                expect(game.instance_variable_get(:@board)).to eq(updated_board)
+            end
         end
     end
 
