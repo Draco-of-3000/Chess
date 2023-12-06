@@ -150,7 +150,7 @@ class ChessBoard < ChessPiece
 end
 
 class ChessGame < ChessPiece
-    attr_accessor :chessboard, :board, :player_one_pieces, :player_pieces
+    attr_accessor :chessboard, :board, :player_one_pieces, :player_two_pieces, :black_pawns, :white_pawns
     def initialize
         @chessboard = ChessBoard.new
         @board = @chessboard.board
@@ -629,37 +629,72 @@ class ChessGame < ChessPiece
         end
     end
 
-    def pawn_promotion(column, row, current_player)
-        current_player = @current_player
+    def pawn_promotion(current_column, current_row)
+        if @current_player == @player_one 
+            pawn = retrieve_pawn(current_column, current_row)
+            
+            return unless @player_one_pieces.include?(pawn) && current_row == 7
 
-        pawn = get_piece_at(column, row)
+            piece_color = @player_one_color
 
-        return unless (@black_pawns.include?(pawn) || @white_pawns.include?(pawn)) && (row == 0 || row == 7)
+            puts "#{@player_one_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
+            piece_choice = gets.chomp.downcase
 
-        piece_color = (current_player == @player_one) ? 'white' : 'black'
+            until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
+                puts "Invalid piece choice for promotion."
+                return
+            end
 
-        puts "#{current_player.capitalize}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
-        piece_choice = gets.chomp.downcase
-
-        unless ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
-            puts "Invalid piece choice for promotion."
-            return
-        end
-
-        new_piece = case piece_choice
+            new_piece = case piece_choice
         
-        when 'queen'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Queen", (piece_color == 'white' ? "\u2655" : "\u265B"))
-        when 'rook'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Rook", (piece_color == 'white' ? "\u2656" : "\u265C"))
-        when 'bishop'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Bishop", (piece_color == 'white' ? "\u2657" : "\u265D"))
-        when 'knight'
-          ChessPiece.new("#{piece_color.to_s.capitalize} Knight", (piece_color == 'white' ? "\u2658" : "\u265E"))
-        end
+            when 'king'
+                ChessPiece.new("White King 3", "\u2654", pawn.start_column, pawn.start_row, current_column, current_row, @player_one_color)
+            when 'queen'
+                ChessPiece.new("White Queen 3", "\u2655", pawn.start_column, pawn.start_row, current_column, current_row, @player_one_color)
+            when 'rook'
+                ChessPiece.new("White Rook 3", "\u2656", pawn.start_column, pawn.start_row, current_column, current_row, @player_one_color)
+            when 'bishop'
+                ChessPiece.new("White Bishop 3", "\u2657", pawn.start_column, pawn.start_row, current_column, current_row, @player_one_color)
+            when 'knight'
+                ChessPiece.new("White Knight 3", "\u2658", pawn.start_column, pawn.start_row, current_column, current_row, @player_one_color)
+            end
 
-        replace_piece(pawn, new_piece)
-        puts "#{piece_color.to_s.capitalize} promotes a pawn to a #{piece_choice.capitalize} at #{column}, #{row}."
+            replace_piece(pawn, new_piece)
+            puts "#{@player_one_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
+            new_piece
+
+        elsif @current_player == @player_two
+            pawn = get_piece_at(column, row)
+            
+            return unless @player_two_pieces.include?(pawn) &&  pawn&.name&.match?(/Pawn/i) && row == 0
+
+            piece_color = @player_two_color
+
+            puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
+            piece_choice = gets.chomp.downcase
+
+            until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
+                puts "Invalid piece choice for promotion."
+                return
+            end
+
+            new_piece = case piece_choice
+            when 'king'
+                ChessPiece.new("Black King 3", "\u265A", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+            when 'queen'
+                ChessPiece.new("Black Queen", "\u265B", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+            when 'rook'
+                ChessPiece.new("Black Rook", "\u265C", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+            when 'bishop'
+                ChessPiece.new("Black Bishop", "\u265D", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+            when 'knight'
+                ChessPiece.new("Black Knight", "\u265E", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+            end
+
+            replace_piece(pawn, new_piece)
+            puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
+            new_piece
+        end
     end
 
     def king_in_check?
