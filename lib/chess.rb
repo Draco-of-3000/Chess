@@ -594,7 +594,7 @@ class ChessGame < ChessPiece
       
             return false unless destination_row == rook_row && destination_column == rook_column
       
-            @castling_attempted? = true
+            @castling_attempted = true
             true
         end
     end
@@ -965,4 +965,4 @@ end
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-hoe.play_game
+#hoe.play_game
