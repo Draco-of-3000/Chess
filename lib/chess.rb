@@ -182,7 +182,7 @@ class ChessGame < ChessPiece
         @rook_moved = false
         @square_under_attack = false
         @insufficient_material = false
-        @castling_attempted? = true
+        @castling_attempted = true
     end
 
     def setup_board
@@ -600,7 +600,7 @@ class ChessGame < ChessPiece
     end
 
     def castling
-        if @castling_attempted? == true
+        if @castling_attempted == true
             # Assuming castling is valid and already checked
             king_column = (@current_player == @player_one) ? 4 : 3
             rook_column = (@current_player == @player_one) ? 7 : 0
