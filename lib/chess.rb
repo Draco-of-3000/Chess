@@ -182,6 +182,7 @@ class ChessGame < ChessPiece
         @rook_moved = false
         @square_under_attack = false
         @insufficient_material = false
+        @castling_attempted? = true
     end
 
     def setup_board
@@ -559,6 +560,43 @@ class ChessGame < ChessPiece
         end
 
         true
+    end
+
+    def castling_attempted?(destination_column, destination_row, current_column, current_row)
+        if @current_player == @player_one
+            piece = get_piece_at(current_column, current_row)
+            return false unless piece&.name&.match?(/King/i)
+      
+            king_column_change = (destination_column - destination_row).abs
+            king_row_change = (new_row - old_row).abs
+      
+            return false unless king_column_change == 2 && king_row_change.zero?
+      
+            rook_column = 7
+            rook_row = 0 
+      
+            return false unless destination_row == rook_row && destination_column == rook_column
+      
+            @castling_attempted = true
+            true
+
+        elsif @current_player == @player_two
+            piece = get_piece_at(current_column, current_row)
+            return false unless piece&.name&.match?(/King/i)
+      
+            king_column_change = (destination_column - destination_row).abs
+            king_row_change = (new_row - old_row).abs
+      
+            return false unless king_column_change == 2 && king_row_change.zero?
+      
+            rook_column = 0
+            rook_row = 7
+      
+            return false unless destination_row == rook_row && destination_column == rook_column
+      
+            @castling_attempted? = true
+            true
+        end
     end
 
     def castling
