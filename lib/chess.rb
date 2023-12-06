@@ -567,8 +567,8 @@ class ChessGame < ChessPiece
             piece = get_piece_at(current_column, current_row)
             return false unless piece&.name&.match?(/King/i)
       
-            king_column_change = (destination_column - destination_row).abs
-            king_row_change = (new_row - old_row).abs
+            king_column_change = (destination_column - current_column).abs
+            king_row_change = (destination_row - current_row).abs
       
             return false unless king_column_change == 2 && king_row_change.zero?
       
@@ -584,8 +584,8 @@ class ChessGame < ChessPiece
             piece = get_piece_at(current_column, current_row)
             return false unless piece&.name&.match?(/King/i)
       
-            king_column_change = (destination_column - destination_row).abs
-            king_row_change = (new_row - old_row).abs
+            king_column_change = (destination_column - current_column).abs
+            king_row_change = (destination_row - current_row).abs
       
             return false unless king_column_change == 2 && king_row_change.zero?
       
