@@ -183,6 +183,7 @@ class ChessGame < ChessPiece
         @square_under_attack = false
         @insufficient_material = false
         @castling_attempted = true
+        @castling_possible = false
     end
 
     def setup_board
@@ -559,6 +560,7 @@ class ChessGame < ChessPiece
             return false unless get_piece_at(column, 0).nil?
         end
 
+        @castling_possible = true
         true
     end
 
@@ -600,25 +602,25 @@ class ChessGame < ChessPiece
     end
 
     def castling
-        if @castling_attempted == true
-            # Assuming castling is valid and already checked
-            king_column = (@current_player == @player_one) ? 4 : 3
-            rook_column = (@current_player == @player_one) ? 7 : 0
+        return unless @castling_possible == true && @castling_attempted == true
+
+        # Assuming castling is valid and already checked
+        king_column = (@current_player == @player_one) ? 4 : 3
+        rook_column = (@current_player == @player_one) ? 7 : 0
       
-            if rook_column == 7
-                # Kingside castling for white
-                move_piece(6, 0, king_column, 0) # Move the king to the new position
-                move_piece(5, 0, rook_column, 0) # Move the rook to the new position
-            else
-                # Queenside castling for black
-                move_piece(2, 0, king_column, 0) # Move the king to the new position
-                move_piece(3, 0, rook_column, 0) # Move the rook to the new position
-            end
-      
-            # Mark the king and rook as moved
-            @king_moved = true
-            @rook_moved = true
+        if rook_column == 7
+          # Kingside castling for white
+          move_piece(6, 0, king_column, 0) # Move the king to the new position
+          move_piece(5, 0, rook_column, 0) # Move the rook to the new position
+        else
+          # Queenside castling for black
+          move_piece(2, 0, king_column, 0) # Move the king to the new position
+          move_piece(3, 0, rook_column, 0) # Move the rook to the new position
         end
+      
+        # Mark the king and rook as moved
+        @king_moved = true
+        @rook_moved = true
     end
 
     def replace_piece(old_piece, new_piece)
