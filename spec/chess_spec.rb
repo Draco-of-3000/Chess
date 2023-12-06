@@ -405,6 +405,8 @@ describe ChessGame do
     describe '#castling' do
         before do
             ENV['SKIP_CAPTURE_PIECE'] = 'true'
+            game.instance_variable_set(:@castling_attempted, true)
+            game.instance_variable_set(:@castling_possible, true)
         end
         context 'when castling is valid' do
             it 'should allow kingside castling for white' do
