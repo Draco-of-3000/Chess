@@ -583,6 +583,7 @@ class ChessGame < ChessPiece
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
+
                 elsif @en_passant_attempted == true
                     piece.current_column = opponent_piece.current_column
                     piece.current_row = opponent_piece.current_row + 1
@@ -590,6 +591,11 @@ class ChessGame < ChessPiece
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via en passant"
                     puts "en passant move is #{@en_passant_move}"
                     display_updated_board
+                    @en_passant_possible = false
+                    @player_two_double_move_made = false
+                    @player_two_double_move_pawn = nil
+                    @en_passant_move = nil
+                    @en_passant_piece = nil
                     switch_players
                 else
                     illegal_move
@@ -621,24 +627,66 @@ class ChessGame < ChessPiece
                 when /queen/i
                     queen_movement(old_column, old_row)
                 end
+
+                en_passant_possible?(old_column, old_row)
+
+                if @en_passant_possible == true
+                    opponent_pieces = @player_one_pieces
+                    opponent_piece = nil
+
+                    @board.each_with_index do |row, r|
+                        row.each_with_index do |col, c|
+                            next if col.nil? || col.name != @player_one_double_move_pawn
+                
+                            opponent_piece = col
+                            break
+                        end
+                        break if opponent_piece
+                    end
+
+                    @en_passant_piece = opponent_piece
+                    en_passant_piece = @en_passant_piece
+      
+                    puts "opponent piece = #{opponent_piece} "
+
+                    if opponent_piece
+                        @en_passant_attempted = true
+                        @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
+                        en_passant_capture(en_passant_piece)
+                    end
+
+                    valid_moves << @en_passant_move
+                end
     
                 puts "#{valid_moves}"
     
-                if valid_moves.include?([new_column, new_row])
+                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
                     #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
-                    #king_in_check?
+                    
+                elsif @en_passant_attempted == true
+                    piece.current_column = opponent_piece.current_column
+                    piece.current_row = opponent_piece.current_row + 1
+                    update_board(piece.current_column, piece.current_row, old_column, old_row)
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via en passant"
+                    puts "en passant move is #{@en_passant_move}"
+                    display_updated_board
+                    @en_passant_possible = false
+                    @player_one_double_move_made = false
+                    @player_one_double_move_pawn = nil
+                    @en_passant_move = nil
+                    @en_passant_piece = nil
+                    switch_players
                 else
                     illegal_move
                 end
             else
-                puts "Illegal selection, select a black piece!"
+                puts "Illegal selection, select a white piece!"
             end
         end
-
     end
 
     def castling_possible?
