@@ -435,8 +435,28 @@ class ChessGame < ChessPiece
         false
     end
 
-    def en_passant_capture(destination_column, destination_row)
+    def en_passant_attempted?(destination_column, destination_row)
         if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true
+            opponent_pieces = @player_two_pieces
+            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+      
+            if opponent_piece
+                @en_passant_attempted = true
+            end
+
+        elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible = true
+            opponent_pieces = @player_one_pieces
+            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+      
+            if opponent_piece
+                @en_passant_attempted = true
+            end
+        end
+
+    end
+       
+    def en_passant_capture(destination_column, destination_row)
+        if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
             opponent_pieces = @player_two_pieces
             opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
 
