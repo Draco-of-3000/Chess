@@ -308,17 +308,12 @@ describe ChessGame do
         context 'when en passant is possible' do
             it 'returns true' do
                 game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
-                game.instance_variable_set(:@double_move_made, true)
-      
-                opponent_piece_1 = double(start_column: 1, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1', color: 'black')
-                opponent_piece_2 = double(start_column: 1, start_row: 2, current_column: 0, current_row: 4, name: 'White Pawn 2', color: 'white')
+                game.instance_variable_set(:@player_two_double_move_made, true)
 
-                allow(game).to receive(:retrieve_pawn).and_return(opponent_piece_2)
+                allow(game).to receive(:retrieve_pawn).and_return(instance_double('Pawn', current_row: 4))
       
-                game.instance_variable_set(:@player_two_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
-                game.instance_variable_set(:@player_one_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
-
-                expect(game.en_passant_possible?(0, 4)).to be(true)
+                expect(game.en_passant_possible?(1, 4)).to be(true)
+                expect(game.instance_variable_get(:@en_passant_possible)).to be(true)
             end
         end
     end
@@ -326,17 +321,18 @@ describe ChessGame do
     describe '#en_passant_capture' do
         it "captures the opponent's pawn en passant" do
             game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
-            game.instance_variable_set(:@double_move_made, true)
+            game.instance_variable_set(:@player_two_double_move_made, true)
             game.instance_variable_set(:@en_passant_possible, true)
             game.instance_variable_set(:@en_passant_attempted, true)
+            game.instance_variable_set(:@player_two_double_move_pawn, 'Pawn 2')
       
-            opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
+            en_passant_piece = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Pawn 2')
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
       
-            game.instance_variable_set(:@player_two_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
-                game.instance_variable_set(:@player_one_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
+            game.instance_variable_set(:@player_two_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_2])
+            game.instance_variable_set(:@player_one_pieces, [ChessPiece::WHITE_PAWN_6, en_passant_piece, ChessPiece::WHITE_KNIGHT_1])
             # Capture the pawn en passant
-            game.en_passant_capture(1, 4)
+            game.en_passant_capture(en_passant_piece)
 
             # Check that the opponent's pawn is captured, and pieces and counts are updated
             expect(game.instance_variable_get(:@pieces_captured_by_player_one)).to eq(1)
