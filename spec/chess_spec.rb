@@ -328,6 +328,7 @@ describe ChessGame do
             game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
             game.instance_variable_set(:@double_move_made, true)
             game.instance_variable_set(:@en_passant_possible, true)
+            game.instance_variable_set(:@en_passant_attempted, true)
       
             opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
