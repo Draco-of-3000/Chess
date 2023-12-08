@@ -493,9 +493,15 @@ class ChessGame < ChessPiece
             @player_two_pieces_remaining -= 1
             puts "#{@player_one_name}'s pawn captured #{@player_two_name}'s #{en_passant_piece.name} en passant at #{en_passant_piece.current_column}, #{en_passant_piece.current_row}"
 
-        elsif @current_player == @player_two && @player_one_double_move_made == true && @en_passant_possible == true
+        elsif @current_player == @player_two && @player_one_double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
             
-            @player_two_pieces.delete(en_passant_piece)
+            @player_one_pieces.delete(en_passant_piece)
+            opponent_piece = find_piece_on_board(@player_two_double_move_pawn)
+
+            if opponent_piece
+                @board[opponent_piece.current_row][opponent_piece.current_column] = nil
+            end
+            
             @pieces_captured_by_player_two += 1
             @player_one_pieces_remaining -= 1
             puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{en_passant_piece.name} en passant at #{en_passant_piececurrent_column}, #{en_passant_piece.current_row}"
