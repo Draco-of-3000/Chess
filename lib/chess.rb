@@ -479,10 +479,16 @@ class ChessGame < ChessPiece
 
    # end
        
-    def en_passant_capture(en_passant_piece)
+    #def en_passant_capture(en_passant_piece)
         if @current_player == @player_one && @player_two_double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
 
             @player_two_pieces.delete(en_passant_piece)
+            opponent_piece = find_piece_on_board(@player_two_double_move_pawn)
+
+            if opponent_piece
+                @board[opponent_piece.current_row][opponent_piece.current_column] = nil
+            end
+
             @pieces_captured_by_player_one += 1
             @player_two_pieces_remaining -= 1
             puts "#{@player_one_name}'s pawn captured #{@player_two_name}'s #{en_passant_piece.name} en passant at #{en_passant_piece.current_column}, #{en_passant_piece.current_row}"
@@ -501,6 +507,16 @@ class ChessGame < ChessPiece
 
         return piece if piece
       
+        nil
+    end
+
+    # Add a helper method to find a piece on the board by name
+    def find_piece_on_board(piece_name)
+        @board.each do |row|
+            row.each do |piece|
+                return piece if piece && piece.name == piece_name
+            end
+        end
         nil
     end
 
