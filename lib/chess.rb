@@ -176,6 +176,7 @@ class ChessGame < ChessPiece
         @player_one_pieces = nil
         @player_two_pieces = nil
         @double_move_made = false
+        @en_passant_possible = false
         @in_check = false
         @checkmate = false
         @king_moved = false
@@ -267,7 +268,7 @@ class ChessGame < ChessPiece
 
             if row == 1 && pawn_valid_move?(double_move)
                 pawn_moves << double_move
-                @double_move_made = true
+                @player_one_double_move_made = true
             end
 
         elsif piece.color == @player_two_color
@@ -280,7 +281,7 @@ class ChessGame < ChessPiece
 
             if row == 6 && pawn_valid_move?(double_move)
                 pawn_moves << double_move
-                @double_move_made = true
+                @player_two_double_move_made = true
             end
         end
 
@@ -427,26 +428,34 @@ class ChessGame < ChessPiece
             if current_row == fifth_rank
                 double_move = [current_column, current_row + 2 * direction]
                 return true if @double_move_made && pawn_valid_move?(double_move)
+                @en_passant_possible = true
             end
         end
 
         false
     end
 
-    def en_passant_capture(destination_column, destination_row, color)
-        opponent_pieces = @current_player == 'player_one' ? @player_two_pieces : @player_one_pieces
-        opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+    def en_passant_capture(destination_column, destination_row)
+        if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true
+            opponent_pieces = @player_two_pieces
+            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
 
-        if opponent_piece
-            opponent_pieces.delete(opponent_piece)
-            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
-      
-            if color == :white
+            if opponent_piece
+                opponent_pieces.delete(opponent_piece)
                 @pieces_captured_by_player_one += 1
                 @player_two_pieces_remaining -= 1
-            else
+                puts "#{@player_one_name}'s pawn captured #{@player_two_name}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
+            end
+
+        elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible == true
+            opponent_pieces = @player_one_pieces
+            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+
+            if opponent_piece
+                opponent_pieces.delete(opponent_piece)
                 @pieces_captured_by_player_two += 1
                 @player_one_pieces_remaining -= 1
+                puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
             end
         end
     end
