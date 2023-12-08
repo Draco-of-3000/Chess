@@ -176,7 +176,13 @@ class ChessGame < ChessPiece
         @player_one_pieces = nil
         @player_two_pieces = nil
         @double_move_made = false
+        @player_one_double_move_made = false
+        @player_two_double_move_made = false
+        @player_one_double_move_pawn = nil
+        @player_two_double_move_pawn = nil
         @en_passant_possible = false
+        @en_passant_move = []
+        @en_passant_piece = nil
         @in_check = false
         @checkmate = false
         @king_moved = false
@@ -269,6 +275,7 @@ class ChessGame < ChessPiece
             if row == 1 && pawn_valid_move?(double_move)
                 pawn_moves << double_move
                 @player_one_double_move_made = true
+                @player_two_double_move_pawn = piece.name
             end
 
         elsif piece.color == @player_two_color
@@ -282,6 +289,7 @@ class ChessGame < ChessPiece
             if row == 6 && pawn_valid_move?(double_move)
                 pawn_moves << double_move
                 @player_two_double_move_made = true
+                @player_two_double_move_pawn = piece.name
             end
         end
 
@@ -417,66 +425,74 @@ class ChessGame < ChessPiece
         pawn
     end
 
-    def en_passant_possible?(current_column, current_row)
-        pawn_piece = retrieve_pawn(current_column, current_row)
+    #def en_passant_possible?(current_column, current_row)
+        if @current_player == @player_one && @player_two_double_move_made == true
+            pawn_piece = retrieve_pawn(current_column, current_row)
 
-        if pawn_piece
+            if pawn_piece
+                fifth_rank = 4
 
-            direction = (pawn_piece.color == 'white') ? 1 : -1
-            fifth_rank = (pawn_piece.color == 'white') ? 4 : 3
+                if pawn_piece.current_row == fifth_rank
+                    @en_passant_possible = true
+                    puts "en passant is possible"
+                    return true
+                end
+            end
 
-            if current_row == fifth_rank
-                double_move = [current_column, current_row + 2 * direction]
-                return true if @double_move_made && pawn_valid_move?(double_move)
-                @en_passant_possible = true
+        elsif @current_player == @player_two && @player_one_double_move_made == true
+            pawn_piece = retrieve_pawn(current_column, current_row)
+
+            if pawn_piece
+                fifth_rank = 3
+
+                if pawn_piece.current_row == fifth_rank
+                    @en_passant_possible = true
+                    puts "en passant is possible"
+                    return true
+                end
             end
         end
 
+        puts "en passant is not possible"
         false
     end
 
-    def en_passant_attempted?(destination_column, destination_row)
-        if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true
-            opponent_pieces = @player_two_pieces
-            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+    #def en_passant_attempted?(destination_column, destination_row)
+        #if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true
+            #opponent_pieces = @player_two_pieces
+            #opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row - 1 == destination_row }
       
-            if opponent_piece
-                @en_passant_attempted = true
-            end
+           # if opponent_piece
+                #@en_passant_attempted = true
+               # @en_passant_move << [piece.current_column, piece.current_column - 1]
+           # end
 
-        elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible = true
-            opponent_pieces = @player_one_pieces
-            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+        #elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible == true
+           # opponent_pieces = @player_one_pieces
+            #opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
       
-            if opponent_piece
-                @en_passant_attempted = true
-            end
-        end
+            #if opponent_piece
+               # @en_passant_attempted = true
+               # @en_passant_move << [piece.current_column, piece.current_column - 1]
+           # end
+       # end
 
-    end
+   # end
        
-    def en_passant_capture(destination_column, destination_row)
-        if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
-            opponent_pieces = @player_two_pieces
-            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
+    #def en_passant_capture(en_passant_piece)
+        if @current_player == @player_one && @player_two_double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
 
-            if opponent_piece
-                opponent_pieces.delete(opponent_piece)
-                @pieces_captured_by_player_one += 1
-                @player_two_pieces_remaining -= 1
-                puts "#{@player_one_name}'s pawn captured #{@player_two_name}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
-            end
+            @player_two_pieces.delete(en_passant_piece)
+            @pieces_captured_by_player_one += 1
+            @player_two_pieces_remaining -= 1
+            puts "#{@player_one_name}'s pawn captured #{@player_two_name}'s #{en_passant_piece.name} en passant at #{en_passant_piece.current_column}, #{en_passant_piece.current_row}"
 
-        elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible == true
-            opponent_pieces = @player_one_pieces
-            opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
-
-            if opponent_piece
-                opponent_pieces.delete(opponent_piece)
-                @pieces_captured_by_player_two += 1
-                @player_one_pieces_remaining -= 1
-                puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{opponent_piece.name} en passant at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
-            end
+        elsif @current_player == @player_two && @player_one_double_move_made == true && @en_passant_possible == true
+            
+            @player_two_pieces.delete(en_passant_piece)
+            @pieces_captured_by_player_two += 1
+            @player_one_pieces_remaining -= 1
+            puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{en_passant_piece.name} en passant at #{en_passant_piececurrent_column}, #{en_passant_piece.current_row}"
         end
     end
 
@@ -497,7 +513,6 @@ class ChessGame < ChessPiece
                 valid_moves = case piece.name
                 when /pawn/i
                     pawn_movement(old_column, old_row)
-                    #en_passant_possible?(old_column, old_row)
                 when /king/i
                     king_movement(old_column, old_row)
                     @king_moved = true
@@ -513,16 +528,53 @@ class ChessGame < ChessPiece
                 when /queen/i
                     queen_movement(old_column, old_row)
                 end
+
+                en_passant_possible?(old_column, old_row)
+
+                if @en_passant_possible == true
+                    opponent_pieces = @player_two_pieces
+                    opponent_piece = nil
+
+                    @board.each_with_index do |row, r|
+                        row.each_with_index do |col, c|
+                            next if col.nil? || col.name != @player_two_double_move_pawn
+                
+                            opponent_piece = col
+                            break
+                        end
+                        break if opponent_piece
+                    end
+
+                    @en_passant_piece = opponent_piece
+                    en_passant_piece = @en_passant_piece
+      
+                    puts "opponent piece = #{opponent_piece} "
+
+                    if opponent_piece
+                        @en_passant_attempted = true
+                        @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
+                        en_passant_capture(en_passant_piece)
+                    end
+
+                    valid_moves << @en_passant_move
+                end
     
                 puts "#{valid_moves}"
     
-                if valid_moves.include?([new_column, new_row])
+                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
                     #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
-                    #king_in_check?
+                elsif @en_passant_attempted == true
+                    piece.current_column = opponent_piece.current_column
+                    piece.current_row = opponent_piece.current_row + 1
+                    update_board(piece.current_column, piece.current_row, old_column, old_row)
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via en passant"
+                    puts "en passant move is #{@en_passant_move}"
+                    display_updated_board
+                    switch_players
                 else
                     illegal_move
                 end
@@ -1031,4 +1083,4 @@ end
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-#hoe.play_game
+hoe.play_game
