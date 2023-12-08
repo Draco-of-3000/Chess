@@ -325,8 +325,9 @@ describe ChessGame do
 
     describe '#en_passant_capture' do
         it "captures the opponent's pawn en passant" do
-            game.instance_variable_set(:@current_player, 'player_one')
+            game.instance_variable_set(:@current_player, game.instance_variable_get(:@player_one))
             game.instance_variable_set(:@double_move_made, true)
+            game.instance_variable_set(:@en_passant_possible, true)
       
             opponent_piece_1 = double(start_column: 0, start_row: 6, current_column: 1, current_row: 4, name: 'Black Pawn 1')
             opponent_piece_2 = double(start_column: 1, start_row: 7, current_column: 2, current_row: 5, name: 'Black Knight')
@@ -334,7 +335,7 @@ describe ChessGame do
             game.instance_variable_set(:@player_two_pieces, [ChessPiece::BLACK_PAWN_6, opponent_piece_1, opponent_piece_2])
                 game.instance_variable_set(:@player_one_pieces, [ChessPiece::WHITE_PAWN_6, ChessPiece::WHITE_KNIGHT_1])
             # Capture the pawn en passant
-            game.en_passant_capture(1, 4, :white)
+            game.en_passant_capture(1, 4)
 
             # Check that the opponent's pawn is captured, and pieces and counts are updated
             expect(game.instance_variable_get(:@pieces_captured_by_player_one)).to eq(1)
