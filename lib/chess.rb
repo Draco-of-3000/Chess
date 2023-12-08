@@ -479,7 +479,7 @@ class ChessGame < ChessPiece
 
    # end
        
-    #def en_passant_capture(en_passant_piece)
+    def en_passant_capture(en_passant_piece)
         if @current_player == @player_one && @player_two_double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
 
             @player_two_pieces.delete(en_passant_piece)
