@@ -425,7 +425,7 @@ class ChessGame < ChessPiece
         pawn
     end
 
-    #def en_passant_possible?(current_column, current_row)
+    def en_passant_possible?(current_column, current_row)
         if @current_player == @player_one && @player_two_double_move_made == true
             pawn_piece = retrieve_pawn(current_column, current_row)
 
