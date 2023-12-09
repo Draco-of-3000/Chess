@@ -552,7 +552,7 @@ class ChessGame < ChessPiece
     def reset_en_passant_variables
         @en_passant_possible = false
         @en_passant_attempted = false
-        @en_passant_move = nil
+        @en_passant_move = []
         @en_passant_piece = nil
         @player_one_double_move_made = false
         @player_one_double_move_pawn = nil
@@ -677,21 +677,18 @@ class ChessGame < ChessPiece
                     pawn_movement(old_column, old_row)
                 when /king/i
                     king_movement(old_column, old_row)
-                    @king_moved = true
-                    castling_possible?
                 when /knight/i
                     knight_movement(old_column, old_row)
                 when /bishop/i
                     bishop_movement(old_column, old_row)
                 when /rook/i
                     rook_movement(old_column, old_row)
-                    @rook_moved = true
-                    castling_possible?
                 when /queen/i
                     queen_movement(old_column, old_row)
                 end
 
                 en_passant_possible?(old_column, old_row)
+                castling_possible?
 
                 if @en_passant_possible == true
                     opponent_pieces = @player_one_pieces
@@ -755,7 +752,7 @@ class ChessGame < ChessPiece
                     illegal_move
                 end
             else
-                puts "Illegal selection, select a white piece!"
+                puts "Illegal selection, select a black piece!"
             end
         end
     end
