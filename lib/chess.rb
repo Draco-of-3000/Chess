@@ -183,6 +183,7 @@ class ChessGame < ChessPiece
         @en_passant_possible = false
         @en_passant_move = []
         @en_passant_piece = nil
+        @captured_en_passant = false
         @in_check = false
         @checkmate = false
         @king_moved = false
@@ -275,7 +276,7 @@ class ChessGame < ChessPiece
             if row == 1 && pawn_valid_move?(double_move)
                 pawn_moves << double_move
                 @player_one_double_move_made = true
-                @player_two_double_move_pawn = piece.name
+                @player_one_double_move_pawn = piece.name
             end
 
         elsif piece.color == @player_two_color
@@ -456,28 +457,6 @@ class ChessGame < ChessPiece
         puts "en passant is not possible"
         false
     end
-
-    #def en_passant_attempted?(destination_column, destination_row)
-        #if @current_player == @player_one && @double_move_made == true && @en_passant_possible == true
-            #opponent_pieces = @player_two_pieces
-            #opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row - 1 == destination_row }
-      
-           # if opponent_piece
-                #@en_passant_attempted = true
-               # @en_passant_move << [piece.current_column, piece.current_column - 1]
-           # end
-
-        #elsif @current_player == @player_two && @double_move_made == true && @en_passant_possible == true
-           # opponent_pieces = @player_one_pieces
-            #opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
-      
-            #if opponent_piece
-               # @en_passant_attempted = true
-               # @en_passant_move << [piece.current_column, piece.current_column - 1]
-           # end
-       # end
-
-   # end
        
     def en_passant_capture(en_passant_piece)
         if @current_player == @player_one && @player_two_double_move_made == true && @en_passant_possible == true && @en_passant_attempted == true
@@ -508,6 +487,81 @@ class ChessGame < ChessPiece
         end
     end
 
+    def retrieve_en_passant_destination
+        if @current_player == @player_one
+            if @en_passant_possible == true
+                opponent_pieces = @player_two_pieces
+                opponent_piece = nil
+    
+                @board.each_with_index do |row, r|
+                    row.each_with_index do |col, c|
+                        next if col.nil? || col.name != @player_two_double_move_pawn
+            
+                        opponent_piece = col
+                        break
+                    end
+                    break if opponent_piece
+                end
+    
+                @en_passant_piece = opponent_piece
+                en_passant_piece = @en_passant_piece
+    
+                puts "opponent piece = #{opponent_piece} "
+    
+                if opponent_piece
+                    @en_passant_attempted = true
+                    @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
+                    en_passant_capture(en_passant_piece)
+                end
+    
+                valid_moves << @en_passant_move
+                @captured_en_passant = true
+            end
+        elsif @current_player == @player_two
+            if @en_passant_possible == true
+                opponent_pieces = @player_one_pieces
+                opponent_piece = nil
+    
+                @board.each_with_index do |row, r|
+                    row.each_with_index do |col, c|
+                        next if col.nil? || col.name != @player_one_double_move_pawn
+            
+                        opponent_piece = col
+                        break
+                    end
+                    break if opponent_piece
+                end
+    
+                @en_passant_piece = opponent_piece
+                en_passant_piece = @en_passant_piece
+    
+                puts "opponent piece = #{opponent_piece} "
+    
+                if opponent_piece
+                    @en_passant_attempted = true
+                    @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
+                    en_passant_capture(en_passant_piece)
+                end
+    
+                valid_moves << @en_passant_move
+                @captured_en_passant = true
+            end
+        end
+    end
+
+    def reset_en_passant_variables
+        @en_passant_possible = false
+        @en_passant_attempted = false
+        @en_passant_move = nil
+        @en_passant_piece = nil
+        @player_one_double_move_made = false
+        @player_one_double_move_pawn = nil
+        @player_two_double_move_made = false
+        @player_two_double_move_pawn = nil
+        @captured_en_passant = false
+    end
+                    
+
     def get_piece_at(column, row)
         piece = @board[row][column]
 
@@ -537,26 +591,23 @@ class ChessGame < ChessPiece
                     pawn_movement(old_column, old_row)
                 when /king/i
                     king_movement(old_column, old_row)
-                    @king_moved = true
-                    castling_possible?
                 when /knight/i
                     knight_movement(old_column, old_row)
                 when /bishop/i
                     bishop_movement(old_column, old_row)
                 when /rook/i
                     rook_movement(old_column, old_row)
-                    @rook_moved = true
-                    castling_possible?
                 when /queen/i
                     queen_movement(old_column, old_row)
                 end
 
                 en_passant_possible?(old_column, old_row)
+                castling_possible?
 
                 if @en_passant_possible == true
                     opponent_pieces = @player_two_pieces
                     opponent_piece = nil
-
+        
                     @board.each_with_index do |row, r|
                         row.each_with_index do |col, c|
                             next if col.nil? || col.name != @player_two_double_move_pawn
@@ -566,28 +617,35 @@ class ChessGame < ChessPiece
                         end
                         break if opponent_piece
                     end
-
+        
                     @en_passant_piece = opponent_piece
                     en_passant_piece = @en_passant_piece
-      
+        
                     puts "opponent piece = #{opponent_piece} "
-
+        
                     if opponent_piece
                         @en_passant_attempted = true
                         @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
                         en_passant_capture(en_passant_piece)
                     end
-
+        
                     valid_moves << @en_passant_move
+                    @captured_en_passant = true
                 end
     
                 puts "#{valid_moves}"
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
-                    #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+
+                    if piece&.name&.match?(/King/i)
+                        @king_moved = true
+                    elsif piece&.name&.match?(/Rook/i)
+                        @rook_moved = true
+                    end
+
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
 
                 elsif @en_passant_attempted == true
@@ -597,11 +655,11 @@ class ChessGame < ChessPiece
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via en passant"
                     puts "en passant move is #{@en_passant_move}"
                     display_updated_board
-                    @en_passant_possible = false
-                    @player_two_double_move_made = false
-                    @player_two_double_move_pawn = nil
-                    @en_passant_move = nil
-                    @en_passant_piece = nil
+
+                    if @captured_en_passant == true
+                        reset_en_passant_variables
+                    end
+
                     switch_players
                 else
                     illegal_move
@@ -617,7 +675,6 @@ class ChessGame < ChessPiece
                 valid_moves = case piece.name
                 when /pawn/i
                     pawn_movement(old_column, old_row)
-                    #en_passant_possible?(old_column, old_row)
                 when /king/i
                     king_movement(old_column, old_row)
                     @king_moved = true
@@ -639,7 +696,7 @@ class ChessGame < ChessPiece
                 if @en_passant_possible == true
                     opponent_pieces = @player_one_pieces
                     opponent_piece = nil
-
+        
                     @board.each_with_index do |row, r|
                         row.each_with_index do |col, c|
                             next if col.nil? || col.name != @player_one_double_move_pawn
@@ -649,21 +706,22 @@ class ChessGame < ChessPiece
                         end
                         break if opponent_piece
                     end
-
+        
                     @en_passant_piece = opponent_piece
                     en_passant_piece = @en_passant_piece
-      
+        
                     puts "opponent piece = #{opponent_piece} "
-
+        
                     if opponent_piece
                         @en_passant_attempted = true
                         @en_passant_move << [opponent_piece.current_column, opponent_piece.current_row + 1]
                         en_passant_capture(en_passant_piece)
                     end
-
+        
                     valid_moves << @en_passant_move
+                    @captured_en_passant = true
                 end
-    
+
                 puts "#{valid_moves}"
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
@@ -671,6 +729,13 @@ class ChessGame < ChessPiece
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+
+                    if piece&.name&.match?(/King/i)
+                        @king_moved = true
+                    elsif piece&.name&.match?(/Rook/i)
+                        @rook_moved = true
+                    end
+
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
                     
                 elsif @en_passant_attempted == true
@@ -680,11 +745,11 @@ class ChessGame < ChessPiece
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via en passant"
                     puts "en passant move is #{@en_passant_move}"
                     display_updated_board
-                    @en_passant_possible = false
-                    @player_one_double_move_made = false
-                    @player_one_double_move_pawn = nil
-                    @en_passant_move = nil
-                    @en_passant_piece = nil
+
+                    if @captured_en_passant == true
+                        reset_en_passant_variables
+                    end
+
                     switch_players
                 else
                     illegal_move
@@ -1153,4 +1218,4 @@ end
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-#hoe.play_game
+hoe.play_game
