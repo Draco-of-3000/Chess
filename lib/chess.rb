@@ -221,8 +221,9 @@ class ChessGame < ChessPiece
     def setup_board_2
         @board
 
+        dummy_white_pieces = [ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_ROOK_2, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
         setup_pieces(@major_black_pieces)
-        setup_pieces(@major_white_pieces)
+        setup_pieces(dummy_white_pieces)
         setup_pieces(@black_pawns)
 
         @board
@@ -702,18 +703,18 @@ class ChessGame < ChessPiece
                     if king
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
-                        @left_king_castling_move << [king.current_column - 2, king.current_row]
+                        @left_king_castling_move << [@left_king_castling_column, king.current_row]
                         @right_king_castling_move << [@right_king_castling_column, king.current_row]
                     end
 
                     if rook_1
                         @rook_1_castling_column = rook_1.current_column + 3 
-                        @rook_1_castling_move << [rook_1.current_column + 2, rook_1.current_row]
+                        @rook_1_castling_move << [@rook_1_castling_column, rook_1.current_row]
                     end
 
                     if rook_2
                         @rook_2_castling_column = rook_2.current_column - 2
-                        @rook_2_castling_move << [rook_2.current_column - 2, rook_2.current_row]
+                        @rook_2_castling_move << [@rook_2_castling_column, rook_2.current_row]
                     end
 
                     valid_moves << @left_king_castling_move
@@ -892,6 +893,13 @@ class ChessGame < ChessPiece
             rook_1_column = 0
             rook_2_column = 7
 
+            rook_1_column_plus_one = get_piece_at(rook_1_column + 1, 0)
+            rook_1_column_plus_two = get_piece_at(rook_1_column + 2, 0)
+            rook_1_column_plus_three = get_piece_at(rook_1_column + 3, 0)
+
+            rook_2_column_minus_one = get_piece_at(rook_2_column - 1, 0)
+            rook_2_column_minus_two = get_piece_at(rook_2_column - 2, 0)
+
             # Check if the king and rook are present at their starting positions
             return false unless get_piece_at(king_column, 0)&.name == "White King"
 
@@ -901,11 +909,10 @@ class ChessGame < ChessPiece
             return false unless rook_piece_1&.name == "White Rook 1" 
             return false unless rook_piece_2&.name == "White Rook 2"
 
-            # Check that the squares between the king and rook are unoccupied
-            (1..3).each do |column|
-                return false unless get_piece_at(column, 0).nil?
+            if rook_1_column_plus_one.nil? && rook_1_column_plus_two.nil? && rook_1_column_plus_three.nil? && rook_2_column_minus_one.nil? && rook_2_column_minus_two.nil?
+                return false
             end
-
+             
             @castling_possible = true
             puts "Castling is possible"
             return true
@@ -919,8 +926,8 @@ class ChessGame < ChessPiece
             # Check if the king and rook are present at their starting positions
             return false unless get_piece_at(king_column, 0)&.name == "Black King"
             
-            rook_piece_1 = get_piece_at(rook_1_column, 0)
-            rook_piece_2 = get_piece_at(rook_2_column, 0)
+            rook_piece_1 = get_piece_at(rook_1_column, 7)
+            rook_piece_2 = get_piece_at(rook_2_column, 7)
 
             return false unless rook_piece_1&.name == "Black Rook 1" 
             return false unless rook_piece_2&.name == "Black Rook 2"
