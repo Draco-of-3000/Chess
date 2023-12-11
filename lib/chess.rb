@@ -923,8 +923,15 @@ class ChessGame < ChessPiece
             rook_1_column = 0
             rook_2_column = 7
 
+            rook_1_column_plus_one = get_piece_at(rook_1_column + 1, 7)
+            rook_1_column_plus_two = get_piece_at(rook_1_column + 2, 7)
+            rook_1_column_plus_three = get_piece_at(rook_1_column + 3, 7)
+
+            rook_2_column_minus_one = get_piece_at(rook_2_column - 1, 7)
+            rook_2_column_minus_two = get_piece_at(rook_2_column - 2, 7)
+
             # Check if the king and rook are present at their starting positions
-            return false unless get_piece_at(king_column, 0)&.name == "Black King"
+            return false unless get_piece_at(king_column, 7)&.name == "Black King"
             
             rook_piece_1 = get_piece_at(rook_1_column, 7)
             rook_piece_2 = get_piece_at(rook_2_column, 7)
@@ -933,8 +940,8 @@ class ChessGame < ChessPiece
             return false unless rook_piece_2&.name == "Black Rook 2"
 
             # Check that the squares between the king and rook are unoccupied
-            (1..3).each do |column|
-                return false unless get_piece_at(column, 0).nil?
+            if rook_1_column_plus_one.nil? && rook_1_column_plus_two.nil? && rook_1_column_plus_three.nil? && rook_2_column_minus_one.nil? && rook_2_column_minus_two.nil?
+                return false
             end
 
             @castling_possible = true
