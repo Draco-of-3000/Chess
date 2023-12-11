@@ -15,8 +15,8 @@ class ChessPiece
         @unicode = unicode
         @start_column = start_column
         @start_row = start_row
-        @current_column = nil
-        @current_row = nil
+        @current_column = current_column
+        @current_row = current_row
         @color = color
     end
 
@@ -169,13 +169,26 @@ class ChessGame < ChessPiece
         @player_two = ''
         @player_one_name = ''
         @player_two_name = ''
+        @player_one_king = 'White King'
+        @player_two_king = 'Black King'
+        @player_one_rook_1 = "White Rook 1"
+        @player_one_rook_2 = "White Rook 2"
+        @player_two_rook_1 = "Black Rook 1"
+        @player_two_rook_2 = "Black Rook 2"
         @player_one_color = 'white'
         @player_two_color = 'black'
         @player_one_pieces = @white_pieces
         @player_two_pieces = @black_pieces
         @player_one_pieces = nil
         @player_two_pieces = nil
-        @double_move_made = false
+        @left_king_castling_column = nil
+        @right_king_castling_column = nil
+        @left_king_castling_move = []
+        @right_king_castling_move = []
+        @rook_1_castling_column = nil
+        @rook_1_castling_move = []
+        @rook_2_castling_column = nil
+        @rook_2_castling_move = []
         @player_one_double_move_made = false
         @player_two_double_move_made = false
         @player_one_double_move_pawn = nil
@@ -200,6 +213,16 @@ class ChessGame < ChessPiece
         setup_pieces(@major_black_pieces)
         setup_pieces(@major_white_pieces)
         setup_pieces(@white_pawns)
+        setup_pieces(@black_pawns)
+
+        @board
+    end
+
+    def setup_board_2
+        @board
+
+        setup_pieces(@major_black_pieces)
+        setup_pieces(@major_white_pieces)
         setup_pieces(@black_pawns)
 
         @board
@@ -354,7 +377,6 @@ class ChessGame < ChessPiece
 
         valid_knight_moves.each do |move|
             column_change, row_change = move
-            puts "Before: column=#{column}, row=#{row}"
             new_column, new_row = column + column_change, row + row_change
 
             if new_column.between?(0, 7) && new_row.between?(0, 7)
@@ -483,7 +505,7 @@ class ChessGame < ChessPiece
 
             @pieces_captured_by_player_two += 1
             @player_one_pieces_remaining -= 1
-            puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{en_passant_piece.name} en passant at #{en_passant_piececurrent_column}, #{en_passant_piece.current_row}"
+            puts "#{@player_two_name}'s pawn captured #{@player_one_name}'s #{en_passant_piece.name} en passant at #{en_passant_piece.current_column}, #{en_passant_piece.current_row}"
         end
     end
 
@@ -561,7 +583,6 @@ class ChessGame < ChessPiece
         @captured_en_passant = false
     end
                     
-
     def get_piece_at(column, row)
         piece = @board[row][column]
 
@@ -574,12 +595,13 @@ class ChessGame < ChessPiece
     def find_piece_on_board(piece_name)
         @board.each do |row|
             row.each do |piece|
-                return piece if piece && piece.name == piece_name
+                return piece if piece && piece.name == piece_name && piece.current_column && piece.current_row
             end
         end
         nil
     end
 
+    =begin
     def move_piece(new_column, new_row, old_column, old_row)
         if @current_player == @player_one
             piece = get_piece_at(old_column, old_row)
@@ -605,7 +627,6 @@ class ChessGame < ChessPiece
                 castling_possible?
 
                 if @en_passant_possible == true
-                    opponent_pieces = @player_two_pieces
                     opponent_piece = nil
         
                     @board.each_with_index do |row, r|
@@ -632,8 +653,88 @@ class ChessGame < ChessPiece
                     valid_moves << @en_passant_move
                     @captured_en_passant = true
                 end
+
+                if @castling_possible == true
+                    #king = find_piece_on_board(@player_one_king)
+                    #rook_1 = find_piece_on_board(@player_one_rook_1)
+                    #rook_2 = find_piece_on_board(@player_one_rook_2)
+
+                    king = nil
+                    rook_1 = nil
+                    rook_2 = nil
+        
+        
+                    @board.each_with_index do |row, r|
+                        row.each_with_index do |col, c|
+                            next if col.nil? || col.name != @player_one_king
+                
+                            king = col
+                            break
+                        end
+                        break if king
+                    end
+
+                    @board.each_with_index do |row, r|
+                        row.each_with_index do |col, c|
+                            next if col.nil? || col.name != @player_one_rook_1
+                
+                            rook_1 = col
+                            break
+                        end
+                        break if rook_1
+                    end
+
+                    @board.each_with_index do |row, r|
+                        row.each_with_index do |col, c|
+                            next if col.nil? || col.name != @player_one_rook_2
+                
+                            rook_2 = col
+                            break
+                        end
+                        break if rook_2
+                    end
+        
+                    
+                    puts "king piece = #{king.name} "
+                    puts "king current column = #{king.current_column} "
+                    puts "rook 1 piece = #{rook_1.name} "
+                    puts "rook 2 piece = #{rook_2.name} "
+        
+                    if king
+                        @left_king_castling_column = king.current_column - 2
+                        @right_king_castling_column = king.current_column + 2
+                        @left_king_castling_move << [king.current_column - 2, king.current_row]
+                        @right_king_castling_move << [@right_king_castling_column, king.current_row]
+                    end
+
+                    if rook_1
+                        @rook_1_castling_column = rook_1.current_column + 3 
+                        @rook_1_castling_move << [rook_1.current_column + 2, rook_1.current_row]
+                    end
+
+                    if rook_2
+                        @rook_2_castling_column = rook_2.current_column - 2
+                        @rook_2_castling_move << [rook_2.current_column - 2, rook_2.current_row]
+                    end
+
+                    valid_moves << @left_king_castling_move
+                    valid_moves << @right_king_castling_move
+                    valid_moves
+
+                    puts "left_king_castling_column = #{@left_king_castling_column} "
+                    puts "right_king_castling_column = #{@right_king_castling_column} "
+                    puts "left_king_castling_move = #{@left_king_castling_move} "
+                    puts "right_king_castling_move = #{@right_king_castling_move} "
+
+                    puts "rook_1_castling_column = #{@rook_1_castling_column} "
+                    puts "rook_1_castling_move = #{@rook_1_castling_move} "
+                    puts "rook_2_castling_column = #{@rook_2_castling_column} "
+                    puts "rook_2_castling_move = #{@rook_2_castling_move} "
+                end
     
                 puts "#{valid_moves}"
+
+                castling_attempted?(new_column, new_row, old_column, old_row)
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
                     piece.current_column = new_column
@@ -648,7 +749,7 @@ class ChessGame < ChessPiece
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
 
-                elsif @en_passant_attempted == true
+                elsif @en_passant_attempted == true && @castling_possible == false
                     piece.current_column = opponent_piece.current_column
                     piece.current_row = opponent_piece.current_row + 1
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
@@ -661,6 +762,32 @@ class ChessGame < ChessPiece
                     end
 
                     switch_players
+
+                elsif valid_moves.include?(@left_king_castling_move)
+                    piece.current_column = new_column
+                    piece.current_row = new_row
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+
+                    update_board(piece.current_column, piece.current_row, old_column, old_row)
+    
+                    if piece.current_column == @left_king_castling_column
+                        rook_1.current_column = @rook_1_castling_column
+                        rook_1.current_row = rook_1.current_row
+                        update_board(rook_1.current_column, 0, 0, 0)
+    
+                    elsif piece.current_column == @right_king_castling_column
+                        rook_2.current_column = @rook_2_castling_column
+                        rook_2.current_row = rook_2.current_row
+                        update_board(rook_2.current_column, rook_2.current_row, old_column, old_row)
+                    end
+    
+                    @king_moved = true
+                    @rook_moved = true
+    
+                    
+                    display_updated_board
+                    switch_players
+
                 else
                     illegal_move
                 end
@@ -756,41 +883,72 @@ class ChessGame < ChessPiece
             end
         end
     end
+    =end
 
+    =begin
     def castling_possible?
         return false if @king_moved == true || @rook_moved == true
 
-        # Determine the column of the king and rook based on the color
-        king_column = (@current_player == @player_one) ? 4 : 3
-        rook_column = (@current_player == @player_one) ? 7 : 0
+        if @current_player == @player_one
+            # Determine the column of the king and rook based on the color
+            king_column = 4
+            rook_1_column = 0
+            rook_2_column = 7
 
-        # Check if the king and rook are present at their starting positions
-        return false unless get_piece_at(king_column, 0)&.name == "#{color.to_s.capitalize} King"
-        return false unless get_piece_at(rook_column, 0)&.name == "#{color.to_s.capitalize} Rook"
+            # Check if the king and rook are present at their starting positions
+            return false unless get_piece_at(king_column, 0)&.name == "White King"
 
-        # Check that the squares between the king and rook are unoccupied
-        (1..2).each do |column|
-            return false unless get_piece_at(column, 0).nil?
+            rook_piece_1 = get_piece_at(rook_1_column, 0)
+            rook_piece_2 = get_piece_at(rook_2_column, 0)
+
+            return false unless rook_piece_1&.name == "White Rook 1" 
+            return false unless rook_piece_2&.name == "White Rook 2"
+
+            # Check that the squares between the king and rook are unoccupied
+            (1..3).each do |column|
+                return false unless get_piece_at(column, 0).nil?
+            end
+
+            @castling_possible = true
+            puts "Castling is possible"
+            return true
+
+        elsif @current_player == @player_two
+            # Determine the column of the king and rook based on the color
+            king_column = 4
+            rook_1_column = 0
+            rook_2_column = 7
+
+            # Check if the king and rook are present at their starting positions
+            return false unless get_piece_at(king_column, 0)&.name == "Black King"
+            
+            rook_piece_1 = get_piece_at(rook_1_column, 0)
+            rook_piece_2 = get_piece_at(rook_2_column, 0)
+
+            return false unless rook_piece_1&.name == "Black Rook 1" 
+            return false unless rook_piece_2&.name == "Black Rook 2"
+
+            # Check that the squares between the king and rook are unoccupied
+            (1..3).each do |column|
+                return false unless get_piece_at(column, 0).nil?
+            end
+
+            @castling_possible = true
+            puts "Castling is possible"
+            return true
         end
-
-        @castling_possible = true
-        true
     end
+    =end
 
     def castling_attempted?(destination_column, destination_row, current_column, current_row)
         if @current_player == @player_one
             piece = get_piece_at(current_column, current_row)
             return false unless piece&.name&.match?(/King/i)
       
-            king_column_change = (destination_column - current_column).abs
-            king_row_change = (destination_row - current_row).abs
-      
-            return false unless king_column_change == 2 && king_row_change.zero?
-      
-            rook_column = 7
+            rook_column = 0
             rook_row = 0 
       
-            return false unless destination_row == rook_row && destination_column == rook_column
+            return false unless destination_row == rook_row && destination_column == rook_column + 2
       
             @castling_attempted = true
             true
@@ -799,17 +957,13 @@ class ChessGame < ChessPiece
             piece = get_piece_at(current_column, current_row)
             return false unless piece&.name&.match?(/King/i)
       
-            king_column_change = (destination_column - current_column).abs
-            king_row_change = (destination_row - current_row).abs
-      
-            return false unless king_column_change == 2 && king_row_change.zero?
-      
             rook_column = 0
-            rook_row = 7
+            rook_row = 0 
       
-            return false unless destination_row == rook_row && destination_column == rook_column
+            return false unless destination_row == rook_row && destination_column == rook_column + 2
       
             @castling_attempted = true
+            puts "castling has been attempted"
             true
         end
     end
@@ -914,23 +1068,17 @@ class ChessGame < ChessPiece
         king_piece = @current_player == @player_one ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
         opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
 
-
-        puts opponent_pieces
-        puts "king piece = #{king_piece.name}"
-
         opponent_pieces.each do |piece|
             possible_moves =
             
             case piece.name
             when /pawn/i
-                puts "Before: column=#{piece.current_column}, row=#{piece.current_row},  #{piece.name}"
                 pawn_movement(piece.current_column, piece.current_row)
             when /rook/i
                 rook_movement(piece.current_column, piece.current_row)
             when /bishop/i
                 bishop_movement(piece.current_column, piece.current_row)
             when /knight/i
-                puts "Before: column=#{piece.current_column}, row=#{piece.current_row},  #{piece.name}"
                 knight_movement(piece.current_column, piece.current_row)
             when /queen/i
                 queen_movement(piece.current_column, piece.current_row)
@@ -1205,7 +1353,7 @@ class ChessGame < ChessPiece
 
     def play_game
         assign_players
-        setup_board
+        setup_board_2
         scan_board
         make_move
     end
