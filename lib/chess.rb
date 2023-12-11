@@ -601,7 +601,6 @@ class ChessGame < ChessPiece
         nil
     end
 
-    =begin
     def move_piece(new_column, new_row, old_column, old_row)
         if @current_player == @player_one
             piece = get_piece_at(old_column, old_row)
@@ -883,7 +882,6 @@ class ChessGame < ChessPiece
             end
         end
     end
-    =end
 
     =begin
     def castling_possible?
