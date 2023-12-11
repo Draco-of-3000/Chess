@@ -883,7 +883,6 @@ class ChessGame < ChessPiece
         end
     end
 
-    =begin
     def castling_possible?
         return false if @king_moved == true || @rook_moved == true
 
@@ -936,7 +935,6 @@ class ChessGame < ChessPiece
             return true
         end
     end
-    =end
 
     def castling_attempted?(destination_column, destination_row, current_column, current_row)
         if @current_player == @player_one
