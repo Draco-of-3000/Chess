@@ -612,6 +612,27 @@ class ChessGame < ChessPiece
         nil
     end
 
+    def same_color_piece?(destination_column, destination_row)
+        piece = get_piece_at(destination_column, destination_row)
+
+        if @current_player == @player_one
+            if piece.nil?
+                return false
+            elsif piece && piece.color == @player_one_color
+                return true
+            end
+
+        elsif @current_player == @player_two
+            if piece.nil?
+                return false
+            elsif piece && piece.color == @player_two_color
+                return true
+            end
+        end
+
+        false
+    end
+
     def move_piece(new_column, new_row, old_column, old_row)
         if @current_player == @player_one
             piece = get_piece_at(old_column, old_row)
