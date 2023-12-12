@@ -706,9 +706,9 @@ class ChessGame < ChessPiece
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
 
                     if piece&.name&.match?(/King/i)
-                        @king_moved = true
+                        @player_one_king_moved = true
                     elsif piece&.name&.match?(/Rook/i)
-                        @rook_moved = true
+                        @player_one_rook_moved = true
                     end
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
@@ -752,8 +752,8 @@ class ChessGame < ChessPiece
                         update_board(rook_2.current_column, 0, 7, 0)
                     end
     
-                    @king_moved = true
-                    @rook_moved = true
+                    @player_one_king_moved = true
+                    @player_one_rook_moved = true
     
                     
                     display_updated_board
@@ -868,9 +868,9 @@ class ChessGame < ChessPiece
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
 
                     if piece&.name&.match?(/King/i)
-                        @king_moved = true
+                        @player_two_king_moved = true
                     elsif piece&.name&.match?(/Rook/i)
-                        @rook_moved = true
+                        @player_two_rook_moved = true
                     end
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
@@ -912,9 +912,9 @@ class ChessGame < ChessPiece
 
                         update_board(rook_2.current_column, 7, 7, 7)
                     end
-    
-                    @king_moved = true
-                    @rook_moved = true
+
+                    @player_two_king_moved = true
+                    @player_two_rook_moved = true
                     
                     display_updated_board
                     switch_players
@@ -929,9 +929,8 @@ class ChessGame < ChessPiece
     end
 
     def castling_possible?
-        return false if @king_moved == true || @rook_moved == true
-
         if @current_player == @player_one
+            return false if @player_one_king_moved == true || @player_one_rook_moved == true
             # Determine the column of the king and rook based on the color
             king_column = 4
             rook_1_column = 0
@@ -962,6 +961,7 @@ class ChessGame < ChessPiece
             return true
 
         elsif @current_player == @player_two
+            return false if @player_two_king_moved == true || @player_two_rook_moved == true
             # Determine the column of the king and rook based on the color
             king_column = 4
             rook_1_column = 0
