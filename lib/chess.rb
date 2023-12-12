@@ -444,7 +444,6 @@ class ChessGame < ChessPiece
                 @player_one_pieces.delete(opponent_piece)
             end
         end
-
     end
 
     def retrieve_pawn(current_column, current_row)
@@ -1140,30 +1139,62 @@ class ChessGame < ChessPiece
     end
 
     def king_in_check?
-        king_piece = @current_player == @player_one ? ChessPiece::WHITE_KING : ChessPiece::BLACK_KING
-        opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
-
-        opponent_pieces.each do |piece|
-            possible_moves =
+        if @current_player == @player_one
+            king_piece = find_piece_on_board(@player_one_king)
+            opponent_pieces = @player_two_pieces
             
-            case piece.name
-            when /pawn/i
-                pawn_movement(piece.current_column, piece.current_row)
-            when /rook/i
-                rook_movement(piece.current_column, piece.current_row)
-            when /bishop/i
-                bishop_movement(piece.current_column, piece.current_row)
-            when /knight/i
-                knight_movement(piece.current_column, piece.current_row)
-            when /queen/i
-                queen_movement(piece.current_column, piece.current_row)
-            when /king/i
-                king_movement(piece.current_column, piece.current_row)
+            opponent_pieces.each do |piece|
+                possible_moves =
+                
+                case piece.name
+                when /pawn/i
+                    pawn_movement(piece.current_column, piece.current_row)
+                when /rook/i
+                    rook_movement(piece.current_column, piece.current_row)
+                when /bishop/i
+                    bishop_movement(piece.current_column, piece.current_row)
+                when /knight/i
+                    knight_movement(piece.current_column, piece.current_row)
+                when /queen/i
+                    queen_movement(piece.current_column, piece.current_row)
+                when /king/i
+                    king_movement(piece.current_column, piece.current_row)
+                end
+    
+                if possible_moves.include?([king_piece.current_column, king_piece.current_row])
+                    @in_check = true
+                    puts "king is in check"
+                    return true
+                end
             end
+        
+        elsif @current_player == @player_two
+            king_piece = find_piece_on_board(@player_two_king)
+            opponent_pieces = @player_one_pieces
 
-            if possible_moves.include?([king_piece.current_column, king_piece.current_row])
-                @in_check = true
-                return true
+            opponent_pieces.each do |piece|
+                possible_moves =
+                
+                case piece.name
+                when /pawn/i
+                    pawn_movement(piece.current_column, piece.current_row)
+                when /rook/i
+                    rook_movement(piece.current_column, piece.current_row)
+                when /bishop/i
+                    bishop_movement(piece.current_column, piece.current_row)
+                when /knight/i
+                    knight_movement(piece.current_column, piece.current_row)
+                when /queen/i
+                    queen_movement(piece.current_column, piece.current_row)
+                when /king/i
+                    king_movement(piece.current_column, piece.current_row)
+                end
+    
+                if possible_moves.include?([king_piece.current_column, king_piece.current_row])
+                    @in_check = true
+                    puts "king is in check"
+                    return true
+                end
             end
         end
 
