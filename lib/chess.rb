@@ -119,9 +119,9 @@ class ChessBoard < ChessPiece
         puts seperator
         puts "4 |  #{"0, 4"} |  #{"1, 4"} |  #{"2, 4"} |  #{"3, 4"} |  #{"4, 4"} |  #{"5, 4"} |  #{"6, 4"} |  #{"7, 4"} |"
         puts seperator
-        puts "3 |  #{"0, 3"} |  #{"1, 3"} |  #{"2, 4"} |  #{"3, 3"} |  #{"4, 3"} |  #{"5, 3"} |  #{"6, 3"} |  #{"7, 3"} |"
+        puts "3 |  #{"0, 3"} |  #{"1, 3"} |  #{"2, 3"} |  #{"3, 3"} |  #{"4, 3"} |  #{"5, 3"} |  #{"6, 3"} |  #{"7, 3"} |"
         puts seperator
-        puts "2 |  #{"0, 2"} |  #{"1, 2"} |  #{"2, 4"} |  #{"3, 2"} |  #{"4, 2"} |  #{"5, 2"} |  #{"6, 2"} |  #{"7, 2"} |"
+        puts "2 |  #{"0, 2"} |  #{"1, 2"} |  #{"2, 2"} |  #{"3, 2"} |  #{"4, 2"} |  #{"5, 2"} |  #{"6, 2"} |  #{"7, 2"} |"
         puts seperator
         puts "1 |   #{@white_pawn_1.unicode}   |   #{@white_pawn_2.unicode}   |   #{@white_pawn_3.unicode}   |   #{@white_pawn_4.unicode}   |   #{@white_pawn_5.unicode}   |   #{@white_pawn_6.unicode}   |   #{@white_pawn_7.unicode}   |   #{@white_pawn_8.unicode}   |"
         puts seperator
@@ -627,17 +627,7 @@ class ChessGame < ChessPiece
                 castling_possible?
 
                 if @en_passant_possible == true
-                    opponent_piece = nil
-        
-                    @board.each_with_index do |row, r|
-                        row.each_with_index do |col, c|
-                            next if col.nil? || col.name != @player_two_double_move_pawn
-                
-                            opponent_piece = col
-                            break
-                        end
-                        break if opponent_piece
-                    end
+                    opponent_piece = find_piece_on_board(@player_two_double_move_pawn)
         
                     @en_passant_piece = opponent_piece
                     en_passant_piece = @en_passant_piece
@@ -790,17 +780,7 @@ class ChessGame < ChessPiece
 
                 if @en_passant_possible == true
                     opponent_pieces = @player_one_pieces
-                    opponent_piece = nil
-        
-                    @board.each_with_index do |row, r|
-                        row.each_with_index do |col, c|
-                            next if col.nil? || col.name != @player_one_double_move_pawn
-                
-                            opponent_piece = col
-                            break
-                        end
-                        break if opponent_piece
-                    end
+                    opponent_piece = find_piece_on_board(@player_one_double_move_pawn)
         
                     @en_passant_piece = opponent_piece
                     en_passant_piece = @en_passant_piece
