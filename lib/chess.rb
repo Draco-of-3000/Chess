@@ -721,9 +721,10 @@ class ChessGame < ChessPiece
     
                 puts "#{valid_moves}"
 
-                castling_attempted?(new_column, new_row, old_column, old_row)
+                same_piece_color = same_color_piece?(new_column, new_row)
+                puts "same piece = #{same_piece_color}"
     
-                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
+                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
                     piece.current_column = new_column
                     piece.current_row = new_row
@@ -783,6 +784,8 @@ class ChessGame < ChessPiece
                     display_updated_board
                     switch_players
 
+                elsif same_piece_color == true
+                    same_piece_color_illegal_move
                 else
                     illegal_move
                 end
@@ -875,8 +878,11 @@ class ChessGame < ChessPiece
                 end
 
                 puts "#{valid_moves}"
+
+                same_piece_color = same_color_piece?(new_column, new_row)
+                puts "same piece = #{same_piece_color}"
     
-                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
+                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
@@ -934,6 +940,8 @@ class ChessGame < ChessPiece
                     display_updated_board
                     switch_players
 
+                elsif same_piece_color == true
+                    same_piece_color_illegal_move
                 else
                     illegal_move
                 end
@@ -1375,6 +1383,10 @@ class ChessGame < ChessPiece
     def illegal_move
         puts "Illegal move, Make another move"
         return
+    end
+
+    def same_piece_color_illegal_move
+        puts "Illegal move, cannot move to a destination occupied by your own piece, make another move"
     end
 
     def update_board(new_column, new_row, old_column, old_row)
