@@ -1102,7 +1102,8 @@ class ChessGame < ChessPiece
 
             replace_piece(pawn, new_piece)
             puts "#{@player_one_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
-            new_piece
+            @player_one_pieces << new_piece
+            @player_one_pieces.delete(pawn)
 
         elsif @current_player == @player_two
             pawn = retrieve_pawn(current_column, current_row)
@@ -1133,7 +1134,8 @@ class ChessGame < ChessPiece
 
             replace_piece(pawn, new_piece)
             puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
-            new_piece
+            @player_two_pieces << new_piece
+            @player_two_pieces.delete(pawn)
         end
     end
 
