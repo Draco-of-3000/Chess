@@ -727,6 +727,7 @@ class ChessGame < ChessPiece
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
                     piece.current_column = new_column
                     piece.current_row = new_row
+                    pawn_promotion
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
 
                     if piece&.name&.match?(/King/i)
@@ -1074,7 +1075,7 @@ class ChessGame < ChessPiece
         if @current_player == @player_one 
             pawn = retrieve_pawn(current_column, current_row)
             
-            return unless @player_one_pieces.include?(pawn) && current_row == 7
+            return unless @player_one_pieces.include?(pawn) && pawn.current_row == 7
 
             piece_color = @player_one_color
 
@@ -1083,7 +1084,6 @@ class ChessGame < ChessPiece
 
             until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
                 puts "Invalid piece choice for promotion."
-                return
             end
 
             new_piece = case piece_choice
@@ -1105,9 +1105,9 @@ class ChessGame < ChessPiece
             new_piece
 
         elsif @current_player == @player_two
-            pawn = get_piece_at(column, row)
+            pawn = retrieve_pawn(current_column, current_row)
             
-            return unless @player_two_pieces.include?(pawn) &&  pawn&.name&.match?(/Pawn/i) && row == 0
+            return unless @player_one_pieces.include?(pawn) && pawn.current_row == 0
 
             piece_color = @player_two_color
 
@@ -1116,7 +1116,6 @@ class ChessGame < ChessPiece
 
             until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
                 puts "Invalid piece choice for promotion."
-                return
             end
 
             new_piece = case piece_choice
@@ -1142,7 +1141,7 @@ class ChessGame < ChessPiece
         if @current_player == @player_one
             king_piece = find_piece_on_board(@player_one_king)
             opponent_pieces = @player_two_pieces
-            
+
             opponent_pieces.each do |piece|
                 possible_moves =
                 
