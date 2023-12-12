@@ -420,23 +420,31 @@ class ChessGame < ChessPiece
     end
 
     def capture_piece(current_column, current_row, destination_column, destination_row)
-        opponent_pieces = @current_player == @player_one ? @player_two_pieces : @player_one_pieces
-        opponent_piece = opponent_pieces.find { |piece| piece.current_column == destination_column && piece.current_row == destination_row }
-        
-        if opponent_piece
-            opponent_pieces.delete(opponent_piece)
-            puts "#{@current_player}'s pawn captured #{@current_player}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
-    
-            if @current_player == @player_one
-                @pieces_captured_by_player_one += 1
-                @player_two_pieces_remaining -= 1
-            else
-                @pieces_captured_by_player_two += 1
-                @player_one_pieces_remaining -= 1
+        piece = get_piece_at(current_column, current_row)
+
+        if @current_player == @player_one
+            opponent_piece = get_piece_at(destination_column, destination_row)
+
+            if opponent_piece && opponent_piece.color == @player_two_color
+                opponent_piece.current_column = nil
+                opponent_piece.current_row = nil
+
+                @player_two_pieces.delete(opponent_piece)
+                puts "#{@player_one_name}'s #{piece.name} captured #{@player_two_name}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
             end
 
-            replace_piece(opponent_piece, piece) unless ENV['SKIP_REPLACE_PIECE'] 
+        elsif @current_player == @player_two
+            opponent_piece = get_piece_at(destination_column, destination_row)
+
+            if opponent_piece && opponent_piece.color == @player_one_color
+                opponent_piece.current_column = nil
+                opponent_piece.current_row = nil
+
+                puts "#{@player_two_name}'s #{piece.name} captured #{@player_one_name}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
+                @player_one_pieces.delete(opponent_piece)
+            end
         end
+
     end
 
     def retrieve_pawn(current_column, current_row)
@@ -695,6 +703,7 @@ class ChessGame < ChessPiece
                 castling_attempted?(new_column, new_row, old_column, old_row)
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
+                    capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
@@ -847,7 +856,7 @@ class ChessGame < ChessPiece
                 puts "#{valid_moves}"
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false
-                    #capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
+                    capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
@@ -1390,7 +1399,7 @@ class ChessGame < ChessPiece
 
     def play_game
         assign_players
-        setup_board_2
+        setup_board
         scan_board
         make_move
     end
