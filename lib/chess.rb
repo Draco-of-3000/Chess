@@ -656,7 +656,7 @@ class ChessGame < ChessPiece
                     puts "rook 1 piece = #{rook_1.name} "
                     puts "rook 2 piece = #{rook_2.name} "
         
-                    if king
+                    if king && king.current_row == 0
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
                         @left_king_castling_move = []
@@ -665,12 +665,12 @@ class ChessGame < ChessPiece
                         @right_king_castling_move << [@right_king_castling_column, king.current_row]
                     end
 
-                    if rook_1
+                    if rook_1 && rook_1.current_row == 0
                         @rook_1_castling_column = rook_1.current_column + 3 
                         @rook_1_castling_move << [@rook_1_castling_column, rook_1.current_row]
                     end
 
-                    if rook_2
+                    if rook_2 && rook_1.current_row == 0
                         @rook_2_castling_column = rook_2.current_column - 2
                         @rook_2_castling_move << [@rook_2_castling_column, rook_2.current_row]
                     end
@@ -811,7 +811,7 @@ class ChessGame < ChessPiece
                     puts "rook 1 piece = #{rook_1.name} "
                     puts "rook 2 piece = #{rook_2.name} "
         
-                    if king
+                    if king && king.current_row == 7
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
                         @left_king_castling_move = []
@@ -820,12 +820,12 @@ class ChessGame < ChessPiece
                         @right_king_castling_move << [@right_king_castling_column, 7]
                     end
 
-                    if rook_1
+                    if rook_1 && rook_1.current_row == 7
                         @rook_1_castling_column = rook_1.current_column + 3 
                         @rook_1_castling_move << [@rook_1_castling_column, 7]
                     end
 
-                    if rook_2
+                    if rook_2 &&  rook_2.current_row == 7
                         @rook_2_castling_column = rook_2.current_column - 2
                         @rook_2_castling_move << [@rook_2_castling_column, 7]
                     end
@@ -1390,7 +1390,7 @@ class ChessGame < ChessPiece
 
     def play_game
         assign_players
-        setup_board
+        setup_board_2
         scan_board
         make_move
     end
