@@ -886,6 +886,7 @@ class ChessGame < ChessPiece
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
+                    pawn_promotion(piece.current_column, piece.current_row)
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
 
                     if piece&.name&.match?(/King/i)
