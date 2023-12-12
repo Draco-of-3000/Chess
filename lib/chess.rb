@@ -222,9 +222,9 @@ class ChessGame < ChessPiece
         @board
 
         dummy_white_pieces = [ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_ROOK_2, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
-        setup_pieces(@major_black_pieces)
+        dummy_black_pieces = [ChessPiece::BLACK_ROOK_1, ChessPiece::BLACK_ROOK_2, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
+        setup_pieces(dummy_black_pieces)
         setup_pieces(dummy_white_pieces)
-        setup_pieces(@black_pawns)
 
         @board
     end
@@ -727,22 +727,29 @@ class ChessGame < ChessPiece
 
                     switch_players
 
-                elsif valid_moves.include?(@left_king_castling_move)
+                elsif valid_moves.include?(@left_king_castling_move) || valid_moves.include?(@right_king_castling_move)
                     piece.current_column = new_column
                     piece.current_row = new_row
-                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+
+                    puts "#{@player_one_name} moved #{piece.name} to column #{piece.current_column}, row #{0} via castling"
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
     
                     if piece.current_column == @left_king_castling_column
                         rook_1.current_column = @rook_1_castling_column
                         rook_1.current_row = rook_1.current_row
+
+                        puts "#{@player_one_name} moved #{rook_1.name} to column #{rook_1.current_column}, row #{0} via castling"
+
                         update_board(rook_1.current_column, 0, 0, 0)
     
                     elsif piece.current_column == @right_king_castling_column
                         rook_2.current_column = @rook_2_castling_column
-                        rook_2.current_row = rook_2.current_row
-                        update_board(rook_2.current_column, rook_2.current_row, old_column, old_row)
+                        rook_2.current_row = 0
+
+                        puts "#{@player_one_name} moved #{rook_2.name} to column #{rook_2.current_column}, row #{0} via castling"
+
+                        update_board(rook_2.current_column, 0, 7, 0)
                     end
     
                     @king_moved = true
@@ -811,9 +818,9 @@ class ChessGame < ChessPiece
                 end
 
                 if @castling_possible == true
-                    king = find_piece_on_board(@player_one_king)
-                    rook_1 = find_piece_on_board(@player_one_rook_1)
-                    rook_2 = find_piece_on_board(@player_one_rook_2)
+                    king = find_piece_on_board(@player_two_king)
+                    rook_1 = find_piece_on_board(@player_two_rook_1)
+                    rook_2 = find_piece_on_board(@player_two_rook_2)
                     
                     puts "king piece = #{king.name} "
                     puts "king current column = #{king.current_column} "
@@ -823,23 +830,23 @@ class ChessGame < ChessPiece
                     if king
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
-                        @left_king_castling_move << [@left_king_castling_column, king.current_row]
-                        @right_king_castling_move << [@right_king_castling_column, king.current_row]
+                        @left_king_castling_move = []
+                        @left_king_castling_move << [@left_king_castling_column, 7]
+                        @right_king_castling_move << [@right_king_castling_column, 7]
                     end
 
                     if rook_1
                         @rook_1_castling_column = rook_1.current_column + 3 
-                        @rook_1_castling_move << [@rook_1_castling_column, rook_1.current_row]
+                        @rook_1_castling_move << [@rook_1_castling_column, 7]
                     end
 
                     if rook_2
                         @rook_2_castling_column = rook_2.current_column - 2
-                        @rook_2_castling_move << [@rook_2_castling_column, rook_2.current_row]
+                        @rook_2_castling_move << [@rook_2_castling_column, 7]
                     end
 
                     valid_moves << @left_king_castling_move
                     valid_moves << @right_king_castling_move
-                    valid_moves
 
                     puts "left_king_castling_column = #{@left_king_castling_column} "
                     puts "right_king_castling_column = #{@right_king_castling_column} "
@@ -882,31 +889,35 @@ class ChessGame < ChessPiece
 
                     switch_players
 
-                elsif valid_moves.include?(@left_king_castling_move)
+                elsif valid_moves.include?(@left_king_castling_move) || valid_moves.include?(@right_king_castling_move)
                     piece.current_column = new_column
                     piece.current_row = new_row
-                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
+                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via castling"
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
     
                     if piece.current_column == @left_king_castling_column
                         rook_1.current_column = @rook_1_castling_column
-                        rook_1.current_row = rook_1.current_row
-                        update_board(rook_1.current_column, rook_1.current_row, old_column, old_row)
+                        rook_1.current_row = 7
+
+                        puts "#{@player_two_name} moved #{rook_1.name} to column #{rook_1.current_column}, row #{7} via castling"
+
+                        update_board(rook_1.current_column, 7, 0, 7)
     
                     elsif piece.current_column == @right_king_castling_column
                         rook_2.current_column = @rook_2_castling_column
-                        rook_2.current_row = rook_2.current_row
-                        update_board(rook_2.current_column, rook_2.current_row, old_column, old_row)
+                        rook_2.current_row = 7
+
+                        puts "#{@player_two_name} moved #{rook_2.name} to column #{rook_1.current_column}, row #{7} via castling"
+
+                        update_board(rook_2.current_column, 7, 7, 7)
                     end
     
                     @king_moved = true
                     @rook_moved = true
-    
                     
                     display_updated_board
                     switch_players
-
 
                 else
                     illegal_move
