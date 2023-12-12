@@ -199,8 +199,10 @@ class ChessGame < ChessPiece
         @captured_en_passant = false
         @in_check = false
         @checkmate = false
-        @king_moved = false
-        @rook_moved = false
+        @player_one_king_moved = false
+        @player_one_rook_moved = false
+        @player_two_king_moved = false
+        @player_two_rook_moved = false
         @square_under_attack = false
         @insufficient_material = false
         @castling_attempted = true
@@ -657,6 +659,8 @@ class ChessGame < ChessPiece
                     if king
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
+                        @left_king_castling_move = []
+                        @right_king_castling_move = []
                         @left_king_castling_move << [@left_king_castling_column, king.current_row]
                         @right_king_castling_move << [@right_king_castling_column, king.current_row]
                     end
@@ -811,6 +815,7 @@ class ChessGame < ChessPiece
                         @left_king_castling_column = king.current_column - 2
                         @right_king_castling_column = king.current_column + 2
                         @left_king_castling_move = []
+                        @right_king_castling_move = []
                         @left_king_castling_move << [@left_king_castling_column, 7]
                         @right_king_castling_move << [@right_king_castling_column, 7]
                     end
@@ -933,12 +938,11 @@ class ChessGame < ChessPiece
             return false unless rook_piece_2&.name == "White Rook 2"
 
             if rook_1_column_plus_one.nil? && rook_1_column_plus_two.nil? && rook_1_column_plus_three.nil? && rook_2_column_minus_one.nil? && rook_2_column_minus_two.nil?
-                return false
+                @castling_possible = true
+                puts "Castling is possible"
             end
              
-            @castling_possible = true
-            puts "Castling is possible"
-            return true
+            return false
 
         elsif @current_player == @player_two
             return false if @player_two_king_moved == true || @player_two_rook_moved == true
@@ -965,12 +969,11 @@ class ChessGame < ChessPiece
 
             # Check that the squares between the king and rook are unoccupied
             if rook_1_column_plus_one.nil? && rook_1_column_plus_two.nil? && rook_1_column_plus_three.nil? && rook_2_column_minus_one.nil? && rook_2_column_minus_two.nil?
-                return false
+                @castling_possible = true
+                puts "Castling is possible"
             end
 
-            @castling_possible = true
-            puts "Castling is possible"
-            return true
+            return false
         end
     end
 
@@ -1387,7 +1390,7 @@ class ChessGame < ChessPiece
 
     def play_game
         assign_players
-        setup_board_2
+        setup_board
         scan_board
         make_move
     end
