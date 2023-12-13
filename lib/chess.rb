@@ -653,7 +653,13 @@ class ChessGame < ChessPiece
 
             (piece.current_column - 1).downto(0) do |column|
                 square = get_piece_at(column, piece.current_row)
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [column, piece.current_row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -665,8 +671,13 @@ class ChessGame < ChessPiece
                 break if column < 0
               
                 square = get_piece_at(column, row)
-              
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [column, row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -675,8 +686,13 @@ class ChessGame < ChessPiece
 
             (piece.current_row + 1).upto(board_size - 1) do |row|
                 square = get_piece_at(piece.current_column, row)
-              
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [piece.current_column, row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -685,8 +701,13 @@ class ChessGame < ChessPiece
 
             (piece.current_column + 1).upto(board_size - 1) do |column|
                 square = get_piece_at(column, piece.current_row)
-              
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [column, piece.current_row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -698,7 +719,13 @@ class ChessGame < ChessPiece
                 break if column >= board_size
           
                 square = get_piece_at(column, row)
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [column, row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -706,11 +733,17 @@ class ChessGame < ChessPiece
             invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
         
             (piece.current_row - 1).downto(0) do |row|
-              column = piece.current_column - (piece.current_row - row)
-              break if column < 0
+                column = piece.current_column - (piece.current_row - row)
+                break if column < 0
         
-              square = get_piece_at(column, row)
-              invalid_moves << [square.current_column, square.current_row]
+                square = get_piece_at(column, row)
+
+                if square.nil?
+                    invalid_moves << [column, row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
         
@@ -721,7 +754,13 @@ class ChessGame < ChessPiece
                 column = piece.current_column + (piece.current_row - row)
                 
                 square = get_piece_at(column, row)
-                invalid_moves << [square.current_column, square.current_row]
+
+                if square.nil?
+                    invalid_moves << [column, row]
+
+                elsif square
+                    invalid_moves << [square.current_column, square.current_row]
+                end
             end
         end
 
@@ -733,40 +772,7 @@ class ChessGame < ChessPiece
             piece = get_piece_at(old_column, old_row)
             return unless piece
 
-            invalid_moves = []
-            
-            #left_square = row, column - 1
-            #left_diagonal_square = row + 1, column - 1
-            #square_above = column, row + 1
-            #right_square = row, column + 1
-            #right_diagonal_square = column + 1, row + 1
-
-            left_square = get_piece_at(piece.current_column - 1, piece.current_row)
-            left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row + 1)
-            square_above = get_piece_at(piece.current_column, piece.current_row + 1)
-            right_square = get_piece_at(piece.current_column + 1, piece.current_row)
-            right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row + 1)
-
-
-            if left_square
-                invalid_moves << [left_square.current_column, left_square.current_row]
-            end
-
-            if left_diagonal_square
-                invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
-            end
-
-            if square_above
-                invalid_moves << [square_above.current_column, square_above.current_row]
-            end
-
-            if right_square
-                invalid_moves << [right_square.current_column, right_square.current_row]
-            end
-
-            if right_diagonal_square
-                invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
-            end
+            invalid_moves = get_move_path(old_column, old_row)
 
             if piece.color == @player_one_color
                 valid_moves = case piece.name
@@ -849,8 +855,10 @@ class ChessGame < ChessPiece
                     puts "rook_2_castling_move = #{@rook_2_castling_move} "
                 end
 
+                puts "valid moves = #{valid_moves}"
+                puts "invalid moves = #{invalid_moves}"
                 valid_moves.reject! { |move| invalid_moves.include?(move) }
-                puts "#{valid_moves}"
+                puts "valid moves = #{valid_moves}"
 
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
