@@ -633,133 +633,269 @@ class ChessGame < ChessPiece
     end
 
     def get_move_path(current_column, current_row)
-        piece = get_piece_at(current_column, current_row)
+        if @current_player == @player_one
+            piece = get_piece_at(current_column, current_row)
 
-        board_size = 8
+            board_size = 8
 
-        left_square = get_piece_at(piece.current_column - 1, piece.current_row)
-        left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row + 1)
-        square_above = get_piece_at(piece.current_column, piece.current_row + 1)
-        right_square = get_piece_at(piece.current_column + 1, piece.current_row)
-        right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row + 1)
-        left_diagonal_bottom_square = get_piece_at(piece.current_column - 1, piece.current_row - 1)
-        right_diagonal_bottom_square = get_piece_at(piece.current_column + 1, piece.current_row - 1)
+            left_square = get_piece_at(piece.current_column - 1, piece.current_row)
+            left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row + 1)
+            square_above = get_piece_at(piece.current_column, piece.current_row + 1)
+            right_square = get_piece_at(piece.current_column + 1, piece.current_row)
+            right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row + 1)
+            left_diagonal_bottom_square = get_piece_at(piece.current_column - 1, piece.current_row - 1)
+            right_diagonal_bottom_square = get_piece_at(piece.current_column + 1, piece.current_row - 1)
 
 
-        invalid_moves = []
+            invalid_moves = []
 
-        if left_square
-            invalid_moves << [left_square.current_column, left_square.current_row]
+            if left_square
+                invalid_moves << [left_square.current_column, left_square.current_row]
 
-            (piece.current_column - 1).downto(0) do |column|
-                square = get_piece_at(column, piece.current_row)
+                (piece.current_column - 1).downto(0) do |column|
+                    square = get_piece_at(column, piece.current_row)
 
-                if square.nil?
-                    invalid_moves << [column, piece.current_row]
+                    if square.nil?
+                        invalid_moves << [column, piece.current_row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
 
-        if left_diagonal_square
-            invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
+            if left_diagonal_square
+                invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
 
-            (piece.current_row + 1).upto(board_size - 1) do |row|
-                column = piece.current_column - (piece.current_row - row)
-                break if column < 0
+                (piece.current_row + 1).upto(board_size - 1) do |row|
+                    column = piece.current_column - (piece.current_row - row)
+                    break if column < 0
               
-                square = get_piece_at(column, row)
+                    square = get_piece_at(column, row)
 
-                if square.nil?
-                    invalid_moves << [column, row]
+                    if square.nil?
+                        invalid_moves << [column, row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
 
-        if square_above
-            invalid_moves << [square_above.current_column, square_above.current_row]
+            if square_above
+                invalid_moves << [square_above.current_column, square_above.current_row]
 
-            (piece.current_row + 1).upto(board_size - 1) do |row|
-                square = get_piece_at(piece.current_column, row)
+                (piece.current_row + 1).upto(board_size - 1) do |row|
+                    square = get_piece_at(piece.current_column, row)
 
-                if square.nil?
-                    invalid_moves << [piece.current_column, row]
+                    if square.nil?
+                        invalid_moves << [piece.current_column, row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
 
-        if right_square
-            invalid_moves << [right_square.current_column, right_square.current_row]
+            if right_square
+                invalid_moves << [right_square.current_column, right_square.current_row]
 
-            (piece.current_column + 1).upto(board_size - 1) do |column|
-                square = get_piece_at(column, piece.current_row)
+                (piece.current_column + 1).upto(board_size - 1) do |column|
+                    square = get_piece_at(column, piece.current_row)
 
-                if square.nil?
-                    invalid_moves << [column, piece.current_row]
+                    if square.nil?
+                        invalid_moves << [column, piece.current_row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
 
-        if right_diagonal_square
-            invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
+            if right_diagonal_square
+                invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
 
-            (piece.current_row + 1).upto(board_size - 1) do |row|
-                column = piece.current_column + (piece.current_row - row)
-                break if column >= board_size
+                (piece.current_row + 1).upto(board_size - 1) do |row|
+                    column = piece.current_column + (piece.current_row - row)
+                    break if column >= board_size
           
-                square = get_piece_at(column, row)
+                    square = get_piece_at(column, row)
 
-                if square.nil?
-                    invalid_moves << [column, row]
+                    if square.nil?
+                        invalid_moves << [column, row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
 
-        if left_diagonal_bottom_square
-            invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
+            if left_diagonal_bottom_square
+                invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
         
-            (piece.current_row - 1).downto(0) do |row|
-                column = piece.current_column - (piece.current_row - row)
-                break if column < 0
+                (piece.current_row - 1).downto(0) do |row|
+                    column = piece.current_column - (piece.current_row - row)
+                    break if column < 0
         
-                square = get_piece_at(column, row)
+                    square = get_piece_at(column, row)
 
-                if square.nil?
-                    invalid_moves << [column, row]
+                    if square.nil?
+                        invalid_moves << [column, row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
-        end
         
-        if right_diagonal_bottom_square
-            invalid_moves << [right_diagonal_bottom_square.current_column, right_diagonal_bottom_square.current_row]
+            if right_diagonal_bottom_square
+                invalid_moves << [right_diagonal_bottom_square.current_column, right_diagonal_bottom_square.current_row]
         
-            (piece.current_row - 1).downto(0) do |row|
-                column = piece.current_column + (piece.current_row - row)
+                (piece.current_row - 1).downto(0) do |row|
+                    column = piece.current_column + (piece.current_row - row)
                 
-                square = get_piece_at(column, row)
+                    square = get_piece_at(column, row)
 
-                if square.nil?
-                    invalid_moves << [column, row]
+                    if square.nil?
+                        invalid_moves << [column, row]
 
-                elsif square
-                    invalid_moves << [square.current_column, square.current_row]
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+        elsif @current_player == @player_two
+            piece = get_piece_at(current_column, current_row)
+
+            puts "piece = #{piece.name}"
+            board_size = 8
+
+            left_square = get_piece_at(piece.current_column - 1, piece.current_row)
+            left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row - 1)  # Adjusted direction
+            square_below = get_piece_at(piece.current_column, piece.current_row - 1)  # Adjusted direction
+            right_square = get_piece_at(piece.current_column + 1, piece.current_row)
+            right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row - 1)  # Adjusted direction
+            left_diagonal_bottom_square = get_piece_at(piece.current_column - 1, piece.current_row - 1)  # Adjusted direction
+            right_diagonal_bottom_square = get_piece_at(piece.current_column + 1, piece.current_row - 1)  # Adjusted direction
+
+
+            invalid_moves = []
+
+            if left_square
+                invalid_moves << [left_square.current_column, left_square.current_row]
+
+                (piece.current_column - 1).downto(0) do |column|
+                    square = get_piece_at(column, piece.current_row)
+
+                    if square.nil?
+                        invalid_moves << [column, piece.current_row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+            if left_diagonal_square
+                invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
+
+                (piece.current_row - 1).downto(0) do |row|
+                    column = piece.current_column - (piece.current_row - row)
+                    break if column < 0
+              
+                    square = get_piece_at(column, row)
+
+                    if square.nil?
+                        invalid_moves << [column, row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+            if square_below
+                invalid_moves << [square_below.current_column, square_below.current_row]
+            
+                (piece.current_row - 1).downto(0) do |row|  # Adjusted direction
+                    square = get_piece_at(piece.current_column, row)
+
+                    if square.nil?
+                        invalid_moves << [piece.current_column, row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+            if right_square
+                invalid_moves << [right_square.current_column, right_square.current_row]
+
+                (piece.current_column + 1).upto(board_size - 1) do |column|
+                    square = get_piece_at(column, piece.current_row)
+
+                    if square.nil?
+                        invalid_moves << [column, piece.current_row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+            if right_diagonal_square
+                invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
+
+                (piece.current_row - 1).downto(0) do |row|
+                    column = piece.current_column + (piece.current_row - row)
+                    break if column >= board_size
+          
+                    square = get_piece_at(column, row)
+
+                    if square.nil?
+                        invalid_moves << [column, row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+
+            if left_diagonal_bottom_square
+                invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
+        
+                (piece.current_row + 1).upto(board_size - 1) do |row|
+                    column = piece.current_column - (piece.current_row - row)
+                    break if column < 0
+        
+                    square = get_piece_at(column, row)
+
+                    if square.nil?
+                        invalid_moves << [column, row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
+                end
+            end
+        
+            if right_diagonal_bottom_square
+                invalid_moves << [right_diagonal_bottom_square.current_column, right_diagonal_bottom_square.current_row]
+        
+                (piece.current_row + 1).upto(board_size - 1) do |row|
+                    column = piece.current_column + (piece.current_row - row)
+                    break if column >= board_size
+                
+                    square = get_piece_at(column, row)
+
+                    if square.nil?
+                        invalid_moves << [column, row]
+
+                    elsif square
+                        invalid_moves << [square.current_column, square.current_row]
+                    end
                 end
             end
         end
@@ -932,9 +1068,12 @@ class ChessGame < ChessPiece
             else
                 puts "Illegal selection, select a white piece!"
             end
+
         elsif @current_player == @player_two
             piece = get_piece_at(old_column, old_row)
             return unless piece
+
+            invalid_moves = get_move_path(old_column, old_row)
 
             if piece.color == @player_two_color
                 valid_moves = case piece.name
@@ -1017,7 +1156,10 @@ class ChessGame < ChessPiece
                     puts "rook_2_castling_move = #{@rook_2_castling_move} "
                 end
 
-                puts "#{valid_moves}"
+                puts "valid moves = #{valid_moves}"
+                puts "invalid moves = #{invalid_moves}"
+                valid_moves.reject! { |move| invalid_moves.include?(move) }
+                puts "valid moves = #{valid_moves}"
 
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
