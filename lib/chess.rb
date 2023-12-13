@@ -632,6 +632,39 @@ class ChessGame < ChessPiece
         false
     end
 
+    def pawn_diagonal_capture(current_column, current_row)
+        pawn = retrieve_pawn(current_column, current_row)
+        valid_moves = []
+
+        if pawn
+            puts "pawn = #{pawn.name}"
+            left_diagonal_column = pawn.current_column - 1
+            left_diagonal_row = pawn.current_row + 1
+
+            left_opponent_pawn = retrieve_pawn(left_diagonal_column, left_diagonal_row)
+
+            if left_opponent_pawn
+                puts "left diagonal pawn = #{left_opponent_pawn.name}"
+                valid_moves << left_opponent_pawn.current_column 
+                valid_moves << left_opponent_pawn.current_row
+            end
+
+            right_diagonal_column = pawn.current_column + 1
+            right_diagonal_row = pawn.current_row + 1
+
+            right_opponent_pawn = retrieve_pawn(right_diagonal_column, right_diagonal_row)
+
+            if right_opponent_pawn
+                puts "right diagonal pawn = #{right_opponent_pawn.name}"
+                valid_moves << right_opponent_pawn.current_column 
+                valid_moves << right_opponent_pawn.current_row
+                puts "valid diagonal moves #{valid_moves}"
+            end
+        end
+
+        return valid_moves
+    end
+
     def get_move_path(current_column, current_row)
         if @current_player == @player_one
             piece = get_piece_at(current_column, current_row)
@@ -998,6 +1031,12 @@ class ChessGame < ChessPiece
 
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
+
+                possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
+
+                if !possible_pawn_capture.nil?
+                    valid_moves << possible_pawn_capture
+                end
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
@@ -1163,6 +1202,16 @@ class ChessGame < ChessPiece
 
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
+
+                possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
+
+                puts "possible pawn capture #{possible_pawn_capture}"
+
+                if !possible_pawn_capture.nil?
+                    valid_moves << possible_pawn_capture
+                end
+
+                puts "valid moves #{valid_moves}"
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
@@ -1196,14 +1245,14 @@ class ChessGame < ChessPiece
                 elsif valid_moves.include?(@left_king_castling_move) || valid_moves.include?(@right_king_castling_move)
                     piece.current_column = new_column
                     piece.current_row = new_row
-                    puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via castling"
-
+    
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
     
                     if piece.current_column == @left_king_castling_column
                         rook_1.current_column = @rook_1_castling_column
                         rook_1.current_row = 7
 
+                        puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via castling"
                         puts "#{@player_two_name} moved #{rook_1.name} to column #{rook_1.current_column}, row #{7} via castling"
 
                         update_board(rook_1.current_column, 7, 0, 7)
@@ -1212,6 +1261,7 @@ class ChessGame < ChessPiece
                         rook_2.current_column = @rook_2_castling_column
                         rook_2.current_row = 7
 
+                        puts "Moved #{piece.name} to column #{new_column}, row #{new_row} via castling"
                         puts "#{@player_two_name} moved #{rook_2.name} to column #{rook_1.current_column}, row #{7} via castling"
 
                         update_board(rook_2.current_column, 7, 7, 7)
