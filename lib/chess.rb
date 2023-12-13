@@ -636,29 +636,58 @@ class ChessGame < ChessPiece
         pawn = retrieve_pawn(current_column, current_row)
         valid_moves = []
 
-        if pawn
-            puts "pawn = #{pawn.name}"
-            left_diagonal_column = pawn.current_column - 1
-            left_diagonal_row = pawn.current_row + 1
-
-            left_opponent_pawn = retrieve_pawn(left_diagonal_column, left_diagonal_row)
-
-            if left_opponent_pawn
-                puts "left diagonal pawn = #{left_opponent_pawn.name}"
-                valid_moves << left_opponent_pawn.current_column 
-                valid_moves << left_opponent_pawn.current_row
+        if @current_player == @player_one
+            if pawn
+                puts "pawn = #{pawn.name}"
+                left_diagonal_column = pawn.current_column - 1
+                left_diagonal_row = pawn.current_row + 1
+    
+                left_opponent_pawn = retrieve_pawn(left_diagonal_column, left_diagonal_row)
+    
+                if left_opponent_pawn
+                    puts "left diagonal pawn = #{left_opponent_pawn.name}"
+                    valid_moves << left_opponent_pawn.current_column 
+                    valid_moves << left_opponent_pawn.current_row
+                end
+    
+                right_diagonal_column = pawn.current_column + 1
+                right_diagonal_row = pawn.current_row + 1
+    
+                right_opponent_pawn = retrieve_pawn(right_diagonal_column, right_diagonal_row)
+    
+                if right_opponent_pawn
+                    puts "right diagonal pawn = #{right_opponent_pawn.name}"
+                    valid_moves << right_opponent_pawn.current_column 
+                    valid_moves << right_opponent_pawn.current_row
+                    puts "valid diagonal moves #{valid_moves}"
+                end
             end
-
-            right_diagonal_column = pawn.current_column + 1
-            right_diagonal_row = pawn.current_row + 1
-
-            right_opponent_pawn = retrieve_pawn(right_diagonal_column, right_diagonal_row)
-
-            if right_opponent_pawn
-                puts "right diagonal pawn = #{right_opponent_pawn.name}"
-                valid_moves << right_opponent_pawn.current_column 
-                valid_moves << right_opponent_pawn.current_row
-                puts "valid diagonal moves #{valid_moves}"
+        
+        elsif @current_player == @player_two
+            if pawn
+                puts "pawn = #{pawn.name}"
+                left_diagonal_column = pawn.current_column - 1
+                left_diagonal_row = pawn.current_row - 1
+    
+                left_opponent_pawn = retrieve_pawn(left_diagonal_column, left_diagonal_row)
+    
+                if left_opponent_pawn
+                    puts "left diagonal pawn = #{left_opponent_pawn.name}"
+                    valid_moves << left_opponent_pawn.current_column 
+                    valid_moves << left_opponent_pawn.current_row
+                end
+    
+                right_diagonal_column = pawn.current_column + 1
+                right_diagonal_row = pawn.current_row - 1
+    
+                right_opponent_pawn = retrieve_pawn(right_diagonal_column, right_diagonal_row)
+    
+                if right_opponent_pawn
+                    puts "right diagonal pawn = #{right_opponent_pawn.name}"
+                    valid_moves << right_opponent_pawn.current_column 
+                    valid_moves << right_opponent_pawn.current_row
+                    puts "valid diagonal moves #{valid_moves}"
+                end
             end
         end
 
