@@ -430,7 +430,7 @@ class ChessGame < ChessPiece
                 opponent_piece.current_row = nil
 
                 @player_two_pieces.delete(opponent_piece)
-                puts "#{@player_one_name}'s #{piece.name} captured #{@player_two_name}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
+                puts "#{@player_one_name}'s #{piece.name} captured #{@player_two_name}'s #{opponent_piece.name} at #{destination_column}, #{destination_row}"
             end
 
         elsif @current_player == @player_two
@@ -440,7 +440,7 @@ class ChessGame < ChessPiece
                 opponent_piece.current_column = nil
                 opponent_piece.current_row = nil
 
-                puts "#{@player_two_name}'s #{piece.name} captured #{@player_one_name}'s #{opponent_piece.name} at #{opponent_piece.current_column}, #{opponent_piece.current_row}"
+                puts "#{@player_two_name}'s #{piece.name} captured #{@player_one_name}'s #{opponent_piece.name} at #{destination_column}, #{destination_row}"
                 @player_one_pieces.delete(opponent_piece)
             end
         end
