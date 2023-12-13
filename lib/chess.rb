@@ -1061,11 +1061,14 @@ class ChessGame < ChessPiece
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
 
-                possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
+                if piece&.name&.match?(/Pawn/i)
+                    possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
 
-                if !possible_pawn_capture.nil?
-                    valid_moves << possible_pawn_capture
+                    if !possible_pawn_capture.nil?
+                        valid_moves << possible_pawn_capture
+                    end
                 end
+                
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
@@ -1232,12 +1235,12 @@ class ChessGame < ChessPiece
                 same_piece_color = same_color_piece?(new_column, new_row)
                 puts "same piece = #{same_piece_color}"
 
-                possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
+                if piece&.name&.match?(/Pawn/i)
+                    possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
 
-                puts "possible pawn capture #{possible_pawn_capture}"
-
-                if !possible_pawn_capture.nil?
-                    valid_moves << possible_pawn_capture
+                    if !possible_pawn_capture.nil?
+                        valid_moves << possible_pawn_capture
+                    end
                 end
 
                 puts "valid moves #{valid_moves}"
