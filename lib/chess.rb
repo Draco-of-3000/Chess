@@ -632,10 +632,141 @@ class ChessGame < ChessPiece
         false
     end
 
+    def get_move_path(current_column, current_row)
+        piece = get_piece_at(current_column, current_row)
+
+        board_size = 8
+
+        left_square = get_piece_at(piece.current_column - 1, piece.current_row)
+        left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row + 1)
+        square_above = get_piece_at(piece.current_column, piece.current_row + 1)
+        right_square = get_piece_at(piece.current_column + 1, piece.current_row)
+        right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row + 1)
+        left_diagonal_bottom_square = get_piece_at(piece.current_column - 1, piece.current_row - 1)
+        right_diagonal_bottom_square = get_piece_at(piece.current_column + 1, piece.current_row - 1)
+
+
+        invalid_moves = []
+
+        if left_square
+            invalid_moves << [left_square.current_column, left_square.current_row]
+
+            (piece.current_column - 1).downto(0) do |column|
+                square = get_piece_at(column, piece.current_row)
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        if left_diagonal_square
+            invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
+
+            (piece.current_row + 1).upto(board_size - 1) do |row|
+                column = piece.current_column - (piece.current_row - row)
+                break if column < 0
+              
+                square = get_piece_at(column, row)
+              
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        if square_above
+            invalid_moves << [square_above.current_column, square_above.current_row]
+
+            (piece.current_row + 1).upto(board_size - 1) do |row|
+                square = get_piece_at(piece.current_column, row)
+              
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        if right_square
+            invalid_moves << [right_square.current_column, right_square.current_row]
+
+            (piece.current_column + 1).upto(board_size - 1) do |column|
+                square = get_piece_at(column, piece.current_row)
+              
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        if right_diagonal_square
+            invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
+
+            (piece.current_row + 1).upto(board_size - 1) do |row|
+                column = piece.current_column + (piece.current_row - row)
+                break if column >= board_size
+          
+                square = get_piece_at(column, row)
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        if left_diagonal_bottom_square
+            invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
+        
+            (piece.current_row - 1).downto(0) do |row|
+              column = piece.current_column - (piece.current_row - row)
+              break if column < 0
+        
+              square = get_piece_at(column, row)
+              invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+        
+        if right_diagonal_bottom_square
+            invalid_moves << [right_diagonal_bottom_square.current_column, right_diagonal_bottom_square.current_row]
+        
+            (piece.current_row - 1).downto(0) do |row|
+                column = piece.current_column + (piece.current_row - row)
+                
+                square = get_piece_at(column, row)
+                invalid_moves << [square.current_column, square.current_row]
+            end
+        end
+
+        return invalid_moves
+    end
+
     def move_piece(new_column, new_row, old_column, old_row)
         if @current_player == @player_one
             piece = get_piece_at(old_column, old_row)
             return unless piece
+
+            invalid_moves = []
+            
+            #left_square = row, column - 1
+            #left_diagonal_square = row + 1, column - 1
+            #square_above = column, row + 1
+            #right_square = row, column + 1
+            #right_diagonal_square = column + 1, row + 1
+
+            left_square = get_piece_at(piece.current_column - 1, piece.current_row)
+            left_diagonal_square = get_piece_at(piece.current_column - 1, piece.current_row + 1)
+            square_above = get_piece_at(piece.current_column, piece.current_row + 1)
+            right_square = get_piece_at(piece.current_column + 1, piece.current_row)
+            right_diagonal_square = get_piece_at(piece.current_column + 1, piece.current_row + 1)
+
+
+            if left_square
+                invalid_moves << [left_square.current_column, left_square.current_row]
+            end
+
+            if left_diagonal_square
+                invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
+            end
+
+            if square_above
+                invalid_moves << [square_above.current_column, square_above.current_row]
+            end
+
+            if right_square
+                invalid_moves << [right_square.current_column, right_square.current_row]
+            end
+
+            if right_diagonal_square
+                invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
+            end
 
             if piece.color == @player_one_color
                 valid_moves = case piece.name
@@ -717,7 +848,8 @@ class ChessGame < ChessPiece
                     puts "rook_2_castling_column = #{@rook_2_castling_column} "
                     puts "rook_2_castling_move = #{@rook_2_castling_move} "
                 end
-    
+
+                valid_moves.reject! { |move| invalid_moves.include?(move) }
                 puts "#{valid_moves}"
 
                 same_piece_color = same_color_piece?(new_column, new_row)
