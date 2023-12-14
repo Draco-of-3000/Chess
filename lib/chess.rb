@@ -1069,7 +1069,9 @@ class ChessGame < ChessPiece
                     end
                 end
                 
-    
+                # Remove empty arrays from valid_moves
+                valid_moves.reject!(&:empty?)
+
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
                     piece.current_column = new_column
@@ -1244,6 +1246,8 @@ class ChessGame < ChessPiece
                 end
 
                 puts "valid moves #{valid_moves}"
+                # Remove empty arrays from valid_moves
+                valid_moves.reject!(&:empty?)
     
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
