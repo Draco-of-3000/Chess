@@ -207,6 +207,20 @@ class ChessGame < ChessPiece
         @insufficient_material = false
         @castling_attempted = true
         @castling_possible = false
+
+        puts "Welcome To Chess!"
+
+        if File.exist?('chess_save.txt')
+            load_game_option = prompt_load_game_option
+
+            if load_game_option == 'yes'
+                load_game
+            else
+                play_game
+            end
+        else
+            play_game
+        end
     end
 
     def setup_board
@@ -2036,6 +2050,7 @@ class ChessGame < ChessPiece
       
         puts "Game loaded successfully"
 
+        make_move
         rescue Errno::ENOENT
             puts "No saved game found"
     end
