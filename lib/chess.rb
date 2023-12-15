@@ -1079,12 +1079,12 @@ class ChessGame < ChessPiece
                     end
                 end
 
-                if piece&.name&.match?(/Pawn/i) && valid_moves.include?([new_column, new_row]) && new_row == 0
+                if piece&.name&.match?(/Pawn/i) && valid_moves.include?([new_column, new_row]) && new_row == 7
                     puts "possible promtion available"
                     piece.current_column = new_column
                     piece.current_row = new_row
 
-                    if piece.current_row == 0
+                    if piece.current_row == 7
                         puts "promotion is possible"
         
                         puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
