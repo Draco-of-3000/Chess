@@ -687,8 +687,7 @@ class ChessGame < ChessPiece
     
                 if left_opponent_pawn
                     puts "left diagonal pawn = #{left_opponent_pawn.name}"
-                    valid_moves << left_opponent_pawn.current_column 
-                    valid_moves << left_opponent_pawn.current_row
+                    valid_moves << [left_opponent_pawn.current_column, left_opponent_pawn.current_row]
                 end
     
                 right_diagonal_column = pawn.current_column + 1
@@ -698,8 +697,7 @@ class ChessGame < ChessPiece
     
                 if right_opponent_pawn
                     puts "right diagonal pawn = #{right_opponent_pawn.name}"
-                    valid_moves << right_opponent_pawn.current_column 
-                    valid_moves << right_opponent_pawn.current_row
+                    valid_moves << [right_opponent_pawn.current_column, right_opponent_pawn.current_row]
                     puts "valid diagonal moves #{valid_moves}"
                 end
             end
@@ -1078,19 +1076,18 @@ class ChessGame < ChessPiece
                 if piece&.name&.match?(/Pawn/i)
                     possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
 
-                    if !possible_pawn_capture.nil?
-                        valid_moves << possible_pawn_capture
+                    if !possible_pawn_capture.nil?   
+                        valid_moves += possible_pawn_capture
                     end
                 end
                 
                 # Remove empty arrays from valid_moves
-                valid_moves.reject!(&:empty?)
+                #valid_moves.reject!(&:empty?)
 
                 if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE']
                     piece.current_column = new_column
                     piece.current_row = new_row
-                    pawn_promotion(piece.current_column, piece.current_row)
                     puts "Moved #{piece.name} to column #{new_column}, row #{new_row}"
 
                     if piece&.name&.match?(/King/i)
@@ -1254,8 +1251,50 @@ class ChessGame < ChessPiece
                 if piece&.name&.match?(/Pawn/i)
                     possible_pawn_capture = pawn_diagonal_capture(old_column, old_row) 
 
-                    if !possible_pawn_capture.nil?
-                        valid_moves << possible_pawn_capture
+                    if !possible_pawn_capture.nil?   
+                        valid_moves += possible_pawn_capture
+                    end
+                end
+
+                if piece&.name&.match?(/Pawn/i) && valid_moves.include?([new_column, new_row]) && new_row == 0
+                    puts "possible promtion available"
+                    piece.current_column = new_column
+                    piece.current_row = new_row
+
+                    if piece.current_row == 0
+                        puts "promotion is possible"
+        
+                        puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
+                        piece_choice = gets.chomp.downcase
+        
+                        until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
+                            puts "Invalid piece choice for promotion."
+                        end
+        
+                        new_piece = case piece_choice
+                        when 'king'
+                            ChessPiece.new("Black King 3", "\u265A", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'queen'
+                            ChessPiece.new("Black Queen", "\u265B", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'rook'
+                            ChessPiece.new("Black Rook", "\u265C", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'bishop'
+                            ChessPiece.new("Black Bishop", "\u265D", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'knight'
+                            ChessPiece.new("Black Knight", "\u265E", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        end
+        
+                        replace_piece(piece, new_piece)
+                        puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{new_column}, #{new_row}."
+                        @player_two_pieces << new_piece
+                        
+
+                        new_piece.current_column = new_column
+                        new_piece.current_row = new_row
+        
+                        update_board(new_piece.current_column, new_piece.current_row, old_column, old_row)
+                        @player_two_pieces.delete(piece)
+                        return new_piece
                     end
                 end
 
@@ -1263,7 +1302,7 @@ class ChessGame < ChessPiece
                 # Remove empty arrays from valid_moves
                 valid_moves.reject!(&:empty?)
     
-                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false
+                if valid_moves.include?([new_column, new_row]) && @en_passant_possible == false && same_piece_color == false 
                     capture_piece(old_column, old_row, new_column, new_row) unless ENV['SKIP_CAPTURE_PIECE'] 
                     piece.current_column = new_column
                     piece.current_row = new_row
@@ -1277,7 +1316,7 @@ class ChessGame < ChessPiece
                     end
 
                     update_board(piece.current_column, piece.current_row, old_column, old_row)
-                    
+
                 elsif @en_passant_attempted == true
                     piece.current_column = opponent_piece.current_column
                     piece.current_row = opponent_piece.current_row + 1
@@ -1458,7 +1497,7 @@ class ChessGame < ChessPiece
         if @current_player == @player_one 
             pawn = retrieve_pawn(current_column, current_row)
             
-            return unless @player_one_pieces.include?(pawn) && pawn.current_row == 7
+            return unless pawn && pawn.current_row == 7
 
             piece_color = @player_one_color
 
@@ -1488,37 +1527,43 @@ class ChessGame < ChessPiece
             @player_one_pieces << new_piece
             @player_one_pieces.delete(pawn)
 
+            return new_piece
+
         elsif @current_player == @player_two
             pawn = retrieve_pawn(current_column, current_row)
             
-            return unless @player_one_pieces.include?(pawn) && pawn.current_row == 0
+            if pawn && pawn.current_row == 0
+                puts "promotion is possible"
 
-            piece_color = @player_two_color
+                puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
+                piece_choice = gets.chomp.downcase
 
-            puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
-            piece_choice = gets.chomp.downcase
+                until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
+                    puts "Invalid piece choice for promotion."
+                end
 
-            until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
-                puts "Invalid piece choice for promotion."
+                new_piece = case piece_choice
+                when 'king'
+                    ChessPiece.new("Black King 3", "\u265A", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+                when 'queen'
+                    ChessPiece.new("Black Queen", "\u265B", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+                when 'rook'
+                    ChessPiece.new("Black Rook", "\u265C", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+                when 'bishop'
+                    ChessPiece.new("Black Bishop", "\u265D", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+                when 'knight'
+                    ChessPiece.new("Black Knight", "\u265E", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
+                end
+
+                replace_piece(pawn, new_piece)
+                puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
+                @player_two_pieces << new_piece
+                @player_two_pieces.delete(pawn)
+
+                update_board(new_piece.current_column, new_piece.current_row, current_column, current_row)
+                display_updated_board
+                return new_piece
             end
-
-            new_piece = case piece_choice
-            when 'king'
-                ChessPiece.new("Black King 3", "\u265A", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
-            when 'queen'
-                ChessPiece.new("Black Queen", "\u265B", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
-            when 'rook'
-                ChessPiece.new("Black Rook", "\u265C", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
-            when 'bishop'
-                ChessPiece.new("Black Bishop", "\u265D", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
-            when 'knight'
-                ChessPiece.new("Black Knight", "\u265E", pawn.start_column, pawn.start_row, current_column, current_row, @player_two_color)
-            end
-
-            replace_piece(pawn, new_piece)
-            puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{current_column}, #{current_row}."
-            @player_two_pieces << new_piece
-            @player_two_pieces.delete(pawn)
         end
     end
 
