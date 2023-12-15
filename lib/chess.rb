@@ -223,6 +223,18 @@ class ChessGame < ChessPiece
         end
     end
 
+    def prompt_load_game_option
+        puts "Do you want to load a saved game? Type 'yes' or 'no'"
+        input = gets.chomp.downcase 
+
+        until input == 'yes' || input == 'no'
+            puts "Invalid input. Do you want to load a saved game? Type 'yes' or 'no'"
+            input = gets.chomp.downcase
+        end
+
+        input
+    end
+
     def setup_board
         @board
 
