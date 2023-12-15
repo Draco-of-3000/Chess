@@ -179,8 +179,6 @@ class ChessGame < ChessPiece
         @player_two_rook_2 = "Black Rook 2"
         @player_one_color = 'white'
         @player_two_color = 'black'
-        @player_one_pieces = @white_pieces
-        @player_two_pieces = @black_pieces
         @player_one_pieces = nil
         @player_two_pieces = nil
         @left_king_castling_column = nil
@@ -1951,6 +1949,51 @@ class ChessGame < ChessPiece
         setup_board
         scan_board
         make_move
+    end
+
+    def save_game
+        save_data = {
+            board: @board,
+            current_player: @current_player,
+            pieces_captured_by_player_one: @pieces_captured_by_player_one,
+            player_one_pieces_remaining: @player_one_pieces_remaining,
+            pieces_captured_by_player_two: @pieces_captured_by_player_two,
+            player_two_pieces_remaining: @player_two_pieces_remaining,
+            player_one_pieces: @player_one_pieces,
+            player_two_pieces: @player_two_pieces,
+            left_king_castling_column: @left_king_castling_column,
+            right_king_castling_column: @right_king_castling_column,
+            left_king_castling_move: @left_king_castling_move,
+            right_king_castling_move: @right_king_castling_move,
+            rook_1_castling_column: @rook_1_castling_column,
+            rook_1_castling_move: @rook_1_castling_move,
+            rook_2_castling_column: @rook_2_castling_column,
+            rook_2_castling_move: @rook_2_castling_move,
+            player_one_double_move_made: @player_one_double_move_made,
+            player_two_double_move_made: @player_two_double_move_made,
+            player_one_double_move_pawn: @player_one_double_move_pawn,
+            player_two_double_move_pawn: @player_two_double_move_pawn,
+            en_passant_possible: @en_passant_possible,
+            en_passant_move: @en_passant_move,
+            en_passant_piece: @en_passant_piece,
+            captured_en_passant: @captured_en_passant,
+            in_check: @in_check,
+            checkmate: @checkmate,
+            player_one_king_moved: @player_one_king_moved,
+            player_one_rook_moved: @player_one_rook_moved,
+            player_two_king_moved: @player_two_king_moved,
+            player_two_rook_moved: @player_two_rook_moved,
+            square_under_attack: @square_under_attack,
+            insufficient_material: @insufficient_material,
+            castling_attempted: @castling_attempted,
+            castling_possible: @castling_possible
+        }
+
+        File.open('chess_save.txt', 'w') do |file|
+            file.puts save_data.to_yaml
+        end
+
+        puts "Game saved successfully"
     end
 end
 
