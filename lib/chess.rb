@@ -461,13 +461,18 @@ class ChessGame < ChessPiece
     def en_passant_possible?(current_column, current_row)
         if @current_player == @player_one && @player_two_double_move_made == true
             pawn_piece = retrieve_pawn(current_column, current_row)
-            right_opponent_pawn = retrieve_pawn(current_column + 1, current_row + 1)
-            left_opponent_pawn = retrieve_pawn(current_column - 1, current_row + 1)
+            right_opponent_pawn = find_piece_on_board(@player_two_double_move_pawn)
+            left_opponent_pawn = find_piece_on_board(@player_two_double_move_pawn)
+            column_plus_one = pawn_piece.current_column + 1
+            column_minus_one = pawn_piece.current_column - 1
 
-            if pawn_piece && (right_opponent_pawn || left_opponent_pawn)
+            if pawn_piece
                 fifth_rank = 4
 
-                if pawn_piece.current_row == fifth_rank
+                if pawn_piece.current_row == fifth_rank && (
+                    (right_opponent_pawn && right_opponent_pawn.current_column == column_plus_one && right_opponent_pawn.current_row == fifth_rank) ||
+                    (left_opponent_pawn && left_opponent_pawn.current_column == column_minus_one && left_opponent_pawn.current_row == fifth_rank)
+                    )
                     @en_passant_possible = true
                     puts "en passant is possible"
                     return true
@@ -476,13 +481,18 @@ class ChessGame < ChessPiece
 
         elsif @current_player == @player_two && @player_one_double_move_made == true
             pawn_piece = retrieve_pawn(current_column, current_row)
-            right_opponent_pawn = retrieve_pawn(current_column + 1, current_row - 1)
-            left_opponent_pawn = retrieve_pawn(current_column - 1, current_row - 1)
+            right_opponent_pawn = find_piece_on_board(@player_two_double_move_pawn)
+            left_opponent_pawn = find_piece_on_board(@player_two_double_move_pawn)
+            column_plus_one = pawn_piece.current_column + 1
+            column_minus_one = pawn_piece.current_column - 1
 
-            if pawn_piece && (right_opponent_pawn || left_opponent_pawn)
+            if pawn_piece
                 fifth_rank = 3
 
-                if pawn_piece.current_row == fifth_rank
+                if pawn_piece.current_row == fifth_rank && (
+                    (right_opponent_pawn && right_opponent_pawn.current_column == column_plus_one && right_opponent_pawn.current_row == fifth_rank) ||
+                    (left_opponent_pawn && left_opponent_pawn.current_column == column_minus_one && left_opponent_pawn.current_row == fifth_rank)
+                    )
                     @en_passant_possible = true
                     puts "en passant is possible"
                     return true
