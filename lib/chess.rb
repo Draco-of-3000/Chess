@@ -750,7 +750,7 @@ class ChessGame < ChessPiece
                 end
             end
 
-            if left_diagonal_square
+            if left_diagonal_square && !piece&.name&.match?(/Bishop/i)
                 invalid_moves << [left_diagonal_square.current_column, left_diagonal_square.current_row]
 
                 (piece.current_row + 1).upto(board_size - 1) do |row|
@@ -768,7 +768,7 @@ class ChessGame < ChessPiece
                 end
             end
 
-            if square_above
+            if square_above && !piece&.name&.match?(/Bishop/i)
                 invalid_moves << [square_above.current_column, square_above.current_row]
 
                 (piece.current_row + 1).upto(board_size - 1) do |row|
@@ -798,7 +798,7 @@ class ChessGame < ChessPiece
                 end
             end
 
-            if right_diagonal_square
+            if right_diagonal_square && !piece&.name&.match?(/Bishop/i)
                 invalid_moves << [right_diagonal_square.current_column, right_diagonal_square.current_row]
 
                 (piece.current_row + 1).upto(board_size - 1) do |row|
@@ -816,7 +816,7 @@ class ChessGame < ChessPiece
                 end
             end
 
-            if left_diagonal_bottom_square
+            if left_diagonal_bottom_square && !piece&.name&.match?(/Bishop/i)
                 invalid_moves << [left_diagonal_bottom_square.current_column, left_diagonal_bottom_square.current_row]
         
                 (piece.current_row - 1).downto(0) do |row|
@@ -834,7 +834,7 @@ class ChessGame < ChessPiece
                 end
             end
         
-            if right_diagonal_bottom_square
+            if right_diagonal_bottom_square && !piece&.name&.match?(/Bishop/i)
                 invalid_moves << [right_diagonal_bottom_square.current_column, right_diagonal_bottom_square.current_row]
         
                 (piece.current_row - 1).downto(0) do |row|
