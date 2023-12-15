@@ -461,8 +461,10 @@ class ChessGame < ChessPiece
     def en_passant_possible?(current_column, current_row)
         if @current_player == @player_one && @player_two_double_move_made == true
             pawn_piece = retrieve_pawn(current_column, current_row)
+            right_opponent_pawn = retrieve_pawn(current_column + 1, current_row + 1)
+            left_opponent_pawn = retrieve_pawn(current_column - 1, current_row + 1)
 
-            if pawn_piece
+            if pawn_piece && (right_opponent_pawn || left_opponent_pawn)
                 fifth_rank = 4
 
                 if pawn_piece.current_row == fifth_rank
@@ -474,8 +476,10 @@ class ChessGame < ChessPiece
 
         elsif @current_player == @player_two && @player_one_double_move_made == true
             pawn_piece = retrieve_pawn(current_column, current_row)
+            right_opponent_pawn = retrieve_pawn(current_column + 1, current_row - 1)
+            left_opponent_pawn = retrieve_pawn(current_column - 1, current_row - 1)
 
-            if pawn_piece
+            if pawn_piece && (right_opponent_pawn || left_opponent_pawn)
                 fifth_rank = 3
 
                 if pawn_piece.current_row == fifth_rank
