@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Player
     attr_reader :name, :color
 
