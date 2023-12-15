@@ -344,25 +344,39 @@ class ChessGame < ChessPiece
     end
 
     def bishop_movement(column, row)
+        board_size = 8
         bishop_moves = []
 
-        directions = [
-            [1, 1], [-1, 1], [1, -1], [-1, -1],
-            [1, 0], [-1, 0], [0, 1], [0, -1]
-        ]
+        # Diagonal to the top-left
+        left_up = [column - 1, row + 1]
+        while left_up[0] >= 0 && left_up[1] < board_size
+            bishop_moves << left_up.dup
+            left_up[0] -= 1
+            left_up[1] += 1
+        end
 
-        directions.each do |direction|
-            column_change, row_change = direction
-            new_column, new_row = column, row
+        # Diagonal to the top-right
+        right_up = [column + 1, row + 1]
+        while right_up[0] < board_size && right_up[1] < board_size
+            bishop_moves << right_up.dup
+            right_up[0] += 1
+            right_up[1] += 1
+        end
 
-            loop do
-                new_column += column_change
-                new_row += row_change
+        # Diagonal to the bottom-left
+        left_down = [column - 1, row - 1]
+        while left_down[0] >= 0 && left_down[1] >= 0
+            bishop_moves << left_down.dup
+            left_down[0] -= 1
+            left_down[1] -= 1
+        end
 
-                break unless new_column.between?(0, 7) && new_row.between?(0, 7)
-
-                bishop_moves << [new_column, new_row]
-            end
+        # Diagonal to the bottom-right
+        right_down = [column + 1, row - 1]
+        while right_down[0] < board_size && right_down[1] >= 0
+            bishop_moves << right_down.dup
+            right_down[0] += 1
+            right_down[1] -= 1
         end
 
         bishop_moves
