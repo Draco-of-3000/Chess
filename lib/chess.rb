@@ -1977,6 +1977,22 @@ class ChessGame < ChessPiece
         make_move
     end
 
+    def query_save_game
+        if check_winner == false
+            puts "Do you want to save the game? Type 'yes' or 'no'"
+            input = gets.chomp.downcase
+      
+            until input == "yes" || input == "no"
+                puts "Invalid input. Do you want to save the game? Type 'yes' or 'no'"
+                input = gets.chomp.downcase
+            end
+      
+            if input == 'yes'
+                save_game
+            end
+        end
+    end
+
     def save_game
         save_data = {
             board: @board,
