@@ -1966,6 +1966,7 @@ class ChessGame < ChessPiece
             checkmate?
             stalemate
             switch_players
+            query_save_game
             check_winner
         end
     end
