@@ -660,8 +660,7 @@ class ChessGame < ChessPiece
     
                 if left_opponent_pawn
                     puts "left diagonal pawn = #{left_opponent_pawn.name}"
-                    valid_moves << left_opponent_pawn.current_column 
-                    valid_moves << left_opponent_pawn.current_row
+                    valid_moves << [left_opponent_pawn.current_column, left_opponent_pawn.current_row]
                 end
     
                 right_diagonal_column = pawn.current_column + 1
@@ -671,8 +670,7 @@ class ChessGame < ChessPiece
     
                 if right_opponent_pawn
                     puts "right diagonal pawn = #{right_opponent_pawn.name}"
-                    valid_moves << right_opponent_pawn.current_column 
-                    valid_moves << right_opponent_pawn.current_row
+                    valid_moves << [right_opponent_pawn.current_column, right_opponent_pawn.current_row]
                     puts "valid diagonal moves #{valid_moves}"
                 end
             end
@@ -1078,6 +1076,48 @@ class ChessGame < ChessPiece
 
                     if !possible_pawn_capture.nil?   
                         valid_moves += possible_pawn_capture
+                    end
+                end
+
+                if piece&.name&.match?(/Pawn/i) && valid_moves.include?([new_column, new_row]) && new_row == 0
+                    puts "possible promtion available"
+                    piece.current_column = new_column
+                    piece.current_row = new_row
+
+                    if piece.current_row == 0
+                        puts "promotion is possible"
+        
+                        puts "#{@player_two_name}, choose the piece for pawn promotion (queen, king, rook, bishop, knight):"
+                        piece_choice = gets.chomp.downcase
+        
+                        until ['queen', 'king', 'rook', 'bishop', 'knight'].include?(piece_choice)
+                            puts "Invalid piece choice for promotion."
+                        end
+        
+                        new_piece = case piece_choice
+                        when 'king'
+                            ChessPiece.new("Black King 3", "\u265A", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'queen'
+                            ChessPiece.new("Black Queen", "\u265B", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'rook'
+                            ChessPiece.new("Black Rook", "\u265C", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'bishop'
+                            ChessPiece.new("Black Bishop", "\u265D", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        when 'knight'
+                            ChessPiece.new("Black Knight", "\u265E", piece.start_column, piece.start_row, new_column, new_row, @player_two_color)
+                        end
+        
+                        replace_piece(piece, new_piece)
+                        puts "#{@player_two_name} promotes a pawn to a #{piece_choice.capitalize} at #{new_column}, #{new_row}."
+                        @player_two_pieces << new_piece
+                        
+
+                        new_piece.current_column = new_column
+                        new_piece.current_row = new_row
+        
+                        update_board(new_piece.current_column, new_piece.current_row, old_column, old_row)
+                        @player_two_pieces.delete(piece)
+                        return new_piece
                     end
                 end
                 
