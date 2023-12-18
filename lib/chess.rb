@@ -336,7 +336,6 @@ class ChessGame < ChessPiece
           end
         end
     end
-
       
     def seperator
         "--+-------+-------+-------+-------+-------+-------+-------+-------+"
@@ -719,6 +718,7 @@ class ChessGame < ChessPiece
         nil
     end
 
+    # Method to check if a piece matches current player's color
     def same_color_piece?(destination_column, destination_row)
         piece = get_piece_at(destination_column, destination_row)
 
@@ -1597,28 +1597,6 @@ class ChessGame < ChessPiece
             puts "castling has been attempted"
             true
         end
-    end
-
-    def castling
-        return unless @castling_possible == true && @castling_attempted == true
-
-        # Assuming castling is valid and already checked
-        king_column = (@current_player == @player_one) ? 4 : 3
-        rook_column = (@current_player == @player_one) ? 7 : 0
-      
-        if rook_column == 7
-          # Kingside castling for white
-          move_piece(6, 0, king_column, 0) # Move the king to the new position
-          move_piece(5, 0, rook_column, 0) # Move the rook to the new position
-        else
-          # Queenside castling for black
-          move_piece(2, 0, king_column, 0) # Move the king to the new position
-          move_piece(3, 0, rook_column, 0) # Move the rook to the new position
-        end
-      
-        # Mark the king and rook as moved
-        @king_moved = true
-        @rook_moved = true
     end
 
     def replace_piece(old_piece, new_piece)
