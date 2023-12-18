@@ -354,7 +354,7 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def scan_board_2
+    def scan_board_2
         @player_one_pieces = []
         @player_two_pieces = []
 
@@ -369,7 +369,7 @@ class ChessGame < ChessPiece
             end
           end
         end
-    #end
+    end
 
       
     def seperator
