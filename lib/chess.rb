@@ -55,6 +55,18 @@ class ChessPiece
     WHITE_ROOK_2 = ChessPiece.new("White Rook 2", "\u2656", 7, 0, 7, 0, 'white')
     WHITE_QUEEN = ChessPiece.new("White Queen", "\u2655", 3, 0, 3, 0, 'white')
     WHITE_KING = ChessPiece.new("White King", "\u2654", 4, 0, 4, 0, 'white')
+
+    def to_json(*a)
+        {
+          name: @name,
+          unicode: @unicode,
+          start_column: @start_column,
+          start_row: @start_row,
+          current_column: @current_column,
+          current_row: @current_row,
+          color: @color
+        }.to_json(*a)
+    end
 end
 
 class ChessBoard < ChessPiece
@@ -96,6 +108,12 @@ class ChessBoard < ChessPiece
         @white_king = ChessPiece::WHITE_KING
         @white_queen = ChessPiece::WHITE_QUEEN
     end
+
+    #def to_json(options = {})
+        JSON.dump ({
+          :board => @board
+        }).to_json
+    #end   
 
     def setup_board
         setup_pieces(:white)
@@ -208,6 +226,60 @@ class ChessGame < ChessPiece
         @castling_attempted = true
         @castling_possible = false
 
+        #def to_json(options = {})
+            JSON.dump({
+                :chessboard => @chessboard.to_json,
+                :board => @board,
+                :pieces_captured_by_player_one => @pieces_captured_by_player_one,
+                :player_one_pieces_remaining => @player_one_pieces_remaining,
+                :pieces_captured_by_player_two => @pieces_captured_by_player_two,
+                :player_two_pieces_remaining => @player_two_pieces_remaining,
+                :black_pawns => @black_pawns,
+                :white_pawns => @white_pawns,
+                :player_one => @player_one,
+                :player_two => @player_two,
+                :player_one_name => @player_one_name,
+                :player_two_name => @player_two_name,
+                :player_one_king => @player_one_king,
+                :player_two_king => @player_two_king,
+                :player_one_rook_1 => @player_one_rook_1,
+                :player_one_rook_2 => @player_one_rook_2,
+                :player_two_rook_1 => @player_two_rook_1,
+                :player_two_rook_2 => @player_two_rook_2,
+                :player_one_color => @player_one_color,
+                :player_two_color => @player_two_color,
+                :player_one_pieces => @player_one_pieces,
+                :player_two_pieces => @player_two_pieces,
+                :left_king_castling_column => @left_king_castling_column,
+                :right_king_castling_column => @right_king_castling_column,
+                :left_king_castling_move => @left_king_castling_move,
+                :right_king_castling_move => @right_king_castling_move,
+                :rook_1_castling_column => @rook_1_castling_column,
+                :rook_1_castling_move => @rook_1_castling_move,
+                :rook_2_castling_column => @rook_2_castling_column,
+                :rook_2_castling_move => @rook_2_castling_move,
+                :player_one_double_move_made => @player_one_double_move_made,
+                :player_two_double_move_made => @player_two_double_move_made,
+                :player_one_double_move_pawn => @player_one_double_move_pawn,
+                :player_two_double_move_pawn => @player_two_double_move_pawn,
+                :en_passant_possible => @en_passant_possible,
+                :en_passant_move => @en_passant_move,
+                :en_passant_piece => @en_passant_piece,
+                :captured_en_passant => @captured_en_passant,
+                :in_check => @in_check,
+                :checkmate => @checkmate,
+                :player_one_king_moved => @player_one_king_moved,
+                :player_one_rook_moved => @player_one_rook_moved,
+                :player_two_king_moved => @player_two_king_moved,
+                :player_two_rook_moved => @player_two_rook_moved,
+                :square_under_attack => @square_under_attack,
+                :insufficient_material => @insufficient_material,
+                :castling_attempted => @castling_attempted,
+                :castling_possible => @castling_possible
+                
+            }).to_json
+        #end
+
         puts "Welcome To Chess!"
 
         if File.exist?('chess_save.json')
@@ -283,6 +355,34 @@ class ChessGame < ChessPiece
           end
         end
     end
+
+    #def setup_pieces_2(pieces)
+        pieces.each do |piece|
+            if piece[:start_column] && piece[:start_row] && piece[:current_column] && piece[:current_row]
+                column = piece[:current_column]
+                row = piece[:current_column]
+                @board[row][column] = piece
+            end
+        end
+    #end
+
+    #def scan_board_2
+        @player_one_pieces = []
+        @player_two_pieces = []
+
+        @board.each do |row|
+            row.each do |piece|
+            next if piece.nil?
+      
+            if piece.is_a?(Hash) && piece[:color] == 'white' && piece[:start_column] && piece[:start_row] && piece[:current_column] && piece[:current_row]
+                @player_one_pieces << piece
+            elsif piece.is_a?(Hash) && piece[:color] == 'black' && piece[:start_column] && piece[:start_row] && piece[:current_column] && piece[:current_row]
+                @player_two_pieces << piece
+            end
+          end
+        end
+    #end
+
       
     def seperator
         "--+-------+-------+-------+-------+-------+-------+-------+-------+"
@@ -1994,20 +2094,21 @@ class ChessGame < ChessPiece
         end
     end
 
-    def save_game
+    #def save_game
         saved_data = {
             
             board: @board,
+            
             player_one: @player_one,
             player_two: @player_two,
             player_one_name: @player_one_name,
             player_two_name: @player_two_name,
-            player_one_king: @player_one_king
+            player_one_king: @player_one_king,
             player_two_king: @player_two_king,
             player_one_rook_1: @player_one_rook_1,
             player_one_rook_2: @player_one_rook_2,
             player_two_rook_1: @player_two_rook_1,
-            player_two_rook_2: @player_two_rook_2
+            player_two_rook_2: @player_two_rook_2,
             player_one_color: @player_one_color,
             player_two_color: @player_two_color,
             current_player: @current_player,
@@ -2015,8 +2116,8 @@ class ChessGame < ChessPiece
             player_one_pieces_remaining: @player_one_pieces_remaining,
             pieces_captured_by_player_two: @pieces_captured_by_player_two,
             player_two_pieces_remaining: @player_two_pieces_remaining,
-            player_one_pieces: @player_one_pieces,
-            player_two_pieces: @player_two_pieces,
+            player_one_pieces: serialize_pieces(@player_one_pieces),
+            player_two_pieces: serialize_pieces(@player_two_pieces),
             left_king_castling_column: @left_king_castling_column,
             right_king_castling_column: @right_king_castling_column,
             left_king_castling_move: @left_king_castling_move,
@@ -2052,32 +2153,53 @@ class ChessGame < ChessPiece
         puts "Game saved successfully"
     end
 
-    def load_game
+    #def serialize_pieces(pieces)
+        pieces.map(&:to_json)
+      end
+      
+      def deserialize_pieces(serialized_pieces)
+        serialized_pieces.map do |piece_json|
+          piece_data = JSON.parse(piece_json, symbolize_names: true)
+          ChessPiece.new(
+            piece_data[:name],
+            piece_data[:unicode],
+            piece_data[:start_column],
+            piece_data[:start_row],
+            piece_data[:current_column],
+            piece_data[:current_row],
+            piece_data[:color]
+          )
+        end
+    #end
+
+    #def load_game
         file_path = 'chess_save.json'
 
         if File.exist?(file_path)
             saved_data = JSON.parse(File.read(file_path), symbolize_names: true)
 
-            @board = saved_data[:board],
-            @player_one = saved_data[:player_one],
-            @player_two = saved_data[:player_two],
-            @player_one_name = saved_data[:player_one_name],
-            @player_two_name = saved_data[:player_two_name],
+            @board = saved_data[:board]
+            
+
+            @player_one = saved_data[:player_one]
+            @player_two = saved_data[:player_two]
+            @player_one_name = saved_data[:player_one_name]
+            @player_two_name = saved_data[:player_two_name]
             @player_one_king = saved_data[:player_one_king]
-            @player_two_king = saved_data[:player_two_king],
-            @player_one_rook_1 = saved_data[:player_one_rook_1],
-            @player_one_rook_2 = saved_data[:player_one_rook_2],
-            @player_two_rook_1 = saved_data[:player_two_rook_1],
+            @player_two_king = saved_data[:player_two_king]
+            @player_one_rook_1 = saved_data[:player_one_rook_1]
+            @player_one_rook_2 = saved_data[:player_one_rook_2]
+            @player_two_rook_1 = saved_data[:player_two_rook_1]
             @player_two_rook_2 = saved_data[:player_two_rook_2]
-            @player_one_color = saved_data[:player_one_color],
-            @player_two_color = saved_data[:player_two_color],
+            @player_one_color = saved_data[:player_one_color]
+            @player_two_color = saved_data[:player_two_color]
             @current_player = saved_data[:current_player]
             @pieces_captured_by_player_one = saved_data[:pieces_captured_by_player_one]
             @player_one_pieces_remaining = saved_data[:player_one_pieces_remaining]
             @pieces_captured_by_player_two = saved_data[:pieces_captured_by_player_two]
             @player_two_pieces_remaining = saved_data[:player_two_pieces_remaining]
-            @player_one_pieces = saved_data[:player_one_pieces]
-            @player_two_pieces = saved_data[:player_two_pieces]
+            @player_one_pieces = deserialize_pieces(saved_data[:player_one_pieces])
+            @player_two_pieces = deserialize_pieces(saved_data[:player_two_pieces])
             @left_king_castling_column = saved_data[:left_king_castling_column]
             @right_king_castling_column = saved_data[:right_king_castling_column]
             @left_king_castling_move = saved_data[:left_king_castling_move]
@@ -2107,9 +2229,36 @@ class ChessGame < ChessPiece
       
             puts "Game loaded successfully"
 
-            scan_board
+            #scan_board_2
+            #recreated_pieces_1 = @player_one_pieces.map do |serialized_piece|
+                ChessPiece.new(
+                  serialized_piece[:name],
+                  serialized_piece[:unicode],
+                  serialized_piece[:start_column],
+                  serialized_piece[:start_row],
+                  serialized_piece[:current_column],
+                  serialized_piece[:current_row],
+                  serialized_piece[:color]
+                )
+            end
+            #@player_one_pieces = recreated_pieces_1
+            #recreated_pieces_2 = @player_two_pieces.map do |serialized_piece|
+                ChessPiece.new(
+                  serialized_piece[:name],
+                  serialized_piece[:unicode],
+                  serialized_piece[:start_column],
+                  serialized_piece[:start_row],
+                  serialized_piece[:current_column],
+                  serialized_piece[:current_row],
+                  serialized_piece[:color]
+                )
+            #end
+            #@player_two_pieces = recreated_pieces_2
+            #puts @player_one_pieces[0]
+            #puts @player_two_pieces[0]
             setup_pieces(@player_one_pieces)
             setup_pieces(@player_two_pieces)
+            #display_updated_board
             make_move
         else
             puts "No saved game found"
