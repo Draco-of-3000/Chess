@@ -2242,11 +2242,17 @@ class ChessGame < ChessPiece
                 )
             end
             @player_two_pieces = recreated_pieces_2
-            puts @player_one_pieces[0]
-            puts @player_two_pieces[0]
             setup_pieces(@player_one_pieces)
             setup_pieces(@player_two_pieces)
             display_updated_board
+
+            current_player_name = case @current_player
+            when @player_one then @player_one_name
+            when @player_two then @player_two_name
+            end
+    
+            puts "current player is now #{current_player_name}"
+            
             make_move
         else
             puts "No saved game found"
