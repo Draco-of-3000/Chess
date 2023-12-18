@@ -2160,7 +2160,7 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def load_game
+    def load_game
         file_path = 'chess_save.json'
 
         if File.exist?(file_path)
@@ -2217,8 +2217,8 @@ class ChessGame < ChessPiece
       
             puts "Game loaded successfully"
 
-            #scan_board_2
-            #recreated_pieces_1 = @player_one_pieces.map do |serialized_piece|
+            scan_board_2
+            recreated_pieces_1 = @player_one_pieces.map do |serialized_piece|
                 ChessPiece.new(
                   serialized_piece[:name],
                   serialized_piece[:unicode],
@@ -2229,8 +2229,8 @@ class ChessGame < ChessPiece
                   serialized_piece[:color]
                 )
             end
-            #@player_one_pieces = recreated_pieces_1
-            #recreated_pieces_2 = @player_two_pieces.map do |serialized_piece|
+            @player_one_pieces = recreated_pieces_1
+            recreated_pieces_2 = @player_two_pieces.map do |serialized_piece|
                 ChessPiece.new(
                   serialized_piece[:name],
                   serialized_piece[:unicode],
@@ -2240,13 +2240,13 @@ class ChessGame < ChessPiece
                   serialized_piece[:current_row],
                   serialized_piece[:color]
                 )
-            #end
-            #@player_two_pieces = recreated_pieces_2
-            #puts @player_one_pieces[0]
-            #puts @player_two_pieces[0]
+            end
+            @player_two_pieces = recreated_pieces_2
+            puts @player_one_pieces[0]
+            puts @player_two_pieces[0]
             setup_pieces(@player_one_pieces)
             setup_pieces(@player_two_pieces)
-            #display_updated_board
+            display_updated_board
             make_move
         else
             puts "No saved game found"
