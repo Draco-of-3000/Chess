@@ -113,11 +113,6 @@ class ChessBoard < ChessPiece
         JSON.dump ({
           :board => @board
         }).to_json
-    end   
-
-    def setup_board
-        setup_pieces(:white)
-        setup_pieces(:black)
     end
 
     def seperator
