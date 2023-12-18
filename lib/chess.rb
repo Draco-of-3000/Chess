@@ -109,11 +109,11 @@ class ChessBoard < ChessPiece
         @white_queen = ChessPiece::WHITE_QUEEN
     end
 
-    #def to_json(options = {})
+    def to_json(options = {})
         JSON.dump ({
           :board => @board
         }).to_json
-    #end   
+    end   
 
     def setup_board
         setup_pieces(:white)
