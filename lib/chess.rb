@@ -200,7 +200,6 @@ class ChessGame < ChessPiece
         @player_two_rook_moved = false
         @square_under_attack = false
         @insufficient_material = false
-        @castling_attempted = true
         @castling_possible = false
 
         def to_json(options = {})
@@ -249,7 +248,6 @@ class ChessGame < ChessPiece
                 :player_two_rook_moved => @player_two_rook_moved,
                 :square_under_attack => @square_under_attack,
                 :insufficient_material => @insufficient_material,
-                :castling_attempted => @castling_attempted,
                 :castling_possible => @castling_possible
                 
             }).to_json
@@ -1571,34 +1569,6 @@ class ChessGame < ChessPiece
         end
     end
 
-    def castling_attempted?(destination_column, destination_row, current_column, current_row)
-        if @current_player == @player_one
-            piece = get_piece_at(current_column, current_row)
-            return false unless piece&.name&.match?(/King/i)
-      
-            rook_column = 0
-            rook_row = 0 
-      
-            return false unless destination_row == rook_row && destination_column == rook_column + 2
-      
-            @castling_attempted = true
-            true
-
-        elsif @current_player == @player_two
-            piece = get_piece_at(current_column, current_row)
-            return false unless piece&.name&.match?(/King/i)
-      
-            rook_column = 0
-            rook_row = 0 
-      
-            return false unless destination_row == rook_row && destination_column == rook_column + 2
-      
-            @castling_attempted = true
-            puts "castling has been attempted"
-            true
-        end
-    end
-
     def replace_piece(old_piece, new_piece)
         @board.each do |row|
           row.map! { |piece| piece == old_piece ? new_piece : piece }
@@ -2074,7 +2044,6 @@ class ChessGame < ChessPiece
             player_two_rook_moved: @player_two_rook_moved,
             square_under_attack: @square_under_attack,
             insufficient_material: @insufficient_material,
-            castling_attempted: @castling_attempted,
             castling_possible: @castling_possible
         }
 
@@ -2156,7 +2125,6 @@ class ChessGame < ChessPiece
             @player_two_rook_moved = saved_data[:player_two_rook_moved]
             @square_under_attack = saved_data[:square_under_attack]
             @insufficient_material = saved_data[:insufficient_material]
-            @castling_attempted = saved_data[:castling_attempted]
             @castling_possible = saved_data[:castling_possible]
       
             puts "Game loaded successfully"
