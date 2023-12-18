@@ -293,17 +293,6 @@ class ChessGame < ChessPiece
         @board
     end
 
-    def setup_board_2
-        @board
-
-        dummy_white_pieces = [ChessPiece::WHITE_ROOK_1, ChessPiece::WHITE_ROOK_2, ChessPiece::WHITE_KING, ChessPiece::WHITE_QUEEN]
-        dummy_black_pieces = [ChessPiece::BLACK_ROOK_1, ChessPiece::BLACK_ROOK_2, ChessPiece::BLACK_KING, ChessPiece::BLACK_QUEEN]
-        setup_pieces(dummy_black_pieces)
-        setup_pieces(dummy_white_pieces)
-
-        @board
-    end
-
     def setup_pieces(pieces)
         pieces.each do |piece|
             if piece.start_column && piece.start_row && piece.current_column && piece.current_row
