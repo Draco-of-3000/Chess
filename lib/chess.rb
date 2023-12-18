@@ -539,7 +539,7 @@ class ChessGame < ChessPiece
                 if opponent_piece&.name&.match?(/King/i)
                     @checkmate = true
                 end
-                
+
                 puts "#{@player_two_name}'s #{piece.name} captured #{@player_one_name}'s #{opponent_piece.name} at #{destination_column}, #{destination_row}"
                 @player_one_pieces.delete(opponent_piece)
             end
@@ -1776,6 +1776,7 @@ class ChessGame < ChessPiece
         false
     end
 
+    #Method to check if there is insufficient material to contimue the game
     def find_pieces
         white_pieces = @player_one_pieces.flatten
         black_pieces = @player_two_pieces.flatten
@@ -1807,6 +1808,7 @@ class ChessGame < ChessPiece
         end
     end
 
+    #Method to check if players have legal moves to contimue the game
     def legal_moves
         opponent_pieces = (@current_player == @player_one) ? @player_two_pieces : @player_one_pieces
         opponent_moves = []
@@ -1838,8 +1840,9 @@ class ChessGame < ChessPiece
         opponent_moves.any?
     end
 
+    #Method to check for a draw/stalemate
     def stalemate
-        return false if @checkmate || @in_check == true
+        return false if @checkmate == true || @in_check == true
 
         if legal_moves == false && @in_check == false || @insufficient_material == true
             true
