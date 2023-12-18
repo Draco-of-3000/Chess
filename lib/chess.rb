@@ -2082,7 +2082,7 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def save_game
+    def save_game
         saved_data = {
             
             board: @board,
