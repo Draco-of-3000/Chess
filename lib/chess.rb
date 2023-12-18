@@ -2143,20 +2143,20 @@ class ChessGame < ChessPiece
 
     def serialize_pieces(pieces)
         pieces.map(&:to_json)
-      end
+    end
       
-      def deserialize_pieces(serialized_pieces)
+    def deserialize_pieces(serialized_pieces)
         serialized_pieces.map do |piece_json|
-          piece_data = JSON.parse(piece_json, symbolize_names: true)
-          ChessPiece.new(
-            piece_data[:name],
-            piece_data[:unicode],
-            piece_data[:start_column],
-            piece_data[:start_row],
-            piece_data[:current_column],
-            piece_data[:current_row],
-            piece_data[:color]
-          )
+            piece_data = JSON.parse(piece_json, symbolize_names: true)
+            ChessPiece.new(
+                piece_data[:name],
+                piece_data[:unicode],
+                piece_data[:start_column],
+                piece_data[:start_row],
+                piece_data[:current_column],
+                piece_data[:current_row],
+                piece_data[:color]
+            )
         end
     end
 
