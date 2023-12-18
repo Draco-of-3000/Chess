@@ -1972,7 +1972,7 @@ class ChessGame < ChessPiece
     end
 
     def make_move
-        until check_winner == true
+        until check_winner == true || @insufficient_material == true
             assign_coordinates
             display_updated_board
             find_pieces
