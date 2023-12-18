@@ -521,6 +521,11 @@ class ChessGame < ChessPiece
                 opponent_piece.current_row = nil
 
                 @player_two_pieces.delete(opponent_piece)
+
+                if opponent_piece&.name&.match?(/King/i)
+                    @checkmate = true
+                end
+
                 puts "#{@player_one_name}'s #{piece.name} captured #{@player_two_name}'s #{opponent_piece.name} at #{destination_column}, #{destination_row}"
             end
 
@@ -531,6 +536,10 @@ class ChessGame < ChessPiece
                 opponent_piece.current_column = nil
                 opponent_piece.current_row = nil
 
+                if opponent_piece&.name&.match?(/King/i)
+                    @checkmate = true
+                end
+                
                 puts "#{@player_two_name}'s #{piece.name} captured #{@player_one_name}'s #{opponent_piece.name} at #{destination_column}, #{destination_row}"
                 @player_one_pieces.delete(opponent_piece)
             end
