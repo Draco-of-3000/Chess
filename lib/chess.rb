@@ -153,20 +153,6 @@ class ChessBoard < ChessPiece
     def label_at(index)
         "#{('a'.ord + (index % 8)).chr}#{8 - (index / 8)}"
     end
-
-    private
-
-    def setup_pieces(color)
-        major_pieces = color == :white ? 7 : 0
-        pawns = color == :white ? 6 : 1
-
-        @board[major_pieces] = (
-            color == :white ? ["\u2656", "\u2658", "\u2657", "\u2655", "\u2654", "\u2657", "\u2658", "\u2656"] :
-                             ["\u265C", "\u265E", "\u265D", "\u265B", "\u265A", "\u265D", "\u265E", "\u265C"]
-        )
-
-        @board[pawns] = Array.new(8, color == :white ? "\u2659" : "\u265F")
-    end
 end
 
 class ChessGame < ChessPiece
@@ -2252,7 +2238,7 @@ class ChessGame < ChessPiece
             end
     
             puts "current player is now #{current_player_name}"
-            
+
             make_move
         else
             puts "No saved game found"
