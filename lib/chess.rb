@@ -149,10 +149,6 @@ class ChessBoard < ChessPiece
         puts seperator
         puts "\n"
     end
-
-    def label_at(index)
-        "#{('a'.ord + (index % 8)).chr}#{8 - (index / 8)}"
-    end
 end
 
 class ChessGame < ChessPiece
