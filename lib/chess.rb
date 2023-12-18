@@ -2188,4 +2188,3 @@ end
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-#hoe.play_game
