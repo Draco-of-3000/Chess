@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 
 class Player
     attr_reader :name, :color
@@ -210,7 +210,7 @@ class ChessGame < ChessPiece
 
         puts "Welcome To Chess!"
 
-        if File.exist?('chess_save.txt')
+        if File.exist?('chess_save.json')
             load_game_option = prompt_load_game_option
 
             if load_game_option == 'yes'
@@ -259,9 +259,9 @@ class ChessGame < ChessPiece
 
     def setup_pieces(pieces)
         pieces.each do |piece|
-            if piece.start_column && piece.start_row #&& piece.current_column && piece.current_row
-                column = piece.start_column
-                row = piece.start_row
+            if piece.start_column && piece.start_row && piece.current_column && piece.current_row
+                column = piece.current_column
+                row = piece.current_row
                 @board[row][column] = piece
             end
         end
@@ -1995,8 +1995,21 @@ class ChessGame < ChessPiece
     end
 
     def save_game
-        save_data = {
+        saved_data = {
+            
             board: @board,
+            player_one: @player_one,
+            player_two: @player_two,
+            player_one_name: @player_one_name,
+            player_two_name: @player_two_name,
+            player_one_king: @player_one_king
+            player_two_king: @player_two_king,
+            player_one_rook_1: @player_one_rook_1,
+            player_one_rook_2: @player_one_rook_2,
+            player_two_rook_1: @player_two_rook_1,
+            player_two_rook_2: @player_two_rook_2
+            player_one_color: @player_one_color,
+            player_two_color: @player_two_color,
             current_player: @current_player,
             pieces_captured_by_player_one: @pieces_captured_by_player_one,
             player_one_pieces_remaining: @player_one_pieces_remaining,
@@ -2032,62 +2045,80 @@ class ChessGame < ChessPiece
             castling_possible: @castling_possible
         }
 
-        File.open('chess_save.txt', 'w') do |file|
-            file.puts save_data.to_yaml
+        File.open('chess_save.json', 'w') do |file|
+            file.puts JSON.pretty_generate(saved_data)
         end
 
         puts "Game saved successfully"
     end
 
     def load_game
-        saved_data = YAML.load_file('chess_save.txt')
-        
-        @board = save_data[:board]
-        @current_player = saved_data[:current_player]
-        @pieces_captured_by_player_one = saved_data[:pieces_captured_by_player_one]
-        @player_one_pieces_remaining = saved_data[:player_one_pieces_remaining]
-        @pieces_captured_by_player_two = saved_data[:pieces_captured_by_player_two]
-        @player_two_pieces_remaining = saved_data[:player_two_pieces_remaining]
-        @player_one_pieces = saved_data[:player_one_pieces]
-        @player_two_pieces = saved_data[:player_two_pieces]
-        @left_king_castling_column = saved_data[:left_king_castling_column]
-        @right_king_castling_column = saved_data[:right_king_castling_column]
-        @left_king_castling_move = saved_data[:left_king_castling_move]
-        @right_king_castling_move = saved_data[:right_king_castling_move]
-        @rook_1_castling_column = saved_data[:rook_1_castling_column]
-        @rook_1_castling_move = saved_data[:rook_1_castling_move]
-        @rook_2_castling_column = saved_data[:rook_2_castling_column]
-        @rook_2_castling_move = saved_data[:rook_2_castling_move]
-        @player_one_double_move_made = saved_data[:player_one_double_move_made]
-        @player_two_double_move_made = saved_data[:player_two_double_move_made]
-        @player_one_double_move_pawn = saved_data[:player_one_double_move_pawn]
-        @player_two_double_move_pawn = saved_data[:player_two_double_move_pawn]
-        @en_passant_possible = saved_data[:en_passant_possible]
-        @en_passant_move = saved_data[:en_passant_move]
-        @en_passant_piece = saved_data[:en_passant_piece]
-        @captured_en_passant = saved_data[:captured_en_passant]
-        @in_check = saved_data[:in_check]
-        @checkmate = saved_data[:checkmate]
-        @player_one_king_moved = saved_data[:player_one_king_moved]
-        @player_one_rook_moved = saved_data[:player_one_rook_moved]
-        @player_two_king_moved = saved_data[:player_two_king_moved]
-        @player_two_rook_moved = saved_data[:player_two_rook_moved]
-        @square_under_attack = saved_data[:square_under_attack]
-        @insufficient_material = saved_data[:insufficient_material]
-        @castling_attempted = saved_data[:castling_attempted]
-        @castling_possible = saved_data[:castling_possible]
-      
-        puts "Game loaded successfully"
+        file_path = 'chess_save.json'
 
-        make_move
-        rescue Errno::ENOENT
-            puts "No saved game found"
-    end
+        if File.exist?(file_path)
+            saved_data = JSON.parse(File.read(file_path), symbolize_names: true)
+
+            @board = saved_data[:board],
+            @player_one = saved_data[:player_one],
+            @player_two = saved_data[:player_two],
+            @player_one_name = saved_data[:player_one_name],
+            @player_two_name = saved_data[:player_two_name],
+            @player_one_king = saved_data[:player_one_king]
+            @player_two_king = saved_data[:player_two_king],
+            @player_one_rook_1 = saved_data[:player_one_rook_1],
+            @player_one_rook_2 = saved_data[:player_one_rook_2],
+            @player_two_rook_1 = saved_data[:player_two_rook_1],
+            @player_two_rook_2 = saved_data[:player_two_rook_2]
+            @player_one_color = saved_data[:player_one_color],
+            @player_two_color = saved_data[:player_two_color],
+            @current_player = saved_data[:current_player]
+            @pieces_captured_by_player_one = saved_data[:pieces_captured_by_player_one]
+            @player_one_pieces_remaining = saved_data[:player_one_pieces_remaining]
+            @pieces_captured_by_player_two = saved_data[:pieces_captured_by_player_two]
+            @player_two_pieces_remaining = saved_data[:player_two_pieces_remaining]
+            @player_one_pieces = saved_data[:player_one_pieces]
+            @player_two_pieces = saved_data[:player_two_pieces]
+            @left_king_castling_column = saved_data[:left_king_castling_column]
+            @right_king_castling_column = saved_data[:right_king_castling_column]
+            @left_king_castling_move = saved_data[:left_king_castling_move]
+            @right_king_castling_move = saved_data[:right_king_castling_move]
+            @rook_1_castling_column = saved_data[:rook_1_castling_column]
+            @rook_1_castling_move = saved_data[:rook_1_castling_move]
+            @rook_2_castling_column = saved_data[:rook_2_castling_column]
+            @rook_2_castling_move = saved_data[:rook_2_castling_move]
+            @player_one_double_move_made = saved_data[:player_one_double_move_made]
+            @player_two_double_move_made = saved_data[:player_two_double_move_made]
+            @player_one_double_move_pawn = saved_data[:player_one_double_move_pawn]
+            @player_two_double_move_pawn = saved_data[:player_two_double_move_pawn]
+            @en_passant_possible = saved_data[:en_passant_possible]
+            @en_passant_move = saved_data[:en_passant_move]
+            @en_passant_piece = saved_data[:en_passant_piece]
+            @captured_en_passant = saved_data[:captured_en_passant]
+            @in_check = saved_data[:in_check]
+            @checkmate = saved_data[:checkmate]
+            @player_one_king_moved = saved_data[:player_one_king_moved]
+            @player_one_rook_moved = saved_data[:player_one_rook_moved]
+            @player_two_king_moved = saved_data[:player_two_king_moved]
+            @player_two_rook_moved = saved_data[:player_two_rook_moved]
+            @square_under_attack = saved_data[:square_under_attack]
+            @insufficient_material = saved_data[:insufficient_material]
+            @castling_attempted = saved_data[:castling_attempted]
+            @castling_possible = saved_data[:castling_possible]
       
+            puts "Game loaded successfully"
+
+            scan_board
+            setup_pieces(@player_one_pieces)
+            setup_pieces(@player_two_pieces)
+            make_move
+        else
+            puts "No saved game found"
+        end
+    end
 end
 
 
 game = ChessBoard.new
 game.display_board
 hoe = ChessGame.new
-hoe.play_game
+#hoe.play_game
