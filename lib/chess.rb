@@ -354,16 +354,6 @@ class ChessGame < ChessPiece
         end
     end
 
-    #def setup_pieces_2(pieces)
-        pieces.each do |piece|
-            if piece[:start_column] && piece[:start_row] && piece[:current_column] && piece[:current_row]
-                column = piece[:current_column]
-                row = piece[:current_column]
-                @board[row][column] = piece
-            end
-        end
-    #end
-
     #def scan_board_2
         @player_one_pieces = []
         @player_two_pieces = []
