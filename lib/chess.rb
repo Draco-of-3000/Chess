@@ -2141,7 +2141,7 @@ class ChessGame < ChessPiece
         puts "Game saved successfully"
     end
 
-    #def serialize_pieces(pieces)
+    def serialize_pieces(pieces)
         pieces.map(&:to_json)
       end
       
@@ -2158,7 +2158,7 @@ class ChessGame < ChessPiece
             piece_data[:color]
           )
         end
-    #end
+    end
 
     #def load_game
         file_path = 'chess_save.json'
