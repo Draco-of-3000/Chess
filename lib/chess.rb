@@ -226,7 +226,7 @@ class ChessGame < ChessPiece
         @castling_attempted = true
         @castling_possible = false
 
-        #def to_json(options = {})
+        def to_json(options = {})
             JSON.dump({
                 :chessboard => @chessboard.to_json,
                 :board => @board,
@@ -234,8 +234,6 @@ class ChessGame < ChessPiece
                 :player_one_pieces_remaining => @player_one_pieces_remaining,
                 :pieces_captured_by_player_two => @pieces_captured_by_player_two,
                 :player_two_pieces_remaining => @player_two_pieces_remaining,
-                :black_pawns => @black_pawns,
-                :white_pawns => @white_pawns,
                 :player_one => @player_one,
                 :player_two => @player_two,
                 :player_one_name => @player_one_name,
@@ -278,7 +276,7 @@ class ChessGame < ChessPiece
                 :castling_possible => @castling_possible
                 
             }).to_json
-        #end
+        end
 
         puts "Welcome To Chess!"
 
