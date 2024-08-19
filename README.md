@@ -51,6 +51,6 @@ Welcome to the Chess! This is a command-line implementation of the classic chess
  - The game will start, and you can begin playing by following the on-screen instructions.
 
 **Acknowledgements**
-- The Chess game is a classic and well-known game. This implementation is inspired by some FIDE rules and gameplay. This implementation in Ruby is created by Kenshalskis Acheampong.
+- The Chess game is a classic and well-known game. This implementation is inspired by some FIDE rules and gameplay. This implementation in Ruby is created by Kelvin Acheampong.
 
 **Enjoy the game and have fun playing Chess!**
